@@ -61,3 +61,35 @@ Found by reading the API as a native client would:
 - **Uploads.** The app should send the original HEVC (smaller than what Safari
   transcodes to) in a background URLSession, and can trim on the device with
   AVFoundation before uploading, so the 100 MB cap stops mattering.
+
+## I4 — Keep a real Xcode project; XcodeGen dropped (2026-09-20, revises I2)
+
+Ryan installed Xcode 27 and created a project from the template. Reading it
+changed the plan. Projects now use **file-system-synchronized groups**: a
+folder on disk *is* the group, so adding, moving or deleting a source file
+never touches `project.pbxproj`. That was the whole case for XcodeGen (an
+agent can't click through the project editor, and the file conflicts). What's
+left that lives in the project file is settings, capabilities and package
+dependencies, which change rarely, and settings can sit in `.xcconfig` text
+files. Against XcodeGen: Xcode manages signing and capabilities natively, Ryan
+can open the project like any other, and there is no generate step to forget.
+So: a normal checked-in `.xcodeproj`, settings in xcconfig, `.gitignore`
+updated to stop ignoring it (still ignoring `xcuserdata/`).
+
+What the template chose that milestone 0 will change, and why:
+- **Multiplatform (iPhone, iPad, Mac, Vision Pro)** -> iPhone only. Every
+  extra destination is a layout to design and a review surface; PLAN.md puts
+  iPad out of scope.
+- **Minimum OS 27.0** -> 18.0. The template defaults to the newest OS, which
+  would lock out any phone not yet updated. Confirm against Ryan's and
+  Rebecca's phones.
+- **Placeholder bundle id, no team** -> `co.fantasycat.app` and Ryan's team.
+- **Swift 5 language mode** -> Swift 6, strict concurrency, while it's empty
+  and free to do.
+- **Xcode made its own git repository inside ours** (`FantasyCat/.git`, one
+  automatic "Initial Commit"). It must be removed before the folder can be
+  committed, or git records it as an empty submodule pointer. Left untouched
+  until Ryan says so, since he made it. For next time: untick "Create Git
+  repository on my Mac" in the save dialog.
+- The project sits at `FantasyCat/FantasyCat.xcodeproj`; it moves to the repo
+  root so the repo is the project.

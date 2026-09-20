@@ -30,11 +30,12 @@ re-implements a rule; it asks the API.
   `git push origin-agent main`** (HTTPS); `origin` is Ryan's SSH remote and
   hangs without him. Nothing here deploys by itself: a TestFlight upload is
   outward-facing and needs Ryan until he says otherwise.
-- **Stack:** Swift, SwiftUI, iOS 18+. The Xcode project is **generated**
-  by XcodeGen from `project.yml` and is not checked in, so it can be changed
-  in a text file and never merge-conflicts. The API client is **generated** by
-  Swift OpenAPI Generator from the server's `openapi.json`; never hand-write a
-  request the spec already describes.
+- **Stack:** Swift 6, SwiftUI, iOS 18+, iPhone only. A normal checked-in
+  Xcode project with file-system-synchronized folders (add a file to the
+  folder and it's in the target; no project-file edit) and build settings in
+  `.xcconfig` files (I4). The API client is **generated** by Swift OpenAPI
+  Generator from the server's `openapi.json`; never hand-write a request the
+  spec already describes. Sessions are bearer tokens (server D36).
 - **The server is the other half.** When the app needs something the API
   doesn't offer (token auth, an app-site-association file, a push endpoint),
   the change is made in `~/projects/fantasy-cat`, under that repo's rules, and
