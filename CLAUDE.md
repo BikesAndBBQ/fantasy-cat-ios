@@ -25,11 +25,23 @@ re-implements a rule; it asks the API.
 5. `git log`.
 
 ## Project specifics
-- **Category: claude-managed (provisional, same as the server; Ryan to
-  confirm)** — commit and push to `main`. **Always push with
+- **Category: claude-managed** — commit and push to `main`. **Always push with
   `git push origin-agent main`** (HTTPS); `origin` is Ryan's SSH remote and
-  hangs without him. Nothing here deploys by itself: a TestFlight upload is
-  outward-facing and needs Ryan until he says otherwise.
+  hangs without him.
+- **This repo is a sub-project of the server repo (I8, server D37).** One
+  agent owns both. It is not registered with agent-manager by itself: a
+  dispatch starts in `~/projects/fantasy-cat` (the primary) and reaches this
+  repo through agent-manager's `additional_dirs`, so in a dispatch your
+  working directory is the server repo — use `git -C` and `make -C` with this
+  repo's path. **The `.claude/settings.json` here is not applied to a
+  dispatch**; it only governs a session opened in this directory. The
+  permissions a dispatch gets are the server repo's, so add a rule the iOS
+  work needs there and keep this file in step. This repo keeps its own
+  `PLAN.md`, `DECISIONS.md` and `backlog.yaml`; the dashboard shows this
+  backlog under `fantasy-cat`.
+- **Releases: TestFlight only.** While the league is pre-release the agent
+  may upload TestFlight builds without asking Ryan. It never submits to App
+  Store review.
 - **Stack:** Swift 6, SwiftUI, iOS 18+, iPhone only. A normal checked-in
   Xcode project with file-system-synchronized folders (add a file to the
   folder and it's in the target; no project-file edit) (I4). The API client is **generated** by Swift OpenAPI
@@ -71,7 +83,9 @@ re-implements a rule; it asks the API.
   Signing is automatic through Ryan's Xcode account; anything else lives in
   the `FantasyCat` 1Password vault and is read with the project token, never
   the agent's (server repo D19).
-- **Nothing ships to TestFlight or the App Store unattended.**
+- **Nothing is submitted to the App Store by the agent.** TestFlight uploads
+  are allowed unattended while the league is pre-release (I8); revisit when
+  there are non-test users. `fastlane` stays denied.
 - **The app holds no game rules.** Scoring, deadlines, caps and who may vote
   for what come from the API. (They're product decisions made with Rebecca.)
 - **Session tokens go in the Keychain**, never UserDefaults or a file.

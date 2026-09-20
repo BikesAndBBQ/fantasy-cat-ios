@@ -186,3 +186,30 @@ its first round.
 What the Simulator could and couldn't show is in the backlog. The honest
 status of this milestone is "works end to end from a file; unproven from the
 photo library", and only Ryan's phone changes that.
+
+## I8 — One agent with the server repo; TestFlight without asking (2026-09-20)
+
+**This repo is a sub-project of `~/projects/fantasy-cat`.** Ryan wants one
+agent with one context for both, since most work here begins as an API change
+there. agent-manager attaches this repo to the server project as an
+`additional_dirs` entry (server D37; agent-manager DECISIONS 2026-09-20). What
+that means in practice:
+
+- A dispatch's working directory is the server repo. This repo's `CLAUDE.md`
+  is loaded too, but its `.claude/settings.json` is **ignored** in a dispatch
+  (verified in agent-manager), so the server repo's allowlist carries the
+  Swift and Xcode rules. The settings file here still governs a session Ryan
+  opens in this directory, so keep the two in step.
+- The category is no longer provisional: claude-managed, same as the server.
+- The backlog stays here; the dashboard merges it under `fantasy-cat`.
+
+**Releases.** This revises the hard line "nothing ships to TestFlight or the
+App Store unattended". Ryan, 2026-09-20: "we're still in pre-release so ios can
+release freely until I have non-test users on the system. (But it should be
+testflight only for now.)" So the agent may upload TestFlight builds by itself
+and must never submit to App Store review. The `xcrun altool` deny is removed
+because an upload to App Store Connect is how a build reaches TestFlight and
+cannot submit for review; `fastlane` and `notarytool` stay denied. No upload
+pipeline exists yet. When one is built, the App Store Connect key is read from
+the FantasyCat vault at run time and never lands in the repo (first hard line).
+
