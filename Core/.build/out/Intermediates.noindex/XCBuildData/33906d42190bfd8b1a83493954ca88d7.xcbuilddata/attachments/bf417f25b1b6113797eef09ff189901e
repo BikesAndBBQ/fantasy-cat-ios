@@ -1,0 +1,29 @@
+{
+  "" : {
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/FantasyCatCoreTests-primary.dia",
+    "emit-module-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/FantasyCatCoreTests-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/FantasyCatCoreTests-primary-emit-module.dia",
+    "pch" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/FantasyCatCoreTests-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/FantasyCatCoreTests-primary.swiftdeps"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/DerivedSources/test_entry_point.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/test_entry_point~partial.swiftmodule"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/Tests/FantasyCatCoreTests/CoreTests.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCoreTests-p.build/Objects-normal/arm64/CoreTests~partial.swiftmodule"
+  }
+}

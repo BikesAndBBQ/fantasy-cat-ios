@@ -1,3 +1,4 @@
+import FantasyCatCore
 import SwiftUI
 
 /// Pick a league, start one, or join one with an invite. Shown when you have
@@ -70,12 +71,7 @@ struct LeaguesView: View {
         #endif
     }
 
-    /// People paste the whole link; the code is its last path component.
-    private var code: String {
-        let t = invite.trimmingCharacters(in: .whitespacesAndNewlines)
-        if let url = URL(string: t), url.scheme != nil, let last = url.pathComponents.last, last != "/" { return last.lowercased() }
-        return t.lowercased()
-    }
+    private var code: String { Invite.code(from: invite) }
 
     private func lookUp() async {
         let c = code

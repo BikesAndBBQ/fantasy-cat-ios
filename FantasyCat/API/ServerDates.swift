@@ -1,3 +1,4 @@
+import FantasyCatCore
 import Foundation
 import OpenAPIRuntime
 
@@ -12,20 +13,8 @@ struct ServerDateTranscoder: DateTranscoder {
     }
 
     func decode(_ string: String) throws -> Date {
-        if let d = Self.parse(string) { return d }
+        if let d = ServerDate.parse(string) { return d }
         throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Not an RFC 3339 timestamp: \(string)"))
     }
 
-    static func parse(_ string: String) -> Date? {
-        // Foundation's parser wants exactly three fractional digits or none.
-        // Trim or pad whatever Go sent down to milliseconds.
-        var s = string
-        if let dot = s.firstIndex(of: "."), let end = s[dot...].dropFirst().firstIndex(where: { !$0.isNumber }) {
-            let digits = s[s.index(after: dot)..<end]
-            let millis = String(digits.prefix(3)).padding(toLength: 3, withPad: "0", startingAt: 0)
-            s.replaceSubrange(dot..<end, with: "." + millis)
-            return try? Date(s, strategy: .iso8601.year().month().day().timeZone(separator: .colon).time(includingFractionalSeconds: true).timeSeparator(.colon))
-        }
-        return try? Date(s, strategy: .iso8601.year().month().day().timeZone(separator: .colon).time(includingFractionalSeconds: false).timeSeparator(.colon))
-    }
 }

@@ -1,3 +1,4 @@
+import FantasyCatCore
 import AVFoundation
 import Foundation
 import UniformTypeIdentifiers
@@ -22,13 +23,6 @@ struct PickedMedia: Equatable, Sendable {
 }
 
 enum PrepError: Error { case unreadable, exportFailed(String) }
-
-/// The league rule, enforced again by the server. Mirrors web/src/lib/trim.ts.
-enum Clip {
-    static let maxSeconds = 30.0
-    static let minSeconds = 1.0
-    static func whole(_ duration: Double) -> ClosedRange<Double> { 0...min(duration, maxSeconds) }
-}
 
 enum MediaPrep {
     /// Cut the kept part out of a video and re-encode it as 1080p HEVC, on the

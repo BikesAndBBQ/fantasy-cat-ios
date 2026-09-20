@@ -1,3 +1,4 @@
+import FantasyCatCore
 import AVKit
 import SwiftUI
 

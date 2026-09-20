@@ -12,8 +12,8 @@ XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destinatio
 build: ## compile for the Simulator; warnings are printed, errors fail
 	@$(XCB) -quiet build
 
-test:
-	@$(XCB) -quiet test
+test: ## the pure logic in Core/ (dates, trim arithmetic, invite parsing): seconds, no Simulator
+	@swift test --package-path Core 2>&1 | tail -3
 
 run: build ## install and launch in the Simulator
 	@xcrun simctl boot '$(SIM)' 2>/dev/null || true

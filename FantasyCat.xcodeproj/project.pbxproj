@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FC0000000000000000000C01 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = FC0000000000000000000B01 /* OpenAPIRuntime */; };
 		FC0000000000000000000C02 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = FC0000000000000000000B02 /* OpenAPIURLSession */; };
+		FC0000000000000000000C03 /* FantasyCatCore in Frameworks */ = {isa = PBXBuildFile; productRef = FC0000000000000000000B03 /* FantasyCatCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			files = (
 				FC0000000000000000000C01 /* OpenAPIRuntime in Frameworks */,
 				FC0000000000000000000C02 /* OpenAPIURLSession in Frameworks */,
+				FC0000000000000000000C03 /* FantasyCatCore in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			packageProductDependencies = (
 				FC0000000000000000000B01 /* OpenAPIRuntime */,
 				FC0000000000000000000B02 /* OpenAPIURLSession */,
+				FC0000000000000000000B03 /* FantasyCatCore */,
 			);
 			productName = FantasyCat;
 			productReference = 000000000000000000000120 /* FantasyCat.app */;
@@ -102,6 +105,7 @@
 			packageReferences = (
 				FC0000000000000000000A01 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
 				FC0000000000000000000A02 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+				FC0000000000000000000A03 /* XCLocalSwiftPackageReference "Core" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -355,6 +359,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		FC0000000000000000000A03 /* XCLocalSwiftPackageReference "Core" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Core;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		FC0000000000000000000A01 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -384,6 +395,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FC0000000000000000000A02 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */;
 			productName = OpenAPIURLSession;
+		};
+		FC0000000000000000000B03 /* FantasyCatCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FantasyCatCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

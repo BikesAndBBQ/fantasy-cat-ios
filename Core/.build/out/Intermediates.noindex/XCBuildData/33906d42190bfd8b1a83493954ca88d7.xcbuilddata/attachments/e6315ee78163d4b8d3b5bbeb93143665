@@ -1,0 +1,49 @@
+{
+  "" : {
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/FantasyCatCore-primary.dia",
+    "emit-module-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/FantasyCatCore-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/FantasyCatCore-primary-emit-module.dia",
+    "pch" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/FantasyCatCore-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/FantasyCatCore-primary.swiftdeps"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/Sources/FantasyCatCore/Clip.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Clip~partial.swiftmodule"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/Sources/FantasyCatCore/Invite.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/Invite~partial.swiftmodule"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/Sources/FantasyCatCore/ServerDate.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/ServerDate~partial.swiftmodule"
+  },
+  "/Users/ryano/projects/fantasy-cat-ios/Core/Sources/FantasyCatCore/TimeText.swift" : {
+    "const-values" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.swiftconstvalues",
+    "dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.d",
+    "diagnostics" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.dia",
+    "index-unit-output-path" : "/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.o",
+    "llvm-bc" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.bc",
+    "object" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.o",
+    "swift-dependencies" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText.swiftdeps",
+    "swiftmodule" : "/Users/ryano/projects/fantasy-cat-ios/Core/.build/out/Intermediates.noindex/FantasyCatCore.build/Debug/FantasyCatCore-t.build/Objects-normal/arm64/TimeText~partial.swiftmodule"
+  }
+}

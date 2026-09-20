@@ -86,13 +86,14 @@ items:
     status: blocked
     owner: ryan
     created_at: 2026-09-20
-    note: "Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID. Sign-up and password reset are unblocked."
+    note: "Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID."
 
   - title: "A unit test target"
-    status: pending
+    status: done
     owner: agent
     created_at: 2026-09-20
-    note: "There is none yet, so `make test` has nothing to run. First tests: ServerDateTranscoder (the bug that broke sign-in), Failure mapping. Needs a test target added to project.pbxproj by hand."
+    done_at: 2026-09-20
+    note: "Done differently: the pure logic moved into a local package, Core/, tested with `make test` (swift test, seconds, no Simulator). 12 tests: Go timestamps, time text, trim arithmetic, invite parsing. UI is still checked by looking (`make shot`)."
 
   - title: "Milestone 4a: post a photo or video (pipeline and screen)"
     status: done
@@ -144,9 +145,10 @@ items:
       Simulator.
 
   - title: "Account screen in the app"
-    status: pending
+    status: done
     owner: agent
     created_at: 2026-09-20
+    done_at: 2026-09-20
     note: "The avatar opens a sheet with sign-out only. Cats, your picture, reminders and passkeys still live on the web. Also: start or join a league, which today says 'go to fantasycat.co'."
 
   - title: "Milestone 4b: try posting on a real phone"
@@ -163,7 +165,19 @@ items:
     status: pending
     owner: agent
     created_at: 2026-09-20
-    note: "Take a photo or video with the camera (needs a device and a usage string). Recover an upload that finished after the app was killed. One Swift 6 metatype warning on the PhotosPicker label helper. Unit tests for the trim arithmetic."
+    note: "Camera capture is built (2026-09-20) but untried: nothing can tap the camera in a Simulator. Still to do: recover an upload that finished after the app was killed; one Swift 6 metatype warning on the PhotosPicker label helper."
+
+  - title: "In-app leftovers that still point at the web"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "Change password, manage passkeys, league settings and resetting the invite link (admin), editing a round's categories before the first post. Each screen says so rather than hiding it."
+
+  - title: "CI for this repo"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "`make test` (Core) runs anywhere Swift does. Building the app needs a macOS runner with Xcode 27. Also worth a drift check: `make api && make tokens`, then `git diff --exit-code`."
 
   - title: "Milestone 0b: the app on Ryan's phone"
     status: blocked

@@ -1,0 +1,11 @@
+Target dependency graph (4 targets)
+Target 'AllIncludingTests' in project 'Aggregate'
+➜ Explicit dependency on target 'FantasyCatCoreTests-product' in project 'FantasyCatCore'
+➜ Dependency on target 'FantasyCatCoreTests-product' in project 'FantasyCatCore' via transitive dependency through 'FantasyCatCoreTests-test-runner'
+➜ Explicit dependency on target 'FantasyCatCore-product' in project 'FantasyCatCore'
+➜ Explicit dependency on target 'FantasyCatCore' in project 'FantasyCatCore'
+Target 'FantasyCatCore-product' in project 'FantasyCatCore'
+➜ Explicit dependency on target 'FantasyCatCore' in project 'FantasyCatCore'
+Target 'FantasyCatCoreTests-product' in project 'FantasyCatCore'
+➜ Explicit dependency on target 'FantasyCatCore' in project 'FantasyCatCore'
+Target 'FantasyCatCore' in project 'FantasyCatCore' (no dependencies)

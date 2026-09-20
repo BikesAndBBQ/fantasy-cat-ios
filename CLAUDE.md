@@ -53,8 +53,9 @@ re-implements a rule; it asks the API.
   the spec is regenerated. Don't work around a missing endpoint in the client.
 - **Verify, don't assume:** `make build`, then run it in the Simulator and
   look: `make shot THEME=light OUT=.dev/x.png` builds, installs, launches and
-  screenshots (then Read the PNG; check both themes). `make test` once there
-  is a test target. The Simulator
+  screenshots (then Read the PNG; check both themes). `make test` runs the pure logic in `Core/`
+  (a local Swift package: dates, trim arithmetic, invite parsing) in seconds
+  with no Simulator; put new logic that doesn't need UIKit there, with a test. The Simulator
   has no camera and an empty photo library, so anything touching Photos, the
   camera, passkeys or push must also be checked on a real phone, by Ryan, and
   the summary must say which was done.

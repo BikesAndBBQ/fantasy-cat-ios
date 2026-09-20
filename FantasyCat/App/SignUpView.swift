@@ -1,3 +1,4 @@
+import FantasyCatCore
 import SwiftUI
 
 struct SignUpView: View {
@@ -50,7 +51,7 @@ struct SignUpView: View {
         busy = true
         failure = nil
         let code = invite.trimmingCharacters(in: .whitespacesAndNewlines)
-        let inviteCode = code.isEmpty ? nil : (URL(string: code).flatMap { $0.scheme != nil ? $0.pathComponents.last : nil } ?? code).lowercased()
+        let inviteCode = code.isEmpty ? nil : Invite.code(from: code)
         Task {
             do {
                 try await model.signUp(name: name.trimmingCharacters(in: .whitespaces), username: username.trimmingCharacters(in: .whitespaces),

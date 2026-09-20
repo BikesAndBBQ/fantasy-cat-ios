@@ -1,3 +1,4 @@
+import FantasyCatCore
 import AVFoundation
 import SwiftUI
 
@@ -54,8 +55,6 @@ struct TrimBar: View {
         .accessibilityElement(children: .contain)
     }
 
-    private enum End { case start, end }
-
     /// 44 pt wide to catch a thumb; the visible grip is the 14 pt bar in its middle.
     private func handle(leading: Bool) -> some View {
         ZStack {
@@ -76,28 +75,18 @@ struct TrimBar: View {
         }
     }
 
-    private func drag(_ end: End, width: CGFloat) -> some Gesture {
+    private func drag(_ end: Clip.End, width: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("trim")).onChanged { g in
             move(end, to: Double(g.location.x / max(width, 1)) * duration)
         }
     }
 
-    private func move(_ end: End, to t: Double) {
-        let t = (min(duration, max(0, t)) * 10).rounded() / 10
-        var lo = range.lowerBound, hi = range.upperBound
-        switch end {
-        case .start:
-            lo = min(t, hi - Clip.minSeconds)
-            hi = min(hi, lo + Clip.maxSeconds)
-        case .end:
-            hi = max(t, lo + Clip.minSeconds)
-            lo = max(lo, hi - Clip.maxSeconds)
-        }
-        range = max(0, lo)...min(duration, hi)
-        scrub(end == .start ? lo : hi)
+    private func move(_ end: Clip.End, to t: Double) {
+        range = Clip.move(range, end, to: t, duration: duration)
+        scrub(end == .start ? range.lowerBound : range.upperBound)
     }
 
-    private func clock(_ t: Double) -> String { String(format: "%d:%04.1f", Int(t) / 60, t.truncatingRemainder(dividingBy: 60)) }
+    private func clock(_ t: Double) -> String { TimeText.clock(t) }
 
     private func loadFrames() async {
         frames = []

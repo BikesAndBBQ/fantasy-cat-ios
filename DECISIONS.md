@@ -253,3 +253,19 @@ the web's dot means.
 The server's allocation type was anonymous and generated as
 `Components.Schemas.Item`; it's now `BallotAllocation` there (spec only, the
 wire format didn't change).
+
+## I11 — Tests live in a package, not a test target (2026-09-20)
+
+A unit-test target has to be built into `project.pbxproj` by hand (a native
+target, its phases and configurations, a dependency and proxy, the scheme's
+testables): the most fragile edit an agent can make to that file, and the
+tests would then need a Simulator to run. Instead the app's pure logic lives
+in `Core/`, a local Swift package the app imports: Go's timestamp shapes, the
+countdown and deadline text, the trim handles' arithmetic, invite-link
+parsing. `make test` is `swift test` there: twelve tests in a few
+milliseconds on the Mac.
+
+The rule that follows: logic that needs only Foundation goes in `Core/` with a
+test; what's left in the app target is UI and I/O, which is checked by running
+it and looking (`make shot`). The app had its own copies of all four pieces;
+they were deleted, so there is one implementation and it is the tested one.

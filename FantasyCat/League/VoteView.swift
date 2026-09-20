@@ -1,3 +1,4 @@
+import FantasyCatCore
 import SwiftUI
 
 struct VoteView: View {
