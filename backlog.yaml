@@ -1,0 +1,60 @@
+# Work tracker. Spec: ~/projects/agent-manager/WORK-TRACKING.md
+items:
+  - title: "Install Xcode and point the command line at it"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: |
+      This Mac has only the Command Line Tools, so nothing iOS can be built.
+      App Store -> Xcode (or `xcodes install --latest` if you use xcodes), open
+      it once to accept the licence and let it install the iOS platform and a
+      simulator, then:
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      Check with: xcodebuild -version
+
+  - title: "Apple Developer Program membership, and the Team ID"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: |
+      $99/year at developer.apple.com/programs (individual is fine). Needed for
+      TestFlight, push, and associated domains (passkeys, invite links). A free
+      Apple ID only gets a 7-day build on your own phone. Then sign in to
+      Xcode (Settings -> Accounts) and tell the agent the 10-character Team ID
+      (developer.apple.com/account -> Membership details). It isn't a secret.
+
+  - title: "Give the Agents GitHub PAT access to BikesAndBBQ/fantasy-cat-ios"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: "Same as was done for fantasy-cat on 2026-09-17, including Workflows permission. Until then the agent can commit but not push (origin is SSH and needs Ryan at the Mac)."
+
+  - title: "Register fantasy-cat-ios in agent-manager"
+    status: pending
+    owner: ryan
+    created_at: 2026-09-20
+    note: "registry.yaml entry (path, managed_by, description), then SIGHUP the daemon on :8092. Decide managed_by: CLAUDE.md assumes claude-managed like the server. Kermit's territory; the agent can file the ask."
+
+  - title: "Confirm or overturn the provisional choices in DECISIONS I2"
+    status: pending
+    owner: ryan
+    created_at: 2026-09-20
+    note: "SwiftUI, iOS 18 minimum, XcodeGen, Swift OpenAPI Generator, bundle id co.fantasycat.app, TestFlight. Worth two minutes before milestone 0 builds on them."
+
+  - title: "Milestone 0: toolchain and an empty app on Ryan's phone"
+    status: blocked
+    owner: agent
+    created_at: 2026-09-20
+    note: "Blocked on Xcode. See PLAN.md."
+
+  - title: "Server: bearer-token sessions for native clients"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "DECISIONS I3. Lives in ~/projects/fantasy-cat; can be built and tested before Xcode exists."
+
+  - title: "Server: apple-app-site-association (webcredentials + applinks)"
+    status: blocked
+    owner: agent
+    created_at: 2026-09-20
+    note: "Needs the Team ID."
