@@ -8,6 +8,7 @@ struct PostView: View {
     @State private var selection: PhotosPickerItem?
     @State private var player: AVPlayer?
     @State private var loopObserver: Any?
+    @State private var camera = false
     @Environment(\.dismiss) private var dismiss
 
     init(league: Components.Schemas.LeagueView, category: Int64? = nil) {
@@ -44,6 +45,14 @@ struct PostView: View {
             if old.lowerBound != new.lowerBound, player?.timeControlStatus != .playing { seek(new.lowerBound) }
         }
         .onDisappear { stopPlayer() }
+        .fullScreenCover(isPresented: $camera) {
+            CameraCapture { url in
+                camera = false
+                guard let url else { return }
+                Task { do { model.picked(try await PickedMedia.inspect(url)) } catch { model.pickFailed("That couldn't be read. Try again.") } }
+            }
+            .ignoresSafeArea()
+        }
         .onChange(of: model.stage) { _, s in if case .posted = s { dismiss() } }
     }
 
@@ -63,7 +72,10 @@ struct PostView: View {
                     .coordinateSpace(name: "trim")
                     .disabled(model.busy)
                 }
-                picker { Text("Choose a different one") }.buttonStyle(.fc(size: .sm)).disabled(model.busy)
+                HStack {
+                    picker { Text("Choose a different one") }.buttonStyle(.fc(size: .sm)).disabled(model.busy)
+                    if CameraCapture.isAvailable { Button("Take another") { camera = true }.buttonStyle(.fc(size: .sm)).disabled(model.busy) }
+                }
             }
         } else {
             picker {
@@ -82,6 +94,10 @@ struct PostView: View {
             }
             .buttonStyle(.plain)
             .disabled(model.busy)
+            if CameraCapture.isAvailable {
+                Button { camera = true } label: { Label("Take a photo or video", systemImage: "camera.fill") }
+                    .buttonStyle(.fc(block: true)).disabled(model.busy).accessibilityIdentifier("post-camera")
+            }
         }
     }
 
