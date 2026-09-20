@@ -7,6 +7,8 @@ struct LeagueShell: View {
     @State private var store: LeagueStore
     @State private var tab: Tab
     @State private var account = false
+    @State private var details = false
+    @Environment(AppModel.self) private var model
     let user: Components.Schemas.UserView
     var onLeagues: (() -> Void)?
 
@@ -20,6 +22,7 @@ struct LeagueShell: View {
         let asked = args.firstIndex(of: "-tab").flatMap { args.indices.contains($0 + 1) ? Tab(rawValue: args[$0 + 1]) : nil }
         _tab = State(initialValue: asked ?? .week) // `-tab results`: debug convenience, harmless in release
         _account = State(initialValue: args.contains("-account"))
+        _details = State(initialValue: args.contains("-league"))
     }
 
     var body: some View {
@@ -39,9 +42,10 @@ struct LeagueShell: View {
             }
         }
         .sheet(isPresented: $account) { AccountView(onLeagues: onLeagues) }
+        .sheet(isPresented: $details) { LeagueDetailsView(store: store) { Task { await model.reload() } } }
     }
 
-    private var header: LeagueHeader { LeagueHeader(name: store.league?.name ?? "", avatar: user.avatarUrl.flatMap(URL.init(string:))) { account = true } }
+    private var header: LeagueHeader { LeagueHeader(name: store.league?.name ?? "", avatar: user.avatarUrl.flatMap(URL.init(string:)), openLeague: { details = true }) { account = true } }
 }
 
 /// League name on the left, your face on the right: the top row of every league
@@ -50,11 +54,30 @@ struct LeagueShell: View {
 struct LeagueHeader: View {
     let name: String
     let avatar: URL?
+    var openLeague: () -> Void = {}
+    var showsChevron = false
     let openAccount: () -> Void
+
+    init(name: String, avatar: URL?, openLeague: (() -> Void)? = nil, openAccount: @escaping () -> Void) {
+        self.name = name
+        self.avatar = avatar
+        self.openLeague = openLeague ?? {}
+        showsChevron = openLeague != nil
+        self.openAccount = openAccount
+    }
 
     var body: some View {
         HStack {
-            Eyebrow(name).lineLimit(1)
+            Button(action: openLeague) {
+                HStack(spacing: 4) {
+                    Eyebrow(name).lineLimit(1)
+                    if showsChevron { Image(systemName: "chevron.right").font(.system(size: 9, weight: .bold)).foregroundStyle(Tokens.muted) }
+                }
+                .frame(minHeight: 44).contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .disabled(!showsChevron)
+            .accessibilityLabel(showsChevron ? "\(name), league details" : name)
             Spacer()
             Button(action: openAccount) { Avatar(url: avatar, size: .sm).frame(width: 30, height: 30).scaleEffect(30 / 26) }
                 .frame(width: 44, height: 44, alignment: .trailing).contentShape(Rectangle())
