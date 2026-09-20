@@ -62,6 +62,31 @@ final class AppModel {
         if case .ok(let ok) = try? await API.client.me(.init()), let me = try? ok.body.json { apply(me) }
     }
 
+    func signUp(name: String, username: String, email: String, password: String, reminders: Bool, invite: String?) async throws(Failure) {
+        do {
+            let body = Components.Schemas.SignupInputBody(displayName: name, email: email, inviteCode: invite, notifyEmail: reminders, password: password, username: username)
+            switch try await API.client.signup(body: .json(body)) {
+            case .created(let c):
+                let out = try c.body.json
+                guard let token = out.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
+                Keychain.token = token
+                phase = .signedIn(out.user, leagues: out.leagues ?? [])
+            case .default(let status, let problem):
+                throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch { throw Failure.from(error) }
+    }
+
+    /// Always "sent", whether or not the address has an account: the server doesn't say, and neither do we.
+    func forgotPassword(email: String) async throws(Failure) {
+        do {
+            switch try await API.client.forgotPassword(body: .json(.init(email: email))) {
+            case .noContent: return
+            case .default(let status, let problem): throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch { throw Failure.from(error) }
+    }
+
     /// Whether the server offers Google at all (it's configuration there).
     private(set) var googleAvailable = false
     func loadProviders() async {

@@ -7,6 +7,7 @@ import SwiftUI
 /// the associated-domains entitlement, which needs the paid developer team.
 struct SignInView: View {
     @Environment(AppModel.self) private var model
+    var go: (AuthFlow.Screen) -> Void = { _ in }
     @State private var login = ""
     @State private var password = ""
     @State private var busy = false
@@ -54,8 +55,10 @@ struct SignInView: View {
                         .disabled(!canSubmit || busy)
                         .accessibilityIdentifier("signin-submit")
                 }
-                Text("New here? Create your account at fantasycat.co for now; sign-up in the app is on its way.")
-                    .type(.small).foregroundStyle(Tokens.muted)
+                VStack(alignment: .leading, spacing: 0) {
+                    AuthFooterLink(lead: "New here?", action: "Create an account") { go(.signUp) }
+                    AuthFooterLink(lead: "Locked out?", action: "Forgot password") { go(.forgot) }
+                }
             }
             .padding(24)
             .padding(.top, 40)
@@ -121,5 +124,25 @@ struct GoogleMark: View {
             ctx.fill(Path(CGRect(x: 9 * s, y: 7.5 * s, width: 8.1 * s, height: 3.1 * s)), with: .color(Color(red: 0.26, green: 0.52, blue: 0.96)))
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// The signed-out screens and the way between them.
+struct AuthFlow: View {
+    enum Screen { case signIn, signUp, forgot }
+    @State private var screen: Screen = {
+        let args = ProcessInfo.processInfo.arguments
+        return args.contains("-autosignup") ? .signUp : args.contains("-forgot") ? .forgot : .signIn // debug conveniences
+    }()
+
+    var body: some View {
+        Group {
+            switch screen {
+            case .signIn: SignInView { screen = $0 }
+            case .signUp: SignUpView { screen = .signIn }
+            case .forgot: ForgotPasswordView { screen = .signIn }
+            }
+        }
+        .animation(.easeOut(duration: 0.18), value: screen)
     }
 }

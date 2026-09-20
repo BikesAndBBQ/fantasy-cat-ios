@@ -55,7 +55,15 @@ struct Failure: Error, Equatable {
     var message: String
 
     static func from(status: Int, _ problem: Components.Schemas.ErrorModel?) -> Failure {
-        Failure(status: status, message: problem?.detail ?? problem?.title ?? "Something went wrong (\(status)).")
+        var message = problem?.detail ?? problem?.title ?? "Something went wrong (\(status))."
+        // Validation failures arrive as a bland summary plus the useful part per field.
+        let fields = (problem?.errors ?? []).compactMap { e -> String? in
+            guard let m = e.message, !m.isEmpty else { return nil }
+            let name = e.location?.split(separator: ".").last.map { $0.replacingOccurrences(of: "_", with: " ") }
+            return name.map { "\($0.prefix(1).uppercased() + $0.dropFirst()): \(m)" } ?? m
+        }
+        if !fields.isEmpty, status == 422 || message.lowercased().contains("validation") { message = fields.joined(separator: "\n") }
+        return Failure(status: status, message: message)
     }
     static func from(_ error: any Error) -> Failure {
         if let f = error as? Failure { return f }

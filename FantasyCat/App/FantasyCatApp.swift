@@ -29,7 +29,7 @@ struct RootView: View {
             case .starting:
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity).background(PageBackground())
             case .signedOut:
-                SignInView()
+                AuthFlow()
             case .signedIn(let user, let leagues):
                 HomeView(user: user, leagues: leagues)
             }
