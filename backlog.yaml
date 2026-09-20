@@ -158,13 +158,16 @@ items:
     owner: ryan
     created_at: 2026-09-20
     note: |
-      Needs the Apple Developer membership to show as active (renewal paid
-      2026-09-20, Apple says up to 48 h) and the Team ID. Then in Xcode:
-      Settings -> Accounts -> add the Apple ID; open FantasyCat.xcodeproj ->
-      target FantasyCat -> Signing & Capabilities -> pick the team; plug in the
-      phone, enable Developer Mode on it (Settings -> Privacy & Security), and
-      Run. Tell the agent the Team ID so it can go in the project file and the
-      server's app-site-association.
+      Signing works (2026-09-20): team Y837X7M3W4 "Ryan OLSON (Personal Team)",
+      the free tier, set in the project; Debug builds are co.fantasycat.app.dev
+      ("Cat League Dev") so the free team never claims the real bundle id. A
+      generic device build succeeds and is signed. What's left is on the phone:
+      1. Settings -> Privacy & Security -> Developer Mode -> on (it restarts).
+      2. Run from Xcode, or `make device`.
+      3. First launch: Settings -> General -> VPN & Device Management -> trust
+         the developer certificate.
+      Free-tier builds expire after 7 days. When the paid membership is active,
+      swap DEVELOPMENT_TEAM for the paid team's id.
 
   - title: "CI: build and test on a macOS runner"
     status: pending

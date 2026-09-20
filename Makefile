@@ -1,13 +1,13 @@
 # One command each, so neither a person nor an agent has to remember xcodebuild's flags.
 SCHEME  := FantasyCat
-BUNDLE  := co.fantasycat.app
+BUNDLE  := co.fantasycat.app.dev
 SIM     ?= iPhone 18 Pro
 DERIVED := build
 APP     := $(DERIVED)/Build/Products/Debug-iphonesimulator/$(SCHEME).app
 THEME   ?= dark
 XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination 'platform=iOS Simulator,name=$(SIM)' -derivedDataPath $(DERIVED)
 
-.PHONY: build test run shot tokens api console clean
+.PHONY: build test run shot tokens api console device clean
 
 build: ## compile for the Simulator; warnings are printed, errors fail
 	@$(XCB) -quiet build
@@ -40,6 +40,12 @@ console: build ## run in the Simulator with the app's print() output in this ter
 	@xcrun simctl install '$(SIM)' $(APP)
 	@xcrun simctl terminate '$(SIM)' $(BUNDLE) 2>/dev/null || true
 	@xcrun simctl launch --console-pty '$(SIM)' $(BUNDLE) $(ARGS)
+
+DEVICE ?= Ryans Phone
+device: ## build, install and launch on a connected iPhone (Developer Mode on, device trusted): make device [DEVICE='Name']
+	@xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -configuration Debug -destination 'platform=iOS,name=$(DEVICE)' -derivedDataPath build-device -allowProvisioningUpdates -quiet build
+	@xcrun devicectl device install app --device '$(DEVICE)' build-device/Build/Products/Debug-iphoneos/$(SCHEME).app
+	@xcrun devicectl device process launch --device '$(DEVICE)' $(BUNDLE)
 
 clean:
 	@rm -r $(DERIVED) 2>/dev/null || true
