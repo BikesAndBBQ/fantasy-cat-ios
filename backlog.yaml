@@ -70,11 +70,23 @@ items:
       session (logout 204) and the next launch asks again. Found and fixed on
       the way: Go's fractional-second timestamps failed to decode.
 
-  - title: "Milestone 2b: passkeys, Google, sign-up, password reset"
+  - title: "Milestone 2b: Google sign-in"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
-    note: "Passkeys and password AutoFill from the iCloud keychain need the associated-domains entitlement, which needs the Team ID. Google needs the server-side handoff (server backlog). Sign-up and reset are unblocked and can go any time."
+    note: |
+      Built and deployed 2026-09-20 (server D38): "Continue with Google" runs
+      the web flow in the system sign-in sheet and trades a one-time code for a
+      session. Server side is tested, including a stolen code; production
+      accepts the challenge and refuses a made-up code. The Google leg needs a
+      person: Ryan to sign in once, in the Simulator (`open -a Simulator`, then
+      `make run`) or on the phone, and say whether he lands in his league.
+
+  - title: "Milestone 2c: passkeys, sign-up, password reset in the app"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: "Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID. Sign-up and password reset are unblocked."
 
   - title: "A unit test target"
     status: pending
