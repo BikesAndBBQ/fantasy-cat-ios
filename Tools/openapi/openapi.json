@@ -478,7 +478,8 @@
             "type": "string"
           },
           "current_round": {
-            "$ref": "#/components/schemas/RoundView"
+            "$ref": "#/components/schemas/RoundView",
+            "description": "Absent before a league's first round exists."
           },
           "invite_code": {
             "type": "string"
@@ -539,8 +540,7 @@
           "vote_budget",
           "vote_max_per_submission",
           "invite_code",
-          "members",
-          "current_round"
+          "members"
         ],
         "type": "object"
       },
@@ -801,7 +801,8 @@
             "type": "string"
           },
           "photo": {
-            "$ref": "#/components/schemas/MediaView"
+            "$ref": "#/components/schemas/MediaView",
+            "description": "Absent until the cat has a picture."
           },
           "species": {
             "type": "string"
@@ -811,7 +812,6 @@
           "id",
           "name",
           "species",
-          "photo",
           "created_at"
         ],
         "type": "object"

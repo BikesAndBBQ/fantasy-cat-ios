@@ -918,8 +918,10 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/LeagueView/$schema`.
             internal var _dollar_schema: Swift.String?
+            /// Absent before a league's first round exists.
+            ///
             /// - Remark: Generated from `#/components/schemas/LeagueView/current_round`.
-            internal var currentRound: Components.Schemas.RoundView
+            internal var currentRound: Components.Schemas.RoundView?
             /// - Remark: Generated from `#/components/schemas/LeagueView/invite_code`.
             internal var inviteCode: Swift.String
             /// - Remark: Generated from `#/components/schemas/LeagueView/is_admin`.
@@ -948,7 +950,7 @@ extension Components {
             ///
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
-            ///   - currentRound:
+            ///   - currentRound: Absent before a league's first round exists.
             ///   - inviteCode:
             ///   - isAdmin:
             ///   - members:
@@ -961,7 +963,7 @@ extension Components {
             ///   - voteMaxPerSubmission: Null means no per-post limit.
             internal init(
                 _dollar_schema: Swift.String? = nil,
-                currentRound: Components.Schemas.RoundView,
+                currentRound: Components.Schemas.RoundView? = nil,
                 inviteCode: Swift.String,
                 isAdmin: Swift.Bool,
                 members: [Components.Schemas.MemberView]? = nil,
@@ -1006,7 +1008,7 @@ extension Components {
                     Swift.String.self,
                     forKey: ._dollar_schema
                 )
-                self.currentRound = try container.decode(
+                self.currentRound = try container.decodeIfPresent(
                     Components.Schemas.RoundView.self,
                     forKey: .currentRound
                 )
@@ -1527,8 +1529,10 @@ extension Components {
             internal var id: Swift.Int64
             /// - Remark: Generated from `#/components/schemas/PetView/name`.
             internal var name: Swift.String
+            /// Absent until the cat has a picture.
+            ///
             /// - Remark: Generated from `#/components/schemas/PetView/photo`.
-            internal var photo: Components.Schemas.MediaView
+            internal var photo: Components.Schemas.MediaView?
             /// - Remark: Generated from `#/components/schemas/PetView/species`.
             internal var species: Swift.String
             /// Creates a new `PetView`.
@@ -1538,14 +1542,14 @@ extension Components {
             ///   - createdAt:
             ///   - id:
             ///   - name:
-            ///   - photo:
+            ///   - photo: Absent until the cat has a picture.
             ///   - species:
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 createdAt: Foundation.Date,
                 id: Swift.Int64,
                 name: Swift.String,
-                photo: Components.Schemas.MediaView,
+                photo: Components.Schemas.MediaView? = nil,
                 species: Swift.String
             ) {
                 self._dollar_schema = _dollar_schema
@@ -1581,7 +1585,7 @@ extension Components {
                     Swift.String.self,
                     forKey: .name
                 )
-                self.photo = try container.decode(
+                self.photo = try container.decodeIfPresent(
                     Components.Schemas.MediaView.self,
                     forKey: .photo
                 )

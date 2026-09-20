@@ -82,6 +82,38 @@ items:
     created_at: 2026-09-20
     note: "There is none yet, so `make test` has nothing to run. First tests: ServerDateTranscoder (the bug that broke sign-in), Failure mapping. Needs a test target added to project.pbxproj by hand."
 
+  - title: "Milestone 4a: post a photo or video (pipeline and screen)"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    note: |
+      PhotosPicker asking for the original file (`.current`, no H.264
+      conversion), with progress and real errors; on-device trim and 1080p HEVC
+      export of only the kept part; background-URLSession upload; submit via
+      the generated client. Trim bar mirrors the web's. Verified in the
+      Simulator against ./dev.sh with `-autopost`: a 40 s clip trimmed to 1-3 s
+      arrived and the server made a 2000 ms video; a real iPhone HEIC posted.
+      Both themes looked at. NOT verified, because the Simulator can't: the
+      picker itself, an iCloud original downloading, a long 4K video, leaving
+      the app mid-upload.
+
+  - title: "Milestone 4b: try posting on a real phone"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: |
+      The reason this app exists, and only a phone can prove it. A free Apple
+      ID is enough for this (Personal Team, 7-day build); no paid membership
+      needed. Try: a short video, the long video that failed on the web, a
+      video that lives in iCloud, a photo, and leaving the app while it uploads.
+
+  - title: "Post: remaining pieces"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "Take a photo or video with the camera (needs a device and a usage string). Recover an upload that finished after the app was killed. One Swift 6 metatype warning on the PhotosPicker label helper. Unit tests for the trim arithmetic."
+
   - title: "Milestone 0b: the app on Ryan's phone"
     status: blocked
     owner: ryan

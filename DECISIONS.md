@@ -154,3 +154,35 @@ failures now print in debug builds (`make console`) instead of vanishing into
 `-signout`, `-gallery`) exist because an agent can't tap the Simulator. They
 drive the same code a person's tap does, and are compiled out of release
 builds.
+
+## I7 — Posting: the phone does the cutting (2026-09-20)
+
+On the web the whole original is uploaded and the server trims it, because a
+browser can't re-encode video. That is exactly what breaks for long videos:
+Safari converts the file first and gives up silently (server D34), and 100 MB
+is not much 4K. Here the order is reversed:
+
+1. **`PhotosPicker` with `preferredItemEncoding: .current`**: Photos hands
+   over the file as it is. No H.264 conversion, which was the step that failed.
+   It reports progress (an iCloud original downloading) and a real error.
+   The file arrives by `FileRepresentation`, never as `Data`, so size doesn't
+   matter to memory.
+2. **The kept part is exported on the phone**: `AVAssetExportSession`, 1080p
+   HEVC, the chosen time range only, location metadata filtered out. Exact to
+   the frame, and at most thirty seconds ever crosses the network, so the
+   server's 100 MB cap and its `/media/{id}/trim` endpoint aren't needed by
+   this client. Photos go up untouched (the server already handles HEIC).
+3. **Upload in a background `URLSession`**, so it completes if the person
+   leaves the app. `POST /api/media` is the one hand-written request: it's a
+   streamed multipart body the OpenAPI spec deliberately doesn't describe.
+4. **Submit** through the generated client.
+
+Found on the way, fixed in the server repo: the spec said a league's
+`current_round` and a cat's `photo` were required and non-null while the
+server sends null for both. TypeScript shrugged; Swift wouldn't compile
+`currentRound?`, and at runtime would have failed to decode a league before
+its first round.
+
+What the Simulator could and couldn't show is in the backlog. The honest
+status of this milestone is "works end to end from a file; unproven from the
+photo library", and only Ryan's phone changes that.
