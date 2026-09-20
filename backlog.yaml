@@ -23,11 +23,11 @@ items:
       Xcode (Settings -> Accounts) and tell the agent the 10-character Team ID
       (developer.apple.com/account -> Membership details). It isn't a secret.
 
-  - title: "Give the Agents GitHub PAT access to BikesAndBBQ/fantasy-cat-ios"
-    status: blocked
+  - title: "Agents GitHub PAT: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
+    status: pending
     owner: ryan
     created_at: 2026-09-20
-    note: "Same as was done for fantasy-cat on 2026-09-17, including Workflows permission. Until then the agent can commit but not push (origin is SSH and needs Ryan at the Mac)."
+    note: "Pushing already works (verified 2026-09-20). The first push that adds .github/workflows/ will be refused unless the PAT has Workflows permission on this repo, as it was on fantasy-cat. Check once; not urgent until milestone 0."
 
   - title: "Register fantasy-cat-ios in agent-manager"
     status: pending
