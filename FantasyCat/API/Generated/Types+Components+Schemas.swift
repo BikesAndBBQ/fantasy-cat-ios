@@ -12,6 +12,61 @@ import struct Foundation.Date
 extension Components {
     /// Types generated from the `#/components/schemas` section of the OpenAPI document.
     internal enum Schemas {
+        /// - Remark: Generated from `#/components/schemas/AppExchangeInputBody`.
+        internal struct AppExchangeInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppExchangeInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// The code from the fantasycat:// callback.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppExchangeInputBody/code`.
+            internal var code: Swift.String
+            /// The secret whose SHA-256 was sent as app_challenge when the sign-in started.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppExchangeInputBody/verifier`.
+            internal var verifier: Swift.String
+            /// Creates a new `AppExchangeInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - code: The code from the fantasycat:// callback.
+            ///   - verifier: The secret whose SHA-256 was sent as app_challenge when the sign-in started.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                code: Swift.String,
+                verifier: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.code = code
+                self.verifier = verifier
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case code
+                case verifier
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.code = try container.decode(
+                    Swift.String.self,
+                    forKey: .code
+                )
+                self.verifier = try container.decode(
+                    Swift.String.self,
+                    forKey: .verifier
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "code",
+                    "verifier"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/BallotAllocation`.
         internal struct BallotAllocation: Codable, Hashable, Sendable {
             /// How many of the budget go to this post. Leave a post out to give it none.

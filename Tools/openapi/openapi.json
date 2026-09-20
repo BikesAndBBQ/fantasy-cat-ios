@@ -1,6 +1,37 @@
 {
   "components": {
     "schemas": {
+      "AppExchangeInputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/AppExchangeInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "code": {
+            "description": "The code from the fantasycat:// callback.",
+            "maxLength": 200,
+            "minLength": 20,
+            "type": "string"
+          },
+          "verifier": {
+            "description": "The secret whose SHA-256 was sent as app_challenge when the sign-in started.",
+            "maxLength": 128,
+            "minLength": 43,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "verifier"
+        ],
+        "type": "object"
+      },
       "BallotAllocation": {
         "additionalProperties": false,
         "properties": {
@@ -1732,6 +1763,64 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/auth/app/exchange": {
+      "post": {
+        "description": "Start with GET /auth/google/start?app_challenge=\u003cbase64url(SHA-256(verifier))\u003e. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.",
+        "operationId": "exchangeAppLogin",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "User-Agent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppExchangeInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionBody"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Finish a browser sign-in started by the native app",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/forgot": {
       "post": {
         "description": "Always answers 204, whether or not the address has an account.",

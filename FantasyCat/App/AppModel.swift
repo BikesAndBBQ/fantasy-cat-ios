@@ -52,6 +52,29 @@ final class AppModel {
         }
     }
 
+    /// Whether the server offers Google at all (it's configuration there).
+    private(set) var googleAvailable = false
+    func loadProviders() async {
+        if case .ok(let ok) = try? await API.client.authProviders(.init()), let body = try? ok.body.json { googleAvailable = body.google }
+    }
+
+    func signInWithGoogle() async throws(Failure) {
+        let handoff = try await GoogleSignIn().run()
+        do {
+            switch try await API.client.exchangeAppLogin(body: .json(.init(code: handoff.code, verifier: handoff.verifier))) {
+            case .ok(let ok):
+                let body = try ok.body.json
+                guard let token = body.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
+                Keychain.token = token
+                phase = .signedIn(body.user, leagues: body.leagues ?? [])
+            case .default(let status, let problem):
+                throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch {
+            throw Failure.from(error)
+        }
+    }
+
     func signOut() async {
         _ = try? await API.client.logout(.init()) // best effort: the local token goes either way
         Keychain.token = nil

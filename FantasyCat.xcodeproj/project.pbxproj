@@ -256,8 +256,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y837X7M3W4;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y837X7M3W4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cat League Dev";
@@ -294,8 +294,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y837X7M3W4;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y837X7M3W4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cat League";

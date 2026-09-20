@@ -11,6 +11,13 @@ import struct Foundation.Date
 #endif
 /// A type that performs HTTP operations defined by the OpenAPI document.
 internal protocol APIProtocol: Sendable {
+    /// Finish a browser sign-in started by the native app
+    ///
+    /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
+    ///
+    /// - Remark: HTTP `POST /auth/app/exchange`.
+    /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)`.
+    func exchangeAppLogin(_ input: Operations.ExchangeAppLogin.Input) async throws -> Operations.ExchangeAppLogin.Output
     /// Email a password reset link
     ///
     /// Always answers 204, whether or not the address has an account.
@@ -211,6 +218,21 @@ internal protocol APIProtocol: Sendable {
 
 /// Convenience overloads for operation inputs.
 extension APIProtocol {
+    /// Finish a browser sign-in started by the native app
+    ///
+    /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
+    ///
+    /// - Remark: HTTP `POST /auth/app/exchange`.
+    /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)`.
+    internal func exchangeAppLogin(
+        headers: Operations.ExchangeAppLogin.Input.Headers = .init(),
+        body: Operations.ExchangeAppLogin.Input.Body
+    ) async throws -> Operations.ExchangeAppLogin.Output {
+        try await exchangeAppLogin(Operations.ExchangeAppLogin.Input(
+            headers: headers,
+            body: body
+        ))
+    }
     /// Email a password reset link
     ///
     /// Always answers 204, whether or not the address has an account.

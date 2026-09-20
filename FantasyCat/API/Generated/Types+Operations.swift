@@ -11,6 +11,208 @@ import struct Foundation.Date
 #endif
 /// API operations, with input and output types, generated from `#/paths` in the OpenAPI document.
 internal enum Operations {
+    /// Finish a browser sign-in started by the native app
+    ///
+    /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
+    ///
+    /// - Remark: HTTP `POST /auth/app/exchange`.
+    /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)`.
+    internal enum ExchangeAppLogin {
+        internal static let id: Swift.String = "exchangeAppLogin"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/auth/app/exchange/POST/header`.
+            internal struct Headers: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/auth/app/exchange/POST/header/User-Agent`.
+                internal var userAgent: Swift.String?
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.ExchangeAppLogin.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - userAgent:
+                ///   - accept:
+                internal init(
+                    userAgent: Swift.String? = nil,
+                    accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.ExchangeAppLogin.AcceptableContentType>] = .defaultValues()
+                ) {
+                    self.userAgent = userAgent
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.ExchangeAppLogin.Input.Headers
+            /// - Remark: Generated from `#/paths/auth/app/exchange/POST/requestBody`.
+            internal enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/auth/app/exchange/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.AppExchangeInputBody)
+            }
+            internal var body: Operations.ExchangeAppLogin.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            ///   - body:
+            internal init(
+                headers: Operations.ExchangeAppLogin.Input.Headers = .init(),
+                body: Operations.ExchangeAppLogin.Input.Body
+            ) {
+                self.headers = headers
+                self.body = body
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/200/headers`.
+                internal struct Headers: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/200/headers/Set-Cookie`.
+                    internal var setCookie: Swift.String?
+                    /// Creates a new `Headers`.
+                    ///
+                    /// - Parameters:
+                    ///   - setCookie:
+                    internal init(setCookie: Swift.String? = nil) {
+                        self.setCookie = setCookie
+                    }
+                }
+                /// Received HTTP response headers
+                internal var headers: Operations.ExchangeAppLogin.Output.Ok.Headers
+                /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.SessionBody)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.SessionBody {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.ExchangeAppLogin.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - headers: Received HTTP response headers
+                ///   - body: Received HTTP response body
+                internal init(
+                    headers: Operations.ExchangeAppLogin.Output.Ok.Headers = .init(),
+                    body: Operations.ExchangeAppLogin.Output.Ok.Body
+                ) {
+                    self.headers = headers
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.ExchangeAppLogin.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.ExchangeAppLogin.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/auth/app/exchange/POST/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.ExchangeAppLogin.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.ExchangeAppLogin.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.ExchangeAppLogin.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.ExchangeAppLogin.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
     /// Email a password reset link
     ///
     /// Always answers 204, whether or not the address has an account.
