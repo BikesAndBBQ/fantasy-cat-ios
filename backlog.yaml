@@ -161,6 +161,19 @@ items:
       needed. Try: a short video, the long video that failed on the web, a
       video that lives in iCloud, a photo, and leaving the app while it uploads.
 
+  - title: "Trim bar: precise on a long video"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: |
+      Ryan, on his phone: on a two minute video the kept 30 seconds is a small
+      slice of the strip, so dragging the ends is imprecise. "Operable, leave
+      it in the backlog." Options: show a zoomed strip around the selection
+      (what Photos does: the strip is the selection's neighbourhood, not the
+      whole video); slow the drag when the finger moves away vertically; +/-
+      0.1 s nudge buttons by each handle. The arithmetic is in Core/Clip.swift
+      and is tested, so only the view changes.
+
   - title: "Post: remaining pieces"
     status: pending
     owner: agent
