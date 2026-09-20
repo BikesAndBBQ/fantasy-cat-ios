@@ -6,6 +6,11 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FC0000000000000000000C01 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = FC0000000000000000000B01 /* OpenAPIRuntime */; };
+		FC0000000000000000000C02 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = FC0000000000000000000B02 /* OpenAPIURLSession */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* FantasyCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FantasyCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -22,6 +27,8 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				FC0000000000000000000C01 /* OpenAPIRuntime in Frameworks */,
+				FC0000000000000000000C02 /* OpenAPIURLSession in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -60,7 +67,11 @@
 				000000000000000000000010 /* FantasyCat */,
 			);
 			name = FantasyCat;
-			productName = MyApp;
+			packageProductDependencies = (
+				FC0000000000000000000B01 /* OpenAPIRuntime */,
+				FC0000000000000000000B02 /* OpenAPIURLSession */,
+			);
+			productName = FantasyCat;
 			productReference = 000000000000000000000120 /* FantasyCat.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -88,6 +99,10 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FC0000000000000000000A01 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
+				FC0000000000000000000A02 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -267,7 +282,6 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
@@ -305,7 +319,6 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
@@ -333,6 +346,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC0000000000000000000A01 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-runtime";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.0;
+			};
+		};
+		FC0000000000000000000A02 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-urlsession";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC0000000000000000000B01 /* OpenAPIRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC0000000000000000000A01 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;
+			productName = OpenAPIRuntime;
+		};
+		FC0000000000000000000B02 /* OpenAPIURLSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC0000000000000000000A02 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */;
+			productName = OpenAPIURLSession;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }

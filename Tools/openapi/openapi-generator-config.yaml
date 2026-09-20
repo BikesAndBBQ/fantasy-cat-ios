@@ -1,0 +1,7 @@
+# Types and a client; no server stubs. `internal` keeps the generated API out
+# of any module's public surface.
+generate:
+  - types
+  - client
+accessModifier: internal
+namingStrategy: idiomatic

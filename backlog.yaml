@@ -56,6 +56,32 @@ items:
     done_at: 2026-09-20
     note: "Tokens.swift is generated (`make tokens`) from the server repo's design/tokens.resolved.json, which that repo checks against Chrome's rendering. Three OFL typefaces bundled and registered at launch; TypeStyle scales with Dynamic Type. Button, Eyebrow, PageTitle, Chip, Card, Banner, FCField, Avatar, Rosette, PageBackground, plus a gallery (`make shot GALLERY=1`). Verified in the Simulator: both themes, and the largest standard text size."
 
+  - title: "Milestone 2a: generated API client and password sign-in"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    note: |
+      Client generated from the server's openapi.json (`make api`), checked in;
+      the app depends only on the two OpenAPI runtime packages. Bearer session
+      in the Keychain. Verified in the Simulator against ./dev.sh: a wrong
+      password shows the server's sentence; the right one lands on Home; a cold
+      relaunch is still signed in (server saw GET /me 200); sign-out revokes the
+      session (logout 204) and the next launch asks again. Found and fixed on
+      the way: Go's fractional-second timestamps failed to decode.
+
+  - title: "Milestone 2b: passkeys, Google, sign-up, password reset"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-20
+    note: "Passkeys and password AutoFill from the iCloud keychain need the associated-domains entitlement, which needs the Team ID. Google needs the server-side handoff (server backlog). Sign-up and reset are unblocked and can go any time."
+
+  - title: "A unit test target"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "There is none yet, so `make test` has nothing to run. First tests: ServerDateTranscoder (the bug that broke sign-in), Failure mapping. Needs a test target added to project.pbxproj by hand."
+
   - title: "Milestone 0b: the app on Ryan's phone"
     status: blocked
     owner: ryan

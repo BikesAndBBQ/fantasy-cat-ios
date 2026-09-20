@@ -118,3 +118,39 @@ in one JSON file and both apps follow.
 - **A gallery screen** (`-gallery` launch argument) is this app's counterpart of
   the reference page, there to be screenshotted, since an agent can't eyeball a
   SwiftUI preview.
+
+## I6 — The API client: generated on the command line, checked in (2026-09-20)
+
+Swift OpenAPI Generator is normally an Xcode build plugin. That needs a
+"trust this plugin" click nobody is there to make in a headless build, and
+wiring a plugin into `project.pbxproj` by hand is fragile. So `make api` runs
+the generator from a tiny tool package (`Tools/openapi`) and the output is
+committed under `FantasyCat/API/Generated`. The app then depends only on the
+two small runtime packages. Cost: the generated code can go stale against the
+spec; a CI drift check (regenerate, `git diff --exit-code`) is the remedy once
+CI exists.
+
+Settings this forced, both departures from Xcode 27's template:
+- **`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` removed.** With it, every
+  generated type was main-actor-isolated and couldn't be decoded off the main
+  thread. Views are main-actor anyway; models say `@MainActor` themselves.
+- `SWIFT_APPROACHABLE_CONCURRENCY` stays on, which is why the middleware's
+  `next` closure is spelled `@concurrent @Sendable`.
+
+Session handling: `URLSession` has its cookie storage switched off, so the
+Keychain token is the only credential and can't disagree with a cookie jar.
+The token is stored `AfterFirstUnlockThisDeviceOnly`: readable by a
+background upload while the phone is locked, never restored onto another
+device.
+
+**Dates.** Go writes RFC 3339 with however many fractional digits the time
+has, or none. The generated client's default parser takes only the latter, so
+the first real sign-in got a 200 from the server and an error on screen.
+`ServerDateTranscoder` normalises to milliseconds before parsing. Unknown
+failures now print in debug builds (`make console`) instead of vanishing into
+"Something went wrong".
+
+**Debug launch arguments** (`-api <url>`, `-autologin <user> <password>`,
+`-signout`, `-gallery`) exist because an agent can't tap the Simulator. They
+drive the same code a person's tap does, and are compiled out of release
+builds.
