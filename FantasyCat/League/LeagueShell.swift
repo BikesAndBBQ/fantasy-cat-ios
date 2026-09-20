@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// One league: This week, Results, Standings. (Voting joins them in milestone 5.)
+/// One league: This week, Vote, Results, Standings, in the web's order.
 /// A native tab bar rather than a copy of the web's: on iOS that is the
 /// platform's own navigation, and it gets the system's look for free.
 struct LeagueShell: View {
@@ -9,7 +9,7 @@ struct LeagueShell: View {
     @State private var account = false
     let user: Components.Schemas.UserView
 
-    enum Tab: String { case week, results, standings }
+    enum Tab: String { case week, vote, results, standings }
 
     init(slug: String, user: Components.Schemas.UserView) {
         _store = State(initialValue: LeagueStore(slug: slug))
@@ -21,7 +21,9 @@ struct LeagueShell: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            ThisWeekView(store: store, header: header).tabItem { Label("This week", systemImage: "pawprint.fill") }.tag(Tab.week)
+            ThisWeekView(store: store, header: header) { tab = .vote }.tabItem { Label("This week", systemImage: "pawprint.fill") }.tag(Tab.week)
+            VoteView(store: store, header: header).tabItem { Label("Vote", systemImage: "heart.fill") }.tag(Tab.vote)
+                .badge(store.categoriesLeftToVote)
             ResultsView(store: store, header: header).tabItem { Label("Results", systemImage: "rosette") }.tag(Tab.results)
             StandingsView(store: store, header: header).tabItem { Label("Standings", systemImage: "list.number") }.tag(Tab.standings)
         }

@@ -6,6 +6,7 @@ import SwiftUI
 struct GalleryView: View {
     @State private var name = "Totoro"
     @State private var password = ""
+    @State private var votes = 2
 
     var body: some View {
         ScrollView {
@@ -27,6 +28,13 @@ struct GalleryView: View {
                 }
                 section("Chips") {
                     HStack { Chip("Top of the cat tree", tone: .selected); Chip("Sploot"); Chip("admin", tone: .done) }
+                }
+                section("Votes") {
+                    HStack {
+                        Pips(filled: 3, total: 5)
+                        Spacer()
+                        VoteStepper(value: votes, canAdd: votes < 5, label: "Totoro") { votes = $0 }
+                    }
                 }
                 section("Fields") {
                     FCField(label: "Your cat's name", text: $name, help: "You can add more cats later.")

@@ -3,6 +3,7 @@ import SwiftUI
 struct ThisWeekView: View {
     let store: LeagueStore
     let header: LeagueHeader
+    var goVote: () -> Void = {}
     @State private var categoryID: Int64?
     @State private var open: Submission?
     @State private var posting = false
@@ -75,10 +76,17 @@ struct ThisWeekView: View {
             Banner(label: "This round", value: round.status == .voting ? "VOTE" : "FINAL", detail: "Submissions are closed")
         }
         if let voting = store.rounds.first(where: { $0.status == .voting }), voting.number != round.number {
-            Card {
-                (Text("Round \(voting.number) is in voting. ").font(Font(TypeStyle.bodyStrong.uiFont())).foregroundStyle(Tokens.ink)
-                    + Text("Hand out your \(Tokens.votes(5)) on the web for now; voting in the app is next.").font(Font(TypeStyle.body.uiFont())).foregroundStyle(Tokens.muted))
+            Button(action: goVote) {
+                Card {
+                    HStack {
+                        (Text("Round \(voting.number) is in voting. ").font(Font(TypeStyle.bodyStrong.uiFont())).foregroundStyle(Tokens.ink)
+                            + Text("Hand out your \(Tokens.votes(5)).").font(Font(TypeStyle.body.uiFont())).foregroundStyle(Tokens.muted))
+                        Spacer()
+                        Image(systemName: "arrow.right").foregroundStyle(Tokens.muted).accessibilityHidden(true)
+                    }
+                }
             }
+            .buttonStyle(.plain)
         }
         let cats = round.categories ?? []
         ScrollView(.horizontal, showsIndicators: false) {

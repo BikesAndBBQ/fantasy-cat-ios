@@ -234,3 +234,22 @@ answer, the app uses it rather than imitating a web page:
 
 One league goes straight in; several get a chooser; none says where to make
 one. Voting isn't here yet, and the app says so instead of hiding it.
+
+## I10 — Voting (2026-09-20)
+
+Same model as the web, because it's the right one: the allocations on screen
+are the truth while you vote, so a tap never waits for the network, and the
+whole category is saved 600 ms after the last tap (and immediately if you move
+on with a save pending). If the server refuses, the screen falls back to what
+the server has and says why. The stepper disabling itself is a courtesy; the
+budget, the per-post cap and "not your own posts" are enforced by the server,
+and the app never decides whether a ballot is legal.
+
+What the phone adds: a selection haptic on each change, the count rolling
+with a numeric transition, and the newest pip springing in. The tab badge is
+the number of categories where you still have treats to give, which is what
+the web's dot means.
+
+The server's allocation type was anonymous and generated as
+`Components.Schemas.Item`; it's now `BallotAllocation` there (spec only, the
+wire format didn't change).

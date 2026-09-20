@@ -12,6 +12,46 @@ import struct Foundation.Date
 extension Components {
     /// Types generated from the `#/components/schemas` section of the OpenAPI document.
     internal enum Schemas {
+        /// - Remark: Generated from `#/components/schemas/BallotAllocation`.
+        internal struct BallotAllocation: Codable, Hashable, Sendable {
+            /// How many of the budget go to this post. Leave a post out to give it none.
+            ///
+            /// - Remark: Generated from `#/components/schemas/BallotAllocation/points`.
+            internal var points: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/BallotAllocation/submission_id`.
+            internal var submissionId: Swift.Int64
+            /// Creates a new `BallotAllocation`.
+            ///
+            /// - Parameters:
+            ///   - points: How many of the budget go to this post. Leave a post out to give it none.
+            ///   - submissionId:
+            internal init(
+                points: Swift.Int64,
+                submissionId: Swift.Int64
+            ) {
+                self.points = points
+                self.submissionId = submissionId
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case points
+                case submissionId = "submission_id"
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.points = try container.decode(
+                    Swift.Int64.self,
+                    forKey: .points
+                )
+                self.submissionId = try container.decode(
+                    Swift.Int64.self,
+                    forKey: .submissionId
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "points",
+                    "submission_id"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/BallotEntry`.
         internal struct BallotEntry: Codable, Hashable, Sendable {
             /// How many of your votes are on this post.
@@ -771,44 +811,6 @@ extension Components {
                     "admin_name",
                     "league_name",
                     "member_count"
-                ])
-            }
-        }
-        /// - Remark: Generated from `#/components/schemas/Item`.
-        internal struct Item: Codable, Hashable, Sendable {
-            /// - Remark: Generated from `#/components/schemas/Item/points`.
-            internal var points: Swift.Int64
-            /// - Remark: Generated from `#/components/schemas/Item/submission_id`.
-            internal var submissionId: Swift.Int64
-            /// Creates a new `Item`.
-            ///
-            /// - Parameters:
-            ///   - points:
-            ///   - submissionId:
-            internal init(
-                points: Swift.Int64,
-                submissionId: Swift.Int64
-            ) {
-                self.points = points
-                self.submissionId = submissionId
-            }
-            internal enum CodingKeys: String, CodingKey {
-                case points
-                case submissionId = "submission_id"
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.points = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .points
-                )
-                self.submissionId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .submissionId
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "points",
-                    "submission_id"
                 ])
             }
         }
@@ -1730,7 +1732,7 @@ extension Components {
             /// - Remark: Generated from `#/components/schemas/PutBallotInputBody/$schema`.
             internal var _dollar_schema: Swift.String?
             /// - Remark: Generated from `#/components/schemas/PutBallotInputBody/allocations`.
-            internal var allocations: [Components.Schemas.Item]?
+            internal var allocations: [Components.Schemas.BallotAllocation]?
             /// Creates a new `PutBallotInputBody`.
             ///
             /// - Parameters:
@@ -1738,7 +1740,7 @@ extension Components {
             ///   - allocations:
             internal init(
                 _dollar_schema: Swift.String? = nil,
-                allocations: [Components.Schemas.Item]? = nil
+                allocations: [Components.Schemas.BallotAllocation]? = nil
             ) {
                 self._dollar_schema = _dollar_schema
                 self.allocations = allocations
@@ -1754,7 +1756,7 @@ extension Components {
                     forKey: ._dollar_schema
                 )
                 self.allocations = try container.decodeIfPresent(
-                    [Components.Schemas.Item].self,
+                    [Components.Schemas.BallotAllocation].self,
                     forKey: .allocations
                 )
                 try decoder.ensureNoAdditionalProperties(knownKeys: [

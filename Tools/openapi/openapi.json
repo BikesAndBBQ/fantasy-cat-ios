@@ -1,6 +1,26 @@
 {
   "components": {
     "schemas": {
+      "BallotAllocation": {
+        "additionalProperties": false,
+        "properties": {
+          "points": {
+            "description": "How many of the budget go to this post. Leave a post out to give it none.",
+            "format": "int64",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "submission_id": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "submission_id",
+          "points"
+        ],
+        "type": "object"
+      },
       "BallotEntry": {
         "additionalProperties": false,
         "properties": {
@@ -395,25 +415,6 @@
           "league_name",
           "admin_name",
           "member_count"
-        ],
-        "type": "object"
-      },
-      "Item": {
-        "additionalProperties": false,
-        "properties": {
-          "points": {
-            "format": "int64",
-            "minimum": 1,
-            "type": "integer"
-          },
-          "submission_id": {
-            "format": "int64",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "submission_id",
-          "points"
         ],
         "type": "object"
       },
@@ -905,7 +906,7 @@
           },
           "allocations": {
             "items": {
-              "$ref": "#/components/schemas/Item"
+              "$ref": "#/components/schemas/BallotAllocation"
             },
             "maxItems": 200,
             "type": [

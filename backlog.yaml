@@ -115,10 +115,21 @@ items:
       new entry point refreshed the feed by itself.
 
   - title: "Milestone 5: vote in the app"
-    status: pending
+    status: done
     owner: agent
     created_at: 2026-09-20
-    note: "Until then This week tells people to hand out their treats on the web. getBallot / putBallot are already in the generated client."
+    done_at: 2026-09-20
+    note: |
+      Vote tab (badge = categories where you still have treats to give),
+      category progress strip, budget bar with pips, a stepper per post that
+      disables itself at the budget or the per-post cap, a light haptic per
+      change, saved 600 ms after the last tap and flushed when you leave the
+      category; on a refusal it falls back to what the server has. "Nothing to
+      vote on yet" counts down to when voting opens. Verified in the Simulator
+      against ./dev.sh: votes cast through the app were stored (spent 3 of 5:
+      Biscuit 2, Bean 1), came back after a cold relaunch, and the server
+      refuses an over-budget ballot with 422. Haptics can't be felt in a
+      Simulator.
 
   - title: "Account screen in the app"
     status: pending

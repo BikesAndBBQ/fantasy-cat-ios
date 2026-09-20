@@ -37,6 +37,7 @@ struct TypeStyle {
     static let button = TypeStyle(face: .body, size: 15, weight: 600, relativeTo: .callout)
     static let buttonSmall = TypeStyle(face: .body, size: 13.5, weight: 600, relativeTo: .footnote)
     static let eyebrow = TypeStyle(face: .body, size: 11.5, weight: 600, relativeTo: .caption1, tracking: 0.12)
+    static let caption = TypeStyle(face: .body, size: 11.5, weight: 600, relativeTo: .caption1)
     static let score = TypeStyle(face: .score, size: 34, weight: 700, relativeTo: .largeTitle, tracking: 0.02)
     static let scoreSmall = TypeStyle(face: .score, size: 22, weight: 700, relativeTo: .title2, tracking: 0.02)
 
