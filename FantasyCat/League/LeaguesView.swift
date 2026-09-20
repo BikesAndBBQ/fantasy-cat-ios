@@ -32,7 +32,7 @@ struct LeaguesView: View {
                                 Text(league.name).type(.bodyStrong).foregroundStyle(Tokens.ink)
                                 if league.isAdmin { Chip("admin", tone: .done) }
                                 Spacer()
-                                Text("\(league.memberCount) managers").type(.small).foregroundStyle(Tokens.muted)
+                                Text(league.memberCount == 1 ? "1 manager" : "\(league.memberCount) managers").type(.small).foregroundStyle(Tokens.muted)
                             }
                         }
                     }

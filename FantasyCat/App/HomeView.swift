@@ -6,7 +6,10 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     let user: Components.Schemas.UserView
     let leagues: [Components.Schemas.LeagueSummary]
-    @State private var chosen: String?
+    @State private var chosen: String? = {
+        let args = ProcessInfo.processInfo.arguments // debug: `-pickleague <slug>`
+        return args.firstIndex(of: "-pickleague").flatMap { args.indices.contains($0 + 1) ? args[$0 + 1] : nil }
+    }()
     @State private var picking = ProcessInfo.processInfo.arguments.contains("-leagues") // debug: open the chooser
     @State private var account = false
 

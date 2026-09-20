@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// You, your cats, and the way out. The counterpart of the web's /account,
-/// minus what still lives there: changing your password and managing passkeys.
+/// minus what still lives there: managing passkeys.
 struct AccountView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -35,9 +35,11 @@ struct AccountView: View {
                     Divider().overlay(Tokens.line)
                     reminders(user, store)
                     Divider().overlay(Tokens.line)
+                    PasswordSection(hasPassword: user.hasPassword)
+                    Divider().overlay(Tokens.line)
                     VStack(alignment: .leading, spacing: 10) {
                         if let onLeagues { Button("Start or join another league") { dismiss(); onLeagues() }.buttonStyle(.fc(size: .sm)) }
-                        Text("Changing your password and managing passkeys still happen at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
+                        Text("Passkeys are still managed at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
                         Button("Sign out") { Task { dismiss(); await model.signOut() } }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("sign-out")
                     }
                 }
@@ -187,6 +189,40 @@ private struct CatRow: View {
             report(problem)
             if problem == nil { editing = false }
             busy = false
+        }
+    }
+}
+
+private struct PasswordSection: View {
+    @Environment(AppModel.self) private var model
+    let hasPassword: Bool
+    @State private var current = ""
+    @State private var new = ""
+    @State private var busy = false
+    @State private var failure: String?
+    @State private var done = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Eyebrow("Password")
+            if !hasPassword {
+                Text("You sign in with Google or a passkey. Adding a password gives you another way in.").type(.small).foregroundStyle(Tokens.muted)
+            }
+            if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+            if done { Text(hasPassword ? "Password changed." : "Password set.").type(.small).foregroundStyle(Tokens.good) }
+            if hasPassword { FCField(label: "Current password", text: $current, secure: true, contentType: .password) }
+            FCField(label: hasPassword ? "New password" : "Password", text: $new, help: "Ten characters or more.", secure: true, contentType: .newPassword)
+            Button(hasPassword ? "Change password" : "Set a password") {
+                busy = true
+                failure = nil
+                done = false
+                Task {
+                    do { try await model.changePassword(current: hasPassword ? current : nil, new: new); done = true; current = ""; new = "" } catch { failure = Failure.from(error).message }
+                    busy = false
+                }
+            }
+            .buttonStyle(.fc(busy: busy))
+            .disabled(busy || new.count < 10 || (hasPassword && current.isEmpty))
         }
     }
 }

@@ -171,7 +171,7 @@ items:
     status: pending
     owner: agent
     created_at: 2026-09-20
-    note: "Change password, manage passkeys, league settings and resetting the invite link (admin), editing a round's categories before the first post. Each screen says so rather than hiding it."
+    note: "Done 2026-09-20: change or set a password, edit an open round's categories (admin, until the first post), reset the invite link. Still web-only: managing passkeys, and a league's posting limit and vote budget. Each screen says so."
 
   - title: "CI for this repo"
     status: pending

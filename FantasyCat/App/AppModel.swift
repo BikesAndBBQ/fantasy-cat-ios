@@ -77,6 +77,16 @@ final class AppModel {
         } catch { throw Failure.from(error) }
     }
 
+    /// `current` is nil for an account that has no password yet (Google or passkey only).
+    func changePassword(current: String?, new: String) async throws(Failure) {
+        do {
+            switch try await API.client.changePassword(body: .json(.init(currentPassword: current, newPassword: new))) {
+            case .noContent: await reload()
+            case .default(let status, let problem): throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch { throw Failure.from(error) }
+    }
+
     /// Always "sent", whether or not the address has an account: the server doesn't say, and neither do we.
     func forgotPassword(email: String) async throws(Failure) {
         do {

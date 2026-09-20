@@ -95,6 +95,35 @@ final class LeagueStore {
         }
     }
 
+    // MARK: Running the league (admin)
+
+    /// The seed pool, for suggestions while editing categories.
+    private(set) var categoryPool: [String] = []
+    func loadCategoryPool() async {
+        guard categoryPool.isEmpty, case .ok(let ok) = try? await API.client.categoryPool(.init()), let body = try? ok.body.json else { return }
+        categoryPool = body.categories ?? []
+    }
+
+    /// The server decides whether they may still change (until the first post lands).
+    func setCategories(round: Int64, names: [String]) async -> String? {
+        do {
+            switch try await API.client.setCategories(path: .init(slug: slug, number: Int32(round)), body: .json(.init(names: names))) {
+            case .ok: await refresh(); feeds = [:]; return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
+    /// A new invite link; the old one stops working.
+    func rotateInvite() async -> String? {
+        do {
+            switch try await API.client.rotateInvite(path: .init(slug: slug)) {
+            case .ok(let ok): league = try ok.body.json; return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
     /// Take down your own post while submissions are open. Returns what to tell the person if it failed.
     func delete(_ s: Submission) async -> String? {
         do {
