@@ -32,16 +32,17 @@ re-implements a rule; it asks the API.
   outward-facing and needs Ryan until he says otherwise.
 - **Stack:** Swift 6, SwiftUI, iOS 18+, iPhone only. A normal checked-in
   Xcode project with file-system-synchronized folders (add a file to the
-  folder and it's in the target; no project-file edit) and build settings in
-  `.xcconfig` files (I4). The API client is **generated** by Swift OpenAPI
+  folder and it's in the target; no project-file edit) (I4). The API client is **generated** by Swift OpenAPI
   Generator from the server's `openapi.json`; never hand-write a request the
   spec already describes. Sessions are bearer tokens (server D36).
 - **The server is the other half.** When the app needs something the API
   doesn't offer (token auth, an app-site-association file, a push endpoint),
   the change is made in `~/projects/fantasy-cat`, under that repo's rules, and
   the spec is regenerated. Don't work around a missing endpoint in the client.
-- **Verify, don't assume:** `make build`, `make test`, then run it in the
-  Simulator and look (`make shot` screenshots the running app). The Simulator
+- **Verify, don't assume:** `make build`, then run it in the Simulator and
+  look: `make shot THEME=light OUT=.dev/x.png` builds, installs, launches and
+  screenshots (then Read the PNG; check both themes). `make test` once there
+  is a test target. The Simulator
   has no camera and an empty photo library, so anything touching Photos, the
   camera, passkeys or push must also be checked on a real phone, by Ryan, and
   the summary must say which was done.

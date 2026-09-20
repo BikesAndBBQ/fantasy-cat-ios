@@ -42,16 +42,31 @@ items:
     created_at: 2026-09-20
     note: "SwiftUI, iOS 18 minimum, a checked-in Xcode project (I4 dropped XcodeGen), Swift OpenAPI Generator, bundle id co.fantasycat.app, TestFlight. Worth two minutes before milestone 0 builds on them."
 
-  - title: "Milestone 0: toolchain and an empty app on Ryan's phone"
+  - title: "Milestone 0a: the app builds and runs in the Simulator"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    note: "Ryan's template moved to the repo root and made iPhone-only, iOS 18+, Swift 6, bundle id co.fantasycat.app (I4). `make build|run|shot`. Verified: built, launched in the iPhone 18 Pro simulator, screenshotted in both themes. The nested git repo Xcode created was removed with Ryan's OK."
+
+  - title: "Milestone 0b: the app on Ryan's phone"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
     note: |
-      Xcode 27 is in and Ryan's template project is at FantasyCat/ (untracked).
-      I4 lists what changes. Blocked on two answers from Ryan: (1) OK to delete
-      the nested FantasyCat/.git Xcode created (one automatic commit, nothing
-      else)? (2) the Team ID, for signing and the bundle id. Building for the
-      Simulator needs neither, so the agent can start on (1) alone.
+      Needs the Apple Developer membership to show as active (renewal paid
+      2026-09-20, Apple says up to 48 h) and the Team ID. Then in Xcode:
+      Settings -> Accounts -> add the Apple ID; open FantasyCat.xcodeproj ->
+      target FantasyCat -> Signing & Capabilities -> pick the team; plug in the
+      phone, enable Developer Mode on it (Settings -> Privacy & Security), and
+      Run. Tell the agent the Team ID so it can go in the project file and the
+      server's app-site-association.
+
+  - title: "CI: build and test on a macOS runner"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "Needs the Agents PAT to have Workflows permission on this repo (see that item). GitHub's macOS runners must offer Xcode 27."
 
   - title: "Server: bearer-token sessions for native clients"
     status: done

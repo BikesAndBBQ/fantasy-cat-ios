@@ -70,10 +70,11 @@ folder on disk *is* the group, so adding, moving or deleting a source file
 never touches `project.pbxproj`. That was the whole case for XcodeGen (an
 agent can't click through the project editor, and the file conflicts). What's
 left that lives in the project file is settings, capabilities and package
-dependencies, which change rarely, and settings can sit in `.xcconfig` text
-files. Against XcodeGen: Xcode manages signing and capabilities natively, Ryan
+dependencies, which change rarely. They're plain text in `project.pbxproj`
+and were edited there directly at milestone 0; move them to `.xcconfig` files
+if that ever gets fiddly. Against XcodeGen: Xcode manages signing and capabilities natively, Ryan
 can open the project like any other, and there is no generate step to forget.
-So: a normal checked-in `.xcodeproj`, settings in xcconfig, `.gitignore`
+So: a normal checked-in `.xcodeproj`, `.gitignore`
 updated to stop ignoring it (still ignoring `xcuserdata/`).
 
 What the template chose that milestone 0 will change, and why:
