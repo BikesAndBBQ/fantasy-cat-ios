@@ -52,6 +52,16 @@ final class AppModel {
         }
     }
 
+    /// The server sent a fresh picture of the account (after a profile change).
+    func apply(_ me: Components.Schemas.MeBody) {
+        phase = .signedIn(me.user, leagues: me.leagues ?? [])
+    }
+
+    /// Re-read who we are and which leagues we're in (after creating, joining or leaving one).
+    func reload() async {
+        if case .ok(let ok) = try? await API.client.me(.init()), let me = try? ok.body.json { apply(me) }
+    }
+
     /// Whether the server offers Google at all (it's configuration there).
     private(set) var googleAvailable = false
     func loadProviders() async {
