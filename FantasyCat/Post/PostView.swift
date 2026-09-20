@@ -236,7 +236,8 @@ struct PostView: View {
             let m = try await PickedMedia.inspect(autopost)
             model.picked(m)
             let show = ProcessInfo.processInfo.arguments.contains("-nopost")
-            if m.kind == .video, m.duration > 3.5 { model.trim = show ? (m.duration * 0.25)...(m.duration * 0.6) : 1...3 }
+            let full = ProcessInfo.processInfo.arguments.contains("-fullclip") // keep the whole 30 s: slow enough to watch processing
+            if m.kind == .video, m.duration > 3.5, !full { model.trim = show ? (m.duration * 0.25)...(m.duration * 0.6) : 1...3 }
             if ProcessInfo.processInfo.arguments.contains("-nopost") { return } // just show the screen
             while model.pets.isEmpty { try await Task.sleep(for: .milliseconds(100)) }
             await model.post()

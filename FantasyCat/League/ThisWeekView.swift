@@ -48,6 +48,19 @@ struct ThisWeekView: View {
             if let league = store.league { PostView(league: league, category: activeID) }
         }
         .task(id: activeID) { if let id = activeID { await store.loadFeed(id) } }
+        // A fresh post is still being processed by the server (a video takes tens of
+        // seconds to transcode). Loading the feed once, right after posting, left
+        // Ryan's first video on a spinner forever although it was ready 20 seconds
+        // later. So: while anything shown is processing, keep looking.
+        .task(id: processingKey) {
+            guard let id = activeID, processingKey != nil else { return }
+            for _ in 0..<90 { // three minutes, then pull-to-refresh is there
+                try? await Task.sleep(for: .seconds(2))
+                if Task.isCancelled { return }
+                await store.loadFeed(id)
+                if !(store.feeds[id]?.submissions ?? []).contains(where: { $0.media.status == .processing }) { return }
+            }
+        }
         #if DEBUG
         // `-autopost <file>` opens the post screen as soon as the league has loaded; `-open` opens the first post.
         .task(id: store.league?.slug) {
@@ -60,6 +73,13 @@ struct ThisWeekView: View {
             }
         }
         #endif
+    }
+
+    /// Non-nil while the feed on screen has a post the server is still working on.
+    private var processingKey: String? {
+        guard let id = activeID, let items = store.feeds[id]?.submissions else { return nil }
+        let pending = items.filter { $0.media.status == .processing }.map(\.id)
+        return pending.isEmpty ? nil : "\(id):\(pending)"
     }
 
     private var activeID: Int64? { categoryID ?? store.league?.currentRound?.categories?.first?.id }
