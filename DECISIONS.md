@@ -94,3 +94,27 @@ What the template chose that milestone 0 will change, and why:
   repository on my Mac" in the save dialog.
 - The project sits at `FantasyCat/FantasyCat.xcodeproj`; it moves to the repo
   root so the repo is the project.
+
+## I5 — One source for the look, two clients (2026-09-20)
+
+The web app's theme is compiled from `design/tokens.json` in the server repo,
+but the compiler left the arithmetic to the browser (`hsl()` with variables,
+`color-mix(in oklab)`), which Swift can't evaluate. Rather than copy hex values
+by hand, that compiler now also writes `design/tokens.resolved.json` with every
+token as a concrete value, and a checker there paints each CSS variable in
+Chrome and compares (all 32 colors match within 1/255). `scripts/gen-tokens.py`
+here only transcribes that file into `Design/Tokens.swift`. Change the accent
+in one JSON file and both apps follow.
+
+- **Fonts are bundled and registered in code** (`CTFontManagerRegisterFontsForURL`
+  at launch), not listed in Info.plist, so the generated Info.plist stays
+  generated. Bricolage Grotesque and Instrument Sans are variable fonts, set by
+  their `wght` axis so any weight the web uses is available; Barlow Condensed is
+  three static files. All SIL OFL; the licence texts ship beside them.
+- **Type scales with Dynamic Type** through `UIFontMetrics`, each style tied to
+  a system text style. Sizes are the web's pixel values read as points.
+- **Buttons are at least 44 pt tall** where the web's are 40 px: a finger, not a
+  cursor. The only deliberate departure from the web's metrics so far.
+- **A gallery screen** (`-gallery` launch argument) is this app's counterpart of
+  the reference page, there to be screenshotted, since an agent can't eyeball a
+  SwiftUI preview.

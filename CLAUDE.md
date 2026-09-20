@@ -47,7 +47,13 @@ re-implements a rule; it asks the API.
   camera, passkeys or push must also be checked on a real phone, by Ryan, and
   the summary must say which was done.
 - **Polish is not descopable**, as on the web: same tokens, both themes,
-  Dynamic Type and VoiceOver from the start.
+  Dynamic Type and VoiceOver from the start. **UI is built only from
+  `FantasyCat/Design`**: colors from `Tokens` (generated, never edited: `make
+  tokens`), type from `TypeStyle` via `.type(...)`, and the components in
+  `Components.swift`, which mirror the web's `ui.tsx`. No raw colors, fonts or
+  radii in a screen. New component? Add it to `GalleryView` and look at it:
+  `make shot GALLERY=1 THEME=light`. The reference for how things should look
+  is `design/design-system.html` in the server repo.
 - Registered in agent-manager as `fantasy-cat-ios` (pending, see backlog).
 
 ## Working headless (when dispatched by GLaDOS / a peer agent)

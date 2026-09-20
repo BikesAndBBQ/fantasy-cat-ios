@@ -7,7 +7,7 @@ APP     := $(DERIVED)/Build/Products/Debug-iphonesimulator/$(SCHEME).app
 THEME   ?= dark
 XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination 'platform=iOS Simulator,name=$(SIM)' -derivedDataPath $(DERIVED)
 
-.PHONY: build test run shot clean
+.PHONY: build test run shot tokens clean
 
 build: ## compile for the Simulator; warnings are printed, errors fail
 	@$(XCB) -quiet build
@@ -18,13 +18,17 @@ test:
 run: build ## install and launch in the Simulator
 	@xcrun simctl boot '$(SIM)' 2>/dev/null || true
 	@xcrun simctl install '$(SIM)' $(APP)
-	@xcrun simctl launch '$(SIM)' $(BUNDLE)
+	@xcrun simctl terminate '$(SIM)' $(BUNDLE) 2>/dev/null || true
+	@xcrun simctl launch '$(SIM)' $(BUNDLE) $(if $(GALLERY),-gallery)
 
-shot: run ## screenshot the running app: make shot THEME=light OUT=.dev/welcome.png
+shot: run ## screenshot the running app: make shot THEME=light OUT=.dev/welcome.png [GALLERY=1]
 	@mkdir -p .dev
 	@xcrun simctl ui '$(SIM)' appearance $(THEME)
 	@sleep 2
 	@xcrun simctl io '$(SIM)' screenshot $(or $(OUT),.dev/shot-$(THEME).png)
+
+tokens: ## regenerate Design/Tokens.swift from the server repo's resolved tokens
+	@python3 scripts/gen-tokens.py
 
 clean:
 	@rm -r $(DERIVED) 2>/dev/null || true

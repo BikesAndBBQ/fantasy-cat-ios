@@ -49,6 +49,13 @@ items:
     done_at: 2026-09-20
     note: "Ryan's template moved to the repo root and made iPhone-only, iOS 18+, Swift 6, bundle id co.fantasycat.app (I4). `make build|run|shot`. Verified: built, launched in the iPhone 18 Pro simulator, screenshotted in both themes. The nested git repo Xcode created was removed with Ryan's OK."
 
+  - title: "Milestone 1: design tokens and core components in Swift"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    note: "Tokens.swift is generated (`make tokens`) from the server repo's design/tokens.resolved.json, which that repo checks against Chrome's rendering. Three OFL typefaces bundled and registered at launch; TypeStyle scales with Dynamic Type. Button, Eyebrow, PageTitle, Chip, Card, Banner, FCField, Avatar, Rosette, PageBackground, plus a gallery (`make shot GALLERY=1`). Verified in the Simulator: both themes, and the largest standard text size."
+
   - title: "Milestone 0b: the app on Ryan's phone"
     status: blocked
     owner: ryan

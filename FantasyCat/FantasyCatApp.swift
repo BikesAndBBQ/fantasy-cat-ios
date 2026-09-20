@@ -2,9 +2,15 @@ import SwiftUI
 
 @main
 struct FantasyCatApp: App {
+    init() { Typefaces.register() }
+
     var body: some Scene {
         WindowGroup {
-            WelcomeView()
+            if ProcessInfo.processInfo.arguments.contains("-gallery") {
+                GalleryView()
+            } else {
+                WelcomeView()
+            }
         }
     }
 }
