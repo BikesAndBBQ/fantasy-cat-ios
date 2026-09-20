@@ -213,3 +213,24 @@ cannot submit for review; `fastlane` and `notarytool` stay denied. No upload
 pipeline exists yet. When one is built, the App Store Connect key is read from
 the FantasyCat vault at run time and never lands in the repo (first hard line).
 
+
+## I9 — League screens: the web's content in the platform's frame (2026-09-20)
+
+The screens carry the same content, copy and components as the web's, so a
+person moving between the two isn't relearning anything. Where iOS has its own
+answer, the app uses it rather than imitating a web page:
+
+- **A native `TabView`**, not a drawn copy of the web's tab bar. It's the
+  platform's navigation, it gets the system's current look for free, and
+  VoiceOver already understands it.
+- **The league name and account avatar are a row in the page**, not
+  navigation-bar items: there iOS wraps each in its own glass capsule and
+  truncated the name to "PINE ST. …". Found by looking at the screenshot.
+- **Sheets** for a post and for posting, with the system drag indicator.
+- **Pull to refresh**, plus the same once-a-minute league refresh the web
+  does, because round phases flip at midnight.
+- Vote tallies, ranks, places and who may delete what all come from the
+  server. `LeagueStore` fetches and holds; it computes nothing about the game.
+
+One league goes straight in; several get a chooser; none says where to make
+one. Voting isn't here yet, and the app says so instead of hiding it.

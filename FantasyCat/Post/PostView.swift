@@ -10,9 +10,12 @@ struct PostView: View {
     @State private var loopObserver: Any?
     @Environment(\.dismiss) private var dismiss
 
-    init(league: Components.Schemas.LeagueView, autopost: URL? = nil) {
-        _model = State(initialValue: PostModel(league: league))
-        self.autopost = autopost
+    init(league: Components.Schemas.LeagueView, category: Int64? = nil) {
+        let m = PostModel(league: league)
+        if let category { m.categoryID = category }
+        _model = State(initialValue: m)
+        let args = ProcessInfo.processInfo.arguments
+        autopost = args.firstIndex(of: "-autopost").flatMap { args.indices.contains($0 + 1) ? URL(fileURLWithPath: args[$0 + 1]) : nil }
     }
     private let autopost: URL?
 

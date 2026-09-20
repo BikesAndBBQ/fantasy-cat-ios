@@ -98,6 +98,34 @@ items:
       picker itself, an iCloud original downloading, a long 4K video, leaving
       the app mid-upload.
 
+  - title: "Milestone 3: read the league (This week, Results, Standings)"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    note: |
+      Native tab bar; league name and account avatar as a page header row (the
+      navigation bar wrapped them in glass capsules and truncated the name).
+      This week: live countdown, category chips with counts, two-column feed,
+      submission sheet (video plays; take down your own post while open),
+      floating Post. Results: round picker, winners with rosette and count,
+      runners-up, "You earned". Standings: tied ranks from the server, your row
+      highlighted. Pull to refresh; league refreshed every minute. Verified in
+      the Simulator against ./dev.sh, both themes, and a post made through the
+      new entry point refreshed the feed by itself.
+
+  - title: "Milestone 5: vote in the app"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "Until then This week tells people to hand out their treats on the web. getBallot / putBallot are already in the generated client."
+
+  - title: "Account screen in the app"
+    status: pending
+    owner: agent
+    created_at: 2026-09-20
+    note: "The avatar opens a sheet with sign-out only. Cats, your picture, reminders and passkeys still live on the web. Also: start or join a league, which today says 'go to fantasycat.co'."
+
   - title: "Milestone 4b: try posting on a real phone"
     status: blocked
     owner: ryan

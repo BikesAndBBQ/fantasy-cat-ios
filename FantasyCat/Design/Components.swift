@@ -160,18 +160,22 @@ struct Banner: View {
     let label: String
     let value: String
     var detail: String?
+    /// Inverted (ink on the page) is the countdown; the quiet one reports something that already happened.
+    var inverted = true
 
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous)
         VStack(alignment: .leading, spacing: 2) {
             Text(label.uppercased()).type(.eyebrow).opacity(0.7)
-            Text(value).type(.score).foregroundStyle(Tokens.accent).monospacedDigit()
+            Text(value).type(.score).foregroundStyle(inverted ? Tokens.accent : Tokens.accentInk).monospacedDigit()
             if let detail { Text(detail).type(.small).opacity(0.72).padding(.top, 4) }
         }
-        .foregroundStyle(Tokens.paper)
+        .foregroundStyle(inverted ? Tokens.paper : Tokens.ink)
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Tokens.ink, in: RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous))
+        .background(inverted ? Tokens.ink : Tokens.surface, in: shape)
+        .overlay { if !inverted { shape.strokeBorder(Tokens.line, lineWidth: 1) } }
         .accessibilityElement(children: .combine)
     }
 }
