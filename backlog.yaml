@@ -48,10 +48,18 @@ items:
     note: "Pushing already works (verified 2026-09-20). The first push that adds .github/workflows/ will be refused unless the PAT has Workflows permission on this repo, as it was on fantasy-cat. Check once; not urgent until milestone 0."
 
   - title: "Register fantasy-cat-ios in agent-manager"
-    status: pending
+    status: done
     owner: ryan
     created_at: 2026-09-20
-    note: "registry.yaml entry (path, managed_by, description), then SIGHUP the daemon on :8092. Decide managed_by: CLAUDE.md assumes claude-managed like the server. Kermit's territory; the agent can file the ask."
+    done_at: 2026-09-25
+    note: |
+      Done differently (I8, server D37): not its own registry entry but an
+      `additional_dirs` of `fantasy-cat`, one agent for both. Verified
+      2026-09-25 from a dispatch: agent-manager's project list has no
+      standalone `fantasy-cat-ios` (by design), the dispatch lists this repo as
+      a secondary, its `CLAUDE.md` loads, and `git -C`/`xcodebuild` work here.
+      Category settled: claude-managed. Original ask was a registry.yaml entry
+      + SIGHUP on :8092.
 
   - title: "Confirm or overturn the provisional choices in DECISIONS I2"
     status: pending

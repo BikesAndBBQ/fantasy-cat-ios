@@ -67,7 +67,9 @@ re-implements a rule; it asks the API.
   radii in a screen. New component? Add it to `GalleryView` and look at it:
   `make shot GALLERY=1 THEME=light`. The reference for how things should look
   is `design/design-system.html` in the server repo.
-- Registered in agent-manager as `fantasy-cat-ios` (pending, see backlog).
+- Not registered in agent-manager on its own: it is an `additional_dirs` of
+  `fantasy-cat` (I8), so the dashboard and dispatches reach it through that
+  project.
 
 ## Working headless (when dispatched by GLaDOS / a peer agent)
 - The dispatch Bash sandbox **rejects shell expansion** — `$(...)`, `${...}`,
