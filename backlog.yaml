@@ -24,6 +24,23 @@ items:
       Xcode (Settings -> Accounts) and tell the agent the 10-character Team ID
       (developer.apple.com/account -> Membership details). It isn't a secret.
 
+      **2026-09-25: Ryan sent `Y837X7M3W4`, but that is the ID of the free
+      "Ryan OLSON (Personal Team)"** recorded on 2026-09-20, and it is already
+      the project's `DEVELOPMENT_TEAM`. A Personal Team has a Team ID too, so
+      the ID alone doesn't show the paid membership exists. Probed from a
+      dispatch: a device build signed with the cached profile succeeds, but
+      adding the Associated Domains entitlement fails ("profile doesn't
+      include the capability") and Xcode can't refresh it headless ("No
+      Accounts"), so paid-vs-free can't be verified from here. **Still
+      needed from Ryan, one of:**
+      - developer.apple.com/account shows an active *Apple Developer Program*
+        membership (with a renewal date). If the Team ID shown there is still
+        `Y837X7M3W4`, say so and the agent proceeds with nothing to change.
+      - Or Xcode -> Settings -> Accounts lists the team without "(Personal
+        Team)". Xcode currently reports the Personal Team as free.
+      - If not enrolled yet: enroll ($99, individual), then re-check the ID;
+        it may change on enrollment.
+
   - title: "Agents GitHub PAT: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
     status: pending
     owner: ryan
