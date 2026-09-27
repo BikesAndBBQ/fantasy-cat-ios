@@ -1,6 +1,7 @@
 # Work tracker. Spec: ~/projects/agent-manager/WORK-TRACKING.md
 items:
-  - title: "Install Xcode and point the command line at it"
+  - id: 7ed80e
+    title: "Install Xcode and point the command line at it"
     status: done
     owner: ryan
     created_at: 2026-09-20
@@ -13,7 +14,8 @@ items:
         sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
       Check with: xcodebuild -version
 
-  - title: "Apple Developer Program membership, and the Team ID"
+  - id: 509436
+    title: "Apple Developer Program membership, and the Team ID"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
@@ -41,13 +43,15 @@ items:
       - If not enrolled yet: enroll ($99, individual), then re-check the ID;
         it may change on enrollment.
 
-  - title: "Agents GitHub PAT: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
+  - id: ac252b
+    title: "Agents GitHub PAT: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
     status: pending
     owner: ryan
     created_at: 2026-09-20
     note: "Pushing already works (verified 2026-09-20). The first push that adds .github/workflows/ will be refused unless the PAT has Workflows permission on this repo, as it was on fantasy-cat. Check once; not urgent until milestone 0."
 
-  - title: "Register fantasy-cat-ios in agent-manager"
+  - id: 861b08
+    title: "Register fantasy-cat-ios in agent-manager"
     status: done
     owner: ryan
     created_at: 2026-09-20
@@ -61,27 +65,31 @@ items:
       Category settled: claude-managed. Original ask was a registry.yaml entry
       + SIGHUP on :8092.
 
-  - title: "Confirm or overturn the provisional choices in DECISIONS I2"
+  - id: c04c92
+    title: "Confirm or overturn the provisional choices in DECISIONS I2"
     status: pending
     owner: ryan
     created_at: 2026-09-20
     note: "SwiftUI, iOS 18 minimum, a checked-in Xcode project (I4 dropped XcodeGen), Swift OpenAPI Generator, bundle id co.fantasycat.app, TestFlight. Worth two minutes before milestone 0 builds on them."
 
-  - title: "Milestone 0a: the app builds and runs in the Simulator"
+  - id: f71612
+    title: "Milestone 0a: the app builds and runs in the Simulator"
     status: done
     owner: agent
     created_at: 2026-09-20
     done_at: 2026-09-20
     note: "Ryan's template moved to the repo root and made iPhone-only, iOS 18+, Swift 6, bundle id co.fantasycat.app (I4). `make build|run|shot`. Verified: built, launched in the iPhone 18 Pro simulator, screenshotted in both themes. The nested git repo Xcode created was removed with Ryan's OK."
 
-  - title: "Milestone 1: design tokens and core components in Swift"
+  - id: 5bd84b
+    title: "Milestone 1: design tokens and core components in Swift"
     status: done
     owner: agent
     created_at: 2026-09-20
     done_at: 2026-09-20
     note: "Tokens.swift is generated (`make tokens`) from the server repo's design/tokens.resolved.json, which that repo checks against Chrome's rendering. Three OFL typefaces bundled and registered at launch; TypeStyle scales with Dynamic Type. Button, Eyebrow, PageTitle, Chip, Card, Banner, FCField, Avatar, Rosette, PageBackground, plus a gallery (`make shot GALLERY=1`). Verified in the Simulator: both themes, and the largest standard text size."
 
-  - title: "Milestone 2a: generated API client and password sign-in"
+  - id: b5bf90
+    title: "Milestone 2a: generated API client and password sign-in"
     status: done
     owner: agent
     created_at: 2026-09-20
@@ -95,7 +103,8 @@ items:
       session (logout 204) and the next launch asks again. Found and fixed on
       the way: Go's fractional-second timestamps failed to decode.
 
-  - title: "Milestone 2b: Google sign-in"
+  - id: 871b96
+    title: "Milestone 2b: Google sign-in"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
@@ -107,20 +116,23 @@ items:
       person: Ryan to sign in once, in the Simulator (`open -a Simulator`, then
       `make run`) or on the phone, and say whether he lands in his league.
 
-  - title: "Milestone 2c: passkeys, sign-up, password reset in the app"
+  - id: 703a84
+    title: "Milestone 2c: passkeys, sign-up, password reset in the app"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
     note: "Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID."
 
-  - title: "A unit test target"
+  - id: 390bd5
+    title: "A unit test target"
     status: done
     owner: agent
     created_at: 2026-09-20
     done_at: 2026-09-20
     note: "Done differently: the pure logic moved into a local package, Core/, tested with `make test` (swift test, seconds, no Simulator). 12 tests: Go timestamps, time text, trim arithmetic, invite parsing. UI is still checked by looking (`make shot`)."
 
-  - title: "Milestone 4a: post a photo or video (pipeline and screen)"
+  - id: 7ea7d3
+    title: "Milestone 4a: post a photo or video (pipeline and screen)"
     status: done
     owner: agent
     created_at: 2026-09-20
@@ -136,7 +148,8 @@ items:
       picker itself, an iCloud original downloading, a long 4K video, leaving
       the app mid-upload.
 
-  - title: "Milestone 3: read the league (This week, Results, Standings)"
+  - id: df2466
+    title: "Milestone 3: read the league (This week, Results, Standings)"
     status: done
     owner: agent
     created_at: 2026-09-20
@@ -152,7 +165,8 @@ items:
       the Simulator against ./dev.sh, both themes, and a post made through the
       new entry point refreshed the feed by itself.
 
-  - title: "Milestone 5: vote in the app"
+  - id: 5002b6
+    title: "Milestone 5: vote in the app"
     status: done
     owner: agent
     created_at: 2026-09-20
@@ -169,14 +183,16 @@ items:
       refuses an over-budget ballot with 422. Haptics can't be felt in a
       Simulator.
 
-  - title: "Account screen in the app"
+  - id: fdcafd
+    title: "Account screen in the app"
     status: done
     owner: agent
     created_at: 2026-09-20
     done_at: 2026-09-20
     note: "The avatar opens a sheet with sign-out only. Cats, your picture, reminders and passkeys still live on the web. Also: start or join a league, which today says 'go to fantasycat.co'."
 
-  - title: "Milestone 4b: try posting on a real phone"
+  - id: 98dc77
+    title: "Milestone 4b: try posting on a real phone"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
@@ -186,7 +202,8 @@ items:
       needed. Try: a short video, the long video that failed on the web, a
       video that lives in iCloud, a photo, and leaving the app while it uploads.
 
-  - title: "Trim bar: precise on a long video"
+  - id: dae423
+    title: "Trim bar: precise on a long video"
     status: pending
     owner: agent
     created_at: 2026-09-20
@@ -199,25 +216,29 @@ items:
       0.1 s nudge buttons by each handle. The arithmetic is in Core/Clip.swift
       and is tested, so only the view changes.
 
-  - title: "Post: remaining pieces"
+  - id: 8f136b
+    title: "Post: remaining pieces"
     status: pending
     owner: agent
     created_at: 2026-09-20
     note: "Camera capture is built (2026-09-20) but untried: nothing can tap the camera in a Simulator. Still to do: recover an upload that finished after the app was killed; one Swift 6 metatype warning on the PhotosPicker label helper."
 
-  - title: "In-app leftovers that still point at the web"
+  - id: 5d9367
+    title: "In-app leftovers that still point at the web"
     status: pending
     owner: agent
     created_at: 2026-09-20
     note: "Done 2026-09-20: change or set a password, edit an open round's categories (admin, until the first post), reset the invite link. Still web-only: managing passkeys, and a league's posting limit and vote budget. Each screen says so."
 
-  - title: "CI for this repo"
+  - id: 221a9a
+    title: "CI for this repo"
     status: pending
     owner: agent
     created_at: 2026-09-20
     note: "`make test` (Core) runs anywhere Swift does. Building the app needs a macOS runner with Xcode 27. Also worth a drift check: `make api && make tokens`, then `git diff --exit-code`."
 
-  - title: "Milestone 0b: the app on Ryan's phone"
+  - id: 7bcaeb
+    title: "Milestone 0b: the app on Ryan's phone"
     status: blocked
     owner: ryan
     created_at: 2026-09-20
@@ -233,26 +254,30 @@ items:
       Free-tier builds expire after 7 days. When the paid membership is active,
       swap DEVELOPMENT_TEAM for the paid team's id.
 
-  - title: "CI: build and test on a macOS runner"
+  - id: f6fecb
+    title: "CI: build and test on a macOS runner"
     status: pending
     owner: agent
     created_at: 2026-09-20
     note: "Needs the Agents PAT to have Workflows permission on this repo (see that item). GitHub's macOS runners must offer Xcode 27."
 
-  - title: "Server: bearer-token sessions for native clients"
+  - id: 5f9efb
+    title: "Server: bearer-token sessions for native clients"
     status: done
     owner: agent
     created_at: 2026-09-20
     done_at: 2026-09-20
     note: "Server D36, live. Send X-Session-Transport: bearer at sign-in to get session_token in the body; send Authorization: Bearer after. Google sign-in still needs a handoff (server backlog)."
 
-  - title: "Server: apple-app-site-association (webcredentials + applinks)"
+  - id: bdccca
+    title: "Server: apple-app-site-association (webcredentials + applinks)"
     status: blocked
     owner: agent
     created_at: 2026-09-20
     note: "Needs the Team ID."
 
-  - title: "Delete my account, in the app"
+  - id: ee47c1
+    title: "Delete my account, in the app"
     status: pending
     owner: agent
     created_at: 2026-09-25
