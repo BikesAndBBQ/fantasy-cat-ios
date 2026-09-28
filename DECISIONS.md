@@ -284,5 +284,8 @@ Verified 2026-09-28 with a **Developer**-role key: development signing works
 (registered `co.fantasycat.app`, one-year team profile). Distribution does
 not: exporting for App Store Connect fails with "Cloud signing permission
 error", so TestFlight needs a key with more access (backlog `712f67`).
+So the key is an **Admin** Team Key (Ryan, 2026-09-28; the Developer key was
+revoked). Verified the same day: archive and App Store Connect export
+succeed, signed Apple Distribution with a store profile.
 `ExportOptions.plist` exports locally; switching `destination` to `upload`
 sends a build to TestFlight. Nothing is ever submitted for review (I8).

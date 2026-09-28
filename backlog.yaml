@@ -80,8 +80,8 @@ items:
 
   - id: 703a84
     title: "Milestone 2c: passkeys, sign-up, password reset in the app"
-    status: blocked
-    owner: ryan
+    status: pending
+    owner: agent
     created_at: 2026-09-20
     note: |
       Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID.
@@ -89,6 +89,9 @@ items:
       **2026-09-28:** membership is paid (`509436` done). Now blocked on
       getting a provisioning profile with Associated Domains, see `712f67`,
       and on the server's association file (`bdccca`).
+      **Later 2026-09-28:** `712f67` done, a dispatch can now get profiles.
+      Next is `bdccca` (agent), then the entitlement here. Owner is now the
+      agent; the passkey sign-in itself still needs Ryan on a real phone.
 
   - id: 98dc77
     title: "Milestone 4b: try posting on a real phone"
@@ -185,10 +188,21 @@ items:
 
   - id: 712f67
     title: "Headless signing: an App Store Connect API key in the FantasyCat vault"
-    status: blocked
-    owner: ryan
+    status: done
+    owner: agent
     created_at: 2026-09-28
+    done_at: 2026-09-28
     note: |
+      ### Done 2026-09-28: Admin key works
+      Ryan replaced the key with an **Admin** Team Key and revoked the
+      Developer one. Verified: archive + export for App Store Connect
+      succeeded from a dispatch. The `.ipa` is signed *Apple Distribution:
+      Ryan OLSON (Y837X7M3W4)* with an App Store profile for
+      `co.fantasycat.app` (TestFlight enabled, expires 2027-09-28). Not yet
+      uploaded: that needs the app record (`8fd754`). Still open: the
+      allow rule for `scripts/ios-xcodebuild.sh` in the server repo's
+      `.claude/settings.json` (a dispatch can't write it).
+
       ### 2026-09-28, third pass: Developer role tested
       Key ID and Issuer ID are in the vault item. `scripts/ios-xcodebuild.sh`
       (server repo, decision I12) signs with the key.
