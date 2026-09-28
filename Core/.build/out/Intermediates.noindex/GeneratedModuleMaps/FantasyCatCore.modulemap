@@ -1,4 +1,0 @@
-module FantasyCatCore {
-header "FantasyCatCore-Swift.h"
-export *
-}

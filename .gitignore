@@ -14,3 +14,4 @@ build/
 .dev/
 Tools/openapi/.build/
 build-device/
+Core/.build/
