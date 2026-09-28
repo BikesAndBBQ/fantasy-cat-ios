@@ -37,6 +37,83 @@ internal struct Client: APIProtocol {
     private var converter: Converter {
         client.converter
     }
+    /// The oldest iPhone app build still allowed to run
+    ///
+    /// - Remark: HTTP `GET /app/ios`.
+    /// - Remark: Generated from `#/paths//app/ios/get(iosAppVersion)`.
+    internal func iosAppVersion(_ input: Operations.IosAppVersion.Input) async throws -> Operations.IosAppVersion.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.IosAppVersion.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/app/ios",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.IosAppVersion.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.AppVersionOutputBody.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.IosAppVersion.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
     /// Finish a browser sign-in started by the native app
     ///
     /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
@@ -2436,6 +2513,68 @@ internal struct Client: APIProtocol {
                 default:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.UpdateMe.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
+    /// Delete the account, its cats and every photo and video it posted
+    ///
+    /// - Remark: HTTP `DELETE /me`.
+    /// - Remark: Generated from `#/paths//me/delete(deleteMe)`.
+    internal func deleteMe(_ input: Operations.DeleteMe.Input) async throws -> Operations.DeleteMe.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.DeleteMe.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/me",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 204:
+                    let headers: Operations.DeleteMe.Output.NoContent.Headers = .init(setCookie: try converter.getOptionalHeaderFieldAsURI(
+                        in: response.headerFields,
+                        name: "Set-Cookie",
+                        as: Swift.String.self
+                    ))
+                    return .noContent(.init(headers: headers))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.DeleteMe.Output.Default.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [

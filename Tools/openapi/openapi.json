@@ -32,6 +32,45 @@
         ],
         "type": "object"
       },
+      "AppVersionOutputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/AppVersionOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "message": {
+            "description": "What the blocking screen says.",
+            "type": "string"
+          },
+          "min_build": {
+            "description": "Builds (CFBundleVersion) below this must update before they can be used. 0: every build may run.",
+            "examples": [
+              202609281509
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "update_url": {
+            "description": "Where the update button goes: TestFlight while the app is in testing.",
+            "examples": [
+              "itms-beta://"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "min_build",
+          "update_url",
+          "message"
+        ],
+        "type": "object"
+      },
       "BallotAllocation": {
         "additionalProperties": false,
         "properties": {
@@ -1763,6 +1802,37 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/app/ios": {
+      "get": {
+        "operationId": "iosAppVersion",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppVersionOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The oldest iPhone app build still allowed to run",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
     "/auth/app/exchange": {
       "post": {
         "description": "Start with GET /auth/google/start?app_challenge=\u003cbase64url(SHA-256(verifier))\u003e. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.",
@@ -3008,6 +3078,35 @@
       }
     },
     "/me": {
+      "delete": {
+        "operationId": "deleteMe",
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Delete the account, its cats and every photo and video it posted",
+        "tags": [
+          "auth"
+        ]
+      },
       "get": {
         "operationId": "me",
         "responses": {

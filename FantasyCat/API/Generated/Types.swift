@@ -11,6 +11,11 @@ import struct Foundation.Date
 #endif
 /// A type that performs HTTP operations defined by the OpenAPI document.
 internal protocol APIProtocol: Sendable {
+    /// The oldest iPhone app build still allowed to run
+    ///
+    /// - Remark: HTTP `GET /app/ios`.
+    /// - Remark: Generated from `#/paths//app/ios/get(iosAppVersion)`.
+    func iosAppVersion(_ input: Operations.IosAppVersion.Input) async throws -> Operations.IosAppVersion.Output
     /// Finish a browser sign-in started by the native app
     ///
     /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
@@ -167,6 +172,11 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `PATCH /me`.
     /// - Remark: Generated from `#/paths//me/patch(updateMe)`.
     func updateMe(_ input: Operations.UpdateMe.Input) async throws -> Operations.UpdateMe.Output
+    /// Delete the account, its cats and every photo and video it posted
+    ///
+    /// - Remark: HTTP `DELETE /me`.
+    /// - Remark: Generated from `#/paths//me/delete(deleteMe)`.
+    func deleteMe(_ input: Operations.DeleteMe.Input) async throws -> Operations.DeleteMe.Output
     /// Set your picture
     ///
     /// - Remark: HTTP `PUT /me/avatar`.
@@ -218,6 +228,13 @@ internal protocol APIProtocol: Sendable {
 
 /// Convenience overloads for operation inputs.
 extension APIProtocol {
+    /// The oldest iPhone app build still allowed to run
+    ///
+    /// - Remark: HTTP `GET /app/ios`.
+    /// - Remark: Generated from `#/paths//app/ios/get(iosAppVersion)`.
+    internal func iosAppVersion(headers: Operations.IosAppVersion.Input.Headers = .init()) async throws -> Operations.IosAppVersion.Output {
+        try await iosAppVersion(Operations.IosAppVersion.Input(headers: headers))
+    }
     /// Finish a browser sign-in started by the native app
     ///
     /// Start with GET /auth/google/start?app_challenge=<base64url(SHA-256(verifier))>. The browser ends at fantasycat://auth/google?code=… (or ?error=…). Codes are single use and last two minutes. Always returns the session as a bearer token.
@@ -585,6 +602,13 @@ extension APIProtocol {
             headers: headers,
             body: body
         ))
+    }
+    /// Delete the account, its cats and every photo and video it posted
+    ///
+    /// - Remark: HTTP `DELETE /me`.
+    /// - Remark: Generated from `#/paths//me/delete(deleteMe)`.
+    internal func deleteMe(headers: Operations.DeleteMe.Input.Headers = .init()) async throws -> Operations.DeleteMe.Output {
+        try await deleteMe(Operations.DeleteMe.Input(headers: headers))
     }
     /// Set your picture
     ///

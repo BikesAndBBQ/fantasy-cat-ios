@@ -289,3 +289,29 @@ revoked). Verified the same day: archive and App Store Connect export
 succeed, signed Apple Distribution with a store profile.
 `ExportOptions.plist` exports locally; switching `destination` to `upload`
 sends a build to TestFlight. Nothing is ever submitted for review (I8).
+
+## I13 — A server switch that forces an update (2026-09-28)
+Ryan wanted a way to make everyone update, "before anything launches", as a
+safety net for a bad release. The server answers `GET /api/app/ios` with
+`min_build`, `update_url` and `message`, from `IOS_MIN_BUILD` (default 0,
+off), `IOS_UPDATE_URL` (default `itms-beta://`, which opens TestFlight) and
+`IOS_UPDATE_MESSAGE` in its environment. Flipping it is an edit to
+`deploy/env.production` plus a deploy: no app release. Runbook: the server
+README, "Forcing an iPhone app update".
+
+- **Build number, not version.** `CFBundleVersion` is the UTC time of the
+  `make testflight` run, so it always goes up and names one exact build;
+  "1.0" is shared by every build so far.
+- **Checked at launch and on every return to the foreground**, signed in or
+  not, so an app left open is caught the next time it's used.
+- **Blocking means replacing the app**: RootView shows only
+  `UpdateRequiredView`, with no close button. Clearing the switch unblocks
+  at the next foreground.
+- **It fails open.** Offline, a server error or an answer the app can't
+  decode lets the person in. A switch meant for emergencies must not become
+  one. The consequence: keep the path and the three field names stable,
+  since builds on phones depend on them.
+- The comparison lives in `Core/UpdateCheck.swift`, tested. `-minbuild <n>`
+  (Debug only) fakes the server's number to look at the screen.
+- Not done: the API doesn't refuse old clients itself. If a change breaks
+  old builds, the switch goes on before the server change ships.

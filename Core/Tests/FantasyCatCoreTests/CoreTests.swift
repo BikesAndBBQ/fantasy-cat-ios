@@ -18,6 +18,21 @@ import Testing
     }
 }
 
+@Suite struct UpdateCheckTests {
+    @Test func olderBuildsMustUpdate() {
+        #expect(UpdateCheck.mustUpdate(build: "202609281509", minBuild: 202609290900))
+        #expect(!UpdateCheck.mustUpdate(build: "202609290900", minBuild: 202609290900)) // the minimum itself runs
+        #expect(!UpdateCheck.mustUpdate(build: "202610011200", minBuild: 202609290900))
+    }
+
+    @Test func offOrUnreadableLetsYouIn() {
+        #expect(!UpdateCheck.mustUpdate(build: "202609281509", minBuild: 0))
+        #expect(!UpdateCheck.mustUpdate(build: "202609281509", minBuild: nil)) // offline, or the server didn't say
+        #expect(!UpdateCheck.mustUpdate(build: nil, minBuild: 202609290900))
+        #expect(!UpdateCheck.mustUpdate(build: "1.0.3", minBuild: 202609290900))
+    }
+}
+
 @Suite struct TimeTextTests {
     let now = Date(timeIntervalSince1970: 1_800_000_000)
 

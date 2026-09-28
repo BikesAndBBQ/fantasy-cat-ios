@@ -67,6 +67,74 @@ extension Components {
                 ])
             }
         }
+        /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody`.
+        internal struct AppVersionOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// What the blocking screen says.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody/message`.
+            internal var message: Swift.String
+            /// Builds (CFBundleVersion) below this must update before they can be used. 0: every build may run.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody/min_build`.
+            internal var minBuild: Swift.Int64
+            /// Where the update button goes: TestFlight while the app is in testing.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody/update_url`.
+            internal var updateUrl: Swift.String
+            /// Creates a new `AppVersionOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - message: What the blocking screen says.
+            ///   - minBuild: Builds (CFBundleVersion) below this must update before they can be used. 0: every build may run.
+            ///   - updateUrl: Where the update button goes: TestFlight while the app is in testing.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                message: Swift.String,
+                minBuild: Swift.Int64,
+                updateUrl: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.message = message
+                self.minBuild = minBuild
+                self.updateUrl = updateUrl
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case message
+                case minBuild = "min_build"
+                case updateUrl = "update_url"
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.message = try container.decode(
+                    Swift.String.self,
+                    forKey: .message
+                )
+                self.minBuild = try container.decode(
+                    Swift.Int64.self,
+                    forKey: .minBuild
+                )
+                self.updateUrl = try container.decode(
+                    Swift.String.self,
+                    forKey: .updateUrl
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "message",
+                    "min_build",
+                    "update_url"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/BallotAllocation`.
         internal struct BallotAllocation: Codable, Hashable, Sendable {
             /// How many of the budget go to this post. Leave a post out to give it none.

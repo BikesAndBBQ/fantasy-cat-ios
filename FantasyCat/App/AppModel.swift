@@ -1,3 +1,4 @@
+import FantasyCatCore
 import Observation
 import SwiftUI
 
@@ -95,6 +96,32 @@ final class AppModel {
             case .default(let status, let problem): throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
         } catch { throw Failure.from(error) }
+    }
+
+    /// Set when the server says this build is too old to use (I13). While it
+    /// is set, RootView shows only the update screen.
+    struct UpdateRequired: Equatable {
+        var message: String
+        var url: URL?
+    }
+    private(set) var updateRequired: UpdateRequired?
+
+    /// Asked at launch and on every return to the foreground, signed in or
+    /// not. Offline or an answer it can't read leaves things as they were:
+    /// the check never locks anyone out by failing.
+    func checkForUpdate() async {
+        guard case .ok(let ok) = try? await API.client.iosAppVersion(.init()), let body = try? ok.body.json else { return }
+        #if DEBUG
+        // `-minbuild <n>`: pretend the server said n, to see the screen without touching the server.
+        let args = ProcessInfo.processInfo.arguments
+        let minBuild = args.firstIndex(of: "-minbuild").flatMap { args.indices.contains($0 + 1) ? Int64(args[$0 + 1]) : nil } ?? body.minBuild
+        #else
+        let minBuild = body.minBuild
+        #endif
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        updateRequired = UpdateCheck.mustUpdate(build: build, minBuild: minBuild)
+            ? UpdateRequired(message: body.message, url: URL(string: body.updateUrl))
+            : nil
     }
 
     /// Whether the server offers Google at all (it's configuration there).
