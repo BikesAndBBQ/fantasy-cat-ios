@@ -189,6 +189,21 @@ items:
     owner: ryan
     created_at: 2026-09-28
     note: |
+      **2026-09-28, second pass:** the vault item *App Store Connect API Key*
+      exists, with the `.p8` private key in its `credential` field. **Still
+      missing: the Key ID and the Issuer ID.** Signing needs all three, so
+      nothing could be tested yet. Both are on App Store Connect -> Users and
+      Access -> Integrations -> Team Keys: the Issuer ID above the list, the
+      Key ID in the key's row. Add them to the same item as two text fields
+      named `key id` and `issuer id`. Neither is secret, but they belong
+      together.
+
+      **Role:** the key has **Developer**. My understanding, not yet tested, is
+      that this can build and sign for your devices but can't create the
+      distribution certificate TestFlight needs; that takes **App Manager**
+      (or Admin). The agent tests with the Developer key first and asks for
+      a new App Manager key only if it fails.
+
       With the paid membership confirmed, a dispatch still can't sign. Probed
       2026-09-28: a Release device build with `-allowProvisioningUpdates`
       fails with **"No Accounts"** and "No profiles for `co.fantasycat.app`".
@@ -211,3 +226,22 @@ items:
       Settings -> Accounts, check the team no longer says "(Personal Team)",
       then build to your phone once from Xcode. That creates profiles by hand
       but doesn't let a dispatch sign.
+
+  - id: 8fd754
+    title: "Create the app record in App Store Connect"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-28
+    note: |
+      TestFlight needs an app record, and **the App Store Connect API can't
+      create one**: that is web-only, whatever the key's role. The agent can
+      register the bundle id `co.fantasycat.app` first (a signed build does
+      it) so it appears in the form. Then, on appstoreconnect.apple.com:
+      - Apps -> **+** -> New App, platform **iOS**
+      - Name: *Fantasy Cat League* (or your pick; changeable before release)
+      - Primary language English (U.S.), bundle ID `co.fantasycat.app`
+      - SKU: anything unique, e.g. `fantasycat-ios`
+      - User access: Full Access
+      This does not submit anything for review. Waits on `712f67` so the
+      bundle id exists; you can also register it yourself under
+      developer.apple.com -> Identifiers.
