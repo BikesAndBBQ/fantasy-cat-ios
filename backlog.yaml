@@ -1,25 +1,18 @@
 # Work tracker. Spec: ~/projects/agent-manager/WORK-TRACKING.md
 items:
-  - id: 7ed80e
-    title: "Install Xcode and point the command line at it"
+  - id: 509436
+    title: "Apple Developer Program membership, and the Team ID"
     status: done
     owner: ryan
     created_at: 2026-09-20
-    done_at: 2026-09-20
+    done_at: 2026-09-28
     note: |
-      This Mac has only the Command Line Tools, so nothing iOS can be built.
-      App Store -> Xcode (or `xcodes install --latest` if you use xcodes), open
-      it once to accept the licence and let it install the iOS platform and a
-      simulator, then:
-        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-      Check with: xcodebuild -version
+      **Done 2026-09-28.** Ryan confirmed the paid membership:
+      developer.apple.com/account -> Membership details shows Team ID
+      `Y837X7M3W4`, annual fee US$99, renewal 2026-09-20 -> 2027-09-20. Same ID
+      as before, so the project's `DEVELOPMENT_TEAM` needs no change. Signing
+      from a dispatch is still blocked separately, see `712f67`.
 
-  - id: 509436
-    title: "Apple Developer Program membership, and the Team ID"
-    status: blocked
-    owner: ryan
-    created_at: 2026-09-20
-    note: |
       $99/year at developer.apple.com/programs (individual is fine). Needed for
       TestFlight, push, and associated domains (passkeys, invite links). A free
       Apple ID only gets a 7-day build on your own phone. Then sign in to
@@ -72,37 +65,6 @@ items:
     created_at: 2026-09-20
     note: "SwiftUI, iOS 18 minimum, a checked-in Xcode project (I4 dropped XcodeGen), Swift OpenAPI Generator, bundle id co.fantasycat.app, TestFlight. Worth two minutes before milestone 0 builds on them."
 
-  - id: f71612
-    title: "Milestone 0a: the app builds and runs in the Simulator"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: "Ryan's template moved to the repo root and made iPhone-only, iOS 18+, Swift 6, bundle id co.fantasycat.app (I4). `make build|run|shot`. Verified: built, launched in the iPhone 18 Pro simulator, screenshotted in both themes. The nested git repo Xcode created was removed with Ryan's OK."
-
-  - id: 5bd84b
-    title: "Milestone 1: design tokens and core components in Swift"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: "Tokens.swift is generated (`make tokens`) from the server repo's design/tokens.resolved.json, which that repo checks against Chrome's rendering. Three OFL typefaces bundled and registered at launch; TypeStyle scales with Dynamic Type. Button, Eyebrow, PageTitle, Chip, Card, Banner, FCField, Avatar, Rosette, PageBackground, plus a gallery (`make shot GALLERY=1`). Verified in the Simulator: both themes, and the largest standard text size."
-
-  - id: b5bf90
-    title: "Milestone 2a: generated API client and password sign-in"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: |
-      Client generated from the server's openapi.json (`make api`), checked in;
-      the app depends only on the two OpenAPI runtime packages. Bearer session
-      in the Keychain. Verified in the Simulator against ./dev.sh: a wrong
-      password shows the server's sentence; the right one lands on Home; a cold
-      relaunch is still signed in (server saw GET /me 200); sign-out revokes the
-      session (logout 204) and the next launch asks again. Found and fixed on
-      the way: Go's fractional-second timestamps failed to decode.
-
   - id: 871b96
     title: "Milestone 2b: Google sign-in"
     status: blocked
@@ -121,75 +83,12 @@ items:
     status: blocked
     owner: ryan
     created_at: 2026-09-20
-    note: "Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID."
-
-  - id: 390bd5
-    title: "A unit test target"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: "Done differently: the pure logic moved into a local package, Core/, tested with `make test` (swift test, seconds, no Simulator). 12 tests: Go timestamps, time text, trim arithmetic, invite parsing. UI is still checked by looking (`make shot`)."
-
-  - id: 7ea7d3
-    title: "Milestone 4a: post a photo or video (pipeline and screen)"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
     note: |
-      PhotosPicker asking for the original file (`.current`, no H.264
-      conversion), with progress and real errors; on-device trim and 1080p HEVC
-      export of only the kept part; background-URLSession upload; submit via
-      the generated client. Trim bar mirrors the web's. Verified in the
-      Simulator against ./dev.sh with `-autopost`: a 40 s clip trimmed to 1-3 s
-      arrived and the server made a 2000 ms video; a real iPhone HEIC posted.
-      Both themes looked at. NOT verified, because the Simulator can't: the
-      picker itself, an iCloud original downloading, a long 4K video, leaving
-      the app mid-upload.
+      Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID.
 
-  - id: df2466
-    title: "Milestone 3: read the league (This week, Results, Standings)"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: |
-      Native tab bar; league name and account avatar as a page header row (the
-      navigation bar wrapped them in glass capsules and truncated the name).
-      This week: live countdown, category chips with counts, two-column feed,
-      submission sheet (video plays; take down your own post while open),
-      floating Post. Results: round picker, winners with rosette and count,
-      runners-up, "You earned". Standings: tied ranks from the server, your row
-      highlighted. Pull to refresh; league refreshed every minute. Verified in
-      the Simulator against ./dev.sh, both themes, and a post made through the
-      new entry point refreshed the feed by itself.
-
-  - id: 5002b6
-    title: "Milestone 5: vote in the app"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: |
-      Vote tab (badge = categories where you still have treats to give),
-      category progress strip, budget bar with pips, a stepper per post that
-      disables itself at the budget or the per-post cap, a light haptic per
-      change, saved 600 ms after the last tap and flushed when you leave the
-      category; on a refusal it falls back to what the server has. "Nothing to
-      vote on yet" counts down to when voting opens. Verified in the Simulator
-      against ./dev.sh: votes cast through the app were stored (spent 3 of 5:
-      Biscuit 2, Bean 1), came back after a cold relaunch, and the server
-      refuses an over-budget ballot with 422. Haptics can't be felt in a
-      Simulator.
-
-  - id: fdcafd
-    title: "Account screen in the app"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: "The avatar opens a sheet with sign-out only. Cats, your picture, reminders and passkeys still live on the web. Also: start or join a league, which today says 'go to fantasycat.co'."
+      **2026-09-28:** membership is paid (`509436` done). Now blocked on
+      getting a provisioning profile with Associated Domains, see `712f67`,
+      and on the server's association file (`bdccca`).
 
   - id: 98dc77
     title: "Milestone 4b: try posting on a real phone"
@@ -253,6 +152,8 @@ items:
          the developer certificate.
       Free-tier builds expire after 7 days. When the paid membership is active,
       swap DEVELOPMENT_TEAM for the paid team's id.
+      **2026-09-28:** the paid team kept the same id, `Y837X7M3W4`; nothing
+      to swap. Builds signed now should last a year, not 7 days.
 
   - id: f6fecb
     title: "CI: build and test on a macOS runner"
@@ -261,20 +162,12 @@ items:
     created_at: 2026-09-20
     note: "Needs the Agents PAT to have Workflows permission on this repo (see that item). GitHub's macOS runners must offer Xcode 27."
 
-  - id: 5f9efb
-    title: "Server: bearer-token sessions for native clients"
-    status: done
-    owner: agent
-    created_at: 2026-09-20
-    done_at: 2026-09-20
-    note: "Server D36, live. Send X-Session-Transport: bearer at sign-in to get session_token in the body; send Authorization: Bearer after. Google sign-in still needs a handoff (server backlog)."
-
   - id: bdccca
     title: "Server: apple-app-site-association (webcredentials + applinks)"
-    status: blocked
+    status: pending
     owner: agent
     created_at: 2026-09-20
-    note: "Needs the Team ID."
+    note: "Needs the Team ID. **Unblocked 2026-09-28:** paid team `Y837X7M3W4`, so the app ID is `Y837X7M3W4.co.fantasycat.app`. Server-side only; ready to build."
 
   - id: ee47c1
     title: "Delete my account, in the app"
@@ -289,3 +182,32 @@ items:
       any App Store app that creates accounts; TestFlight doesn't, but the
       account screen should offer it with the same two-step confirm as the
       web, then clear the Keychain token and return to sign-in.
+
+  - id: 712f67
+    title: "Headless signing: an App Store Connect API key in the FantasyCat vault"
+    status: blocked
+    owner: ryan
+    created_at: 2026-09-28
+    note: |
+      With the paid membership confirmed, a dispatch still can't sign. Probed
+      2026-09-28: a Release device build with `-allowProvisioningUpdates`
+      fails with **"No Accounts"** and "No profiles for `co.fantasycat.app`".
+      `xcodebuild` in a dispatch doesn't see the Apple ID signed in to Xcode.
+      This blocks the real bundle id, Associated Domains (`703a84`) and
+      every TestFlight upload.
+
+      **The durable fix:** an App Store Connect API key that `xcodebuild`
+      uses directly (`-authenticationKeyPath/-ID/-IssuerID`).
+      - App Store Connect -> Users and Access -> Integrations -> Team Keys,
+        role **App Manager** (enough to register the app id, manage profiles
+        and upload to TestFlight; it cannot submit for review).
+      - Put it in the **FantasyCat** vault: the `.p8` contents, the Key ID
+        and the Issuer ID. Never in either repo (hard line).
+      - The agent then adds a script that loads it with the project token,
+        writes the key to a temp file outside the repo for one build, and
+        deletes it, and records the decision.
+
+      **Quicker, but only for Ryan at the Mac:** open the project in Xcode,
+      Settings -> Accounts, check the team no longer says "(Personal Team)",
+      then build to your phone once from Xcode. That creates profiles by hand
+      but doesn't let a dispatch sign.

@@ -1,0 +1,132 @@
+# Archive of done backlog items (append-only). Spec: ~/projects/agent-manager/WORK-TRACKING.md
+items:
+  - id: 7ed80e
+    title: "Install Xcode and point the command line at it"
+    status: done
+    owner: ryan
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: |
+      This Mac has only the Command Line Tools, so nothing iOS can be built.
+      App Store -> Xcode (or `xcodes install --latest` if you use xcodes), open
+      it once to accept the licence and let it install the iOS platform and a
+      simulator, then:
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      Check with: xcodebuild -version
+
+  - id: f71612
+    title: "Milestone 0a: the app builds and runs in the Simulator"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: "Ryan's template moved to the repo root and made iPhone-only, iOS 18+, Swift 6, bundle id co.fantasycat.app (I4). `make build|run|shot`. Verified: built, launched in the iPhone 18 Pro simulator, screenshotted in both themes. The nested git repo Xcode created was removed with Ryan's OK."
+
+  - id: 5bd84b
+    title: "Milestone 1: design tokens and core components in Swift"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: "Tokens.swift is generated (`make tokens`) from the server repo's design/tokens.resolved.json, which that repo checks against Chrome's rendering. Three OFL typefaces bundled and registered at launch; TypeStyle scales with Dynamic Type. Button, Eyebrow, PageTitle, Chip, Card, Banner, FCField, Avatar, Rosette, PageBackground, plus a gallery (`make shot GALLERY=1`). Verified in the Simulator: both themes, and the largest standard text size."
+
+  - id: b5bf90
+    title: "Milestone 2a: generated API client and password sign-in"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: |
+      Client generated from the server's openapi.json (`make api`), checked in;
+      the app depends only on the two OpenAPI runtime packages. Bearer session
+      in the Keychain. Verified in the Simulator against ./dev.sh: a wrong
+      password shows the server's sentence; the right one lands on Home; a cold
+      relaunch is still signed in (server saw GET /me 200); sign-out revokes the
+      session (logout 204) and the next launch asks again. Found and fixed on
+      the way: Go's fractional-second timestamps failed to decode.
+
+  - id: 390bd5
+    title: "A unit test target"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: "Done differently: the pure logic moved into a local package, Core/, tested with `make test` (swift test, seconds, no Simulator). 12 tests: Go timestamps, time text, trim arithmetic, invite parsing. UI is still checked by looking (`make shot`)."
+
+  - id: 7ea7d3
+    title: "Milestone 4a: post a photo or video (pipeline and screen)"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: |
+      PhotosPicker asking for the original file (`.current`, no H.264
+      conversion), with progress and real errors; on-device trim and 1080p HEVC
+      export of only the kept part; background-URLSession upload; submit via
+      the generated client. Trim bar mirrors the web's. Verified in the
+      Simulator against ./dev.sh with `-autopost`: a 40 s clip trimmed to 1-3 s
+      arrived and the server made a 2000 ms video; a real iPhone HEIC posted.
+      Both themes looked at. NOT verified, because the Simulator can't: the
+      picker itself, an iCloud original downloading, a long 4K video, leaving
+      the app mid-upload.
+
+  - id: df2466
+    title: "Milestone 3: read the league (This week, Results, Standings)"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: |
+      Native tab bar; league name and account avatar as a page header row (the
+      navigation bar wrapped them in glass capsules and truncated the name).
+      This week: live countdown, category chips with counts, two-column feed,
+      submission sheet (video plays; take down your own post while open),
+      floating Post. Results: round picker, winners with rosette and count,
+      runners-up, "You earned". Standings: tied ranks from the server, your row
+      highlighted. Pull to refresh; league refreshed every minute. Verified in
+      the Simulator against ./dev.sh, both themes, and a post made through the
+      new entry point refreshed the feed by itself.
+
+  - id: 5002b6
+    title: "Milestone 5: vote in the app"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: |
+      Vote tab (badge = categories where you still have treats to give),
+      category progress strip, budget bar with pips, a stepper per post that
+      disables itself at the budget or the per-post cap, a light haptic per
+      change, saved 600 ms after the last tap and flushed when you leave the
+      category; on a refusal it falls back to what the server has. "Nothing to
+      vote on yet" counts down to when voting opens. Verified in the Simulator
+      against ./dev.sh: votes cast through the app were stored (spent 3 of 5:
+      Biscuit 2, Bean 1), came back after a cold relaunch, and the server
+      refuses an over-budget ballot with 422. Haptics can't be felt in a
+      Simulator.
+
+  - id: fdcafd
+    title: "Account screen in the app"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: "The avatar opens a sheet with sign-out only. Cats, your picture, reminders and passkeys still live on the web. Also: start or join a league, which today says 'go to fantasycat.co'."
+
+  - id: 5f9efb
+    title: "Server: bearer-token sessions for native clients"
+    status: done
+    owner: agent
+    created_at: 2026-09-20
+    done_at: 2026-09-20
+    archived_at: 2026-09-28
+    note: "Server D36, live. Send X-Session-Transport: bearer at sign-in to get session_token in the body; send Authorization: Bearer after. Google sign-in still needs a handoff (server backlog)."
