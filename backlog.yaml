@@ -296,3 +296,27 @@ items:
       developer.apple.com -> Identifiers.
       **2026-09-28: `co.fantasycat.app` is registered now**, so it is in the
       form's bundle ID list. Ready for you.
+
+  - id: 97a07a
+    title: "Forced update: a server switch that blocks old app builds"
+    status: done
+    owner: agent
+    created_at: 2026-09-28
+    done_at: 2026-09-28
+    note: |
+      Ryan asked for it before any launch, as a safety net (decision I13).
+      - **Server:** `GET /api/app/ios` returns `min_build` from
+        `IOS_MIN_BUILD` in `deploy/env.production` (0 = off). Deployed
+        2026-09-28; production answers `min_build: 0`.
+      - **App:** checks at launch and on every return to the foreground;
+        below the minimum it shows only "Time to update" with a TestFlight
+        button. Fails open when offline.
+      - **To pull it:** set `IOS_MIN_BUILD` to the fixed build's number,
+        commit, `scripts/deploy.sh`. Runbook: server README, "Forcing an
+        iPhone app update".
+      - **Verified in the Simulator** against `./dev.sh`: off, forced by the
+        server value, cleared while the app was open, both themes. Not
+        checked on a real phone, and the TestFlight button itself can't be
+        tried in a Simulator.
+      - First build with the check: `1.0 (202609282151)`. The earlier
+        `202609281509` can't be blocked.
