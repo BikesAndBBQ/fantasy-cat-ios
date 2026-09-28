@@ -266,6 +266,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cat League Dev";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To take a photo or video of your cat to post.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "So videos of your cat have sound.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -307,6 +308,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cat League";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To take a photo or video of your cat to post.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "So videos of your cat have sound.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

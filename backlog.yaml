@@ -157,6 +157,15 @@ items:
       swap DEVELOPMENT_TEAM for the paid team's id.
       **2026-09-28:** the paid team kept the same id, `Y837X7M3W4`; nothing
       to swap. Builds signed now should last a year, not 7 days.
+      **2026-09-28: TestFlight is the easier route now.** Build
+      `1.0 (202609281509)` is on TestFlight, pointed at fantasycat.co, and
+      needs no Developer Mode or certificate trust. To install it:
+      1. appstoreconnect.apple.com -> Apps -> Fantasy Cat -> TestFlight ->
+         Internal Testing -> **+**, make a group, add yourself (and Rebecca,
+         if she's a user on the account).
+      2. Install **TestFlight** from the App Store on the phone, open the
+         invite, install.
+      Builds last 90 days. The agent uploads new ones with `make testflight`.
 
   - id: f6fecb
     title: "CI: build and test on a macOS runner"
@@ -263,10 +272,16 @@ items:
 
   - id: 8fd754
     title: "Create the app record in App Store Connect"
-    status: blocked
+    status: done
     owner: ryan
     created_at: 2026-09-28
+    done_at: 2026-09-28
     note: |
+      **Done 2026-09-28.** Ryan created it: *Fantasy Cat*, SKU `fantasycat-ios`,
+      Apple id `6817008793` (confirmed through the API). The first build,
+      `1.0 (202609281509)`, was uploaded with `make testflight` and processed
+      as **VALID**, ready for internal testing.
+
       TestFlight needs an app record, and **the App Store Connect API can't
       create one**: that is web-only, whatever the key's role. The agent can
       register the bundle id `co.fantasycat.app` first (a signed build does

@@ -7,7 +7,7 @@ APP     := $(DERIVED)/Build/Products/Debug-iphonesimulator/$(SCHEME).app
 THEME   ?= dark
 XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination 'platform=iOS Simulator,name=$(SIM)' -derivedDataPath $(DERIVED)
 
-.PHONY: build test run shot tokens api console device clean
+.PHONY: build test run shot tokens api console device testflight clean
 
 build: ## compile for the Simulator; warnings are printed, errors fail
 	@$(XCB) -quiet build
@@ -46,6 +46,15 @@ device: ## build, install and launch on a connected iPhone (Developer Mode on, d
 	@xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -configuration Debug -destination 'platform=iOS,name=$(DEVICE)' -derivedDataPath build-device -allowProvisioningUpdates -quiet build
 	@xcrun devicectl device install app --device '$(DEVICE)' build-device/Build/Products/Debug-iphoneos/$(SCHEME).app
 	@xcrun devicectl device process launch --device '$(DEVICE)' $(BUNDLE)
+
+# Signs with the App Store Connect API key through the server repo's script
+# (I12); the build number is the UTC time, so each upload is higher than the last.
+BUILD_NUMBER ?= $(shell date -u +%Y%m%d%H%M)
+testflight: ## archive, sign for the App Store and upload to TestFlight (never submits for review): make testflight [DEST=export]
+	@../fantasy-cat/scripts/ios-xcodebuild.sh -scheme $(SCHEME) -configuration Release -destination generic/platform=iOS -derivedDataPath build-device -archivePath build-device/$(SCHEME).xcarchive CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) -quiet archive
+	@sed 's|<string>export</string>|<string>$(or $(DEST),upload)</string>|' ExportOptions.plist > build-device/ExportOptions.plist
+	@../fantasy-cat/scripts/ios-xcodebuild.sh -exportArchive -archivePath build-device/$(SCHEME).xcarchive -exportOptionsPlist build-device/ExportOptions.plist -exportPath build-device/export
+	@echo "testflight: build $(BUILD_NUMBER)"
 
 clean:
 	@rm -r $(DERIVED) 2>/dev/null || true
