@@ -269,3 +269,20 @@ The rule that follows: logic that needs only Foundation goes in `Core/` with a
 test; what's left in the app target is UI and I/O, which is checked by running
 it and looking (`make shot`). The app had its own copies of all four pieces;
 they were deleted, so there is one implementation and it is the tested one.
+
+## I12 — Signing from a dispatch uses an App Store Connect API key (2026-09-28)
+A dispatched `xcodebuild` can't see the Apple ID signed in to Xcode ("No
+Accounts"), so it signs with an App Store Connect API key instead. The key
+lives in the FantasyCat vault item *App Store Connect API Key* (`credential`
+= the `.p8`, plus `key id` and `issuer id`) and is read with the project
+token. `scripts/ios-xcodebuild.sh` in the server repo (where dispatch
+permissions live) writes the `.p8` to a private temp directory outside both
+repos for one run, deletes it on exit, and adds `-allowProvisioningUpdates`
+and the three `-authenticationKey…` flags. 1Password stores the `.p8` with
+its line breaks turned into spaces, so the script rebuilds the PEM.
+Verified 2026-09-28 with a **Developer**-role key: development signing works
+(registered `co.fantasycat.app`, one-year team profile). Distribution does
+not: exporting for App Store Connect fails with "Cloud signing permission
+error", so TestFlight needs a key with more access (backlog `712f67`).
+`ExportOptions.plist` exports locally; switching `destination` to `upload`
+sends a build to TestFlight. Nothing is ever submitted for review (I8).
