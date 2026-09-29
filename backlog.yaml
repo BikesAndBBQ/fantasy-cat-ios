@@ -95,10 +95,16 @@ items:
 
   - id: 98dc77
     title: "Milestone 4b: try posting on a real phone"
-    status: blocked
+    status: done
     owner: ryan
     created_at: 2026-09-20
+    done_at: 2026-09-29
     note: |
+      **2026-09-29:** Ryan posted photos and **the long video** from his
+      phone through the app. Verified by his report only: the production
+      log reaches back only to the 2026-09-28 21:51 deploy and holds no
+      upload from it. Not reported: an iCloud-only video, or leaving the
+      app mid-upload.
       The reason this app exists, and only a phone can prove it. A free Apple
       ID is enough for this (Personal Team, 7-day build); no paid membership
       needed. Try: a short video, the long video that failed on the web, a
