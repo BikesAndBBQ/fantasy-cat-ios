@@ -37,11 +37,27 @@ items:
         it may change on enrollment.
 
   - id: ac252b
-    title: "Agents GitHub PAT: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
-    status: pending
+    title: "Agents GitHub App: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
+    status: blocked
     owner: ryan
     created_at: 2026-09-20
-    note: "Pushing already works (verified 2026-09-20). The first push that adds .github/workflows/ will be refused unless the PAT has Workflows permission on this repo, as it was on fantasy-cat. Check once; not urgent until milestone 0."
+    note: |
+      **Still needed; it's now the GitHub App, not the PAT.** Agents push as
+      `braverson-agents[bot]` with a per-dispatch App token. Tested
+      2026-09-30 by pushing a scratch branch that adds
+      `.github/workflows/`: GitHub refused it with *"refusing to allow a
+      GitHub App to create or update workflow … without `workflows`
+      permission"*. The branch never reached GitHub, and I deleted it locally.
+
+      **Ask:** give the agents' GitHub App **Workflows: Read and write**
+      (GitHub → Settings → Developer settings → GitHub Apps → the app →
+      Permissions), then accept the permission change on the installation.
+      This blocks `f6fecb` (CI on a macOS runner) and any workflow edit in
+      `fantasy-cat` too.
+
+      *Original note:* pushing works (verified 2026-09-20); the first push
+      adding `.github/workflows/` would be refused without Workflows
+      permission. Not urgent until milestone 0.
 
   - id: 861b08
     title: "Register fantasy-cat-ios in agent-manager"
