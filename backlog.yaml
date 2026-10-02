@@ -36,29 +36,6 @@ items:
       - If not enrolled yet: enroll ($99, individual), then re-check the ID;
         it may change on enrollment.
 
-  - id: ac252b
-    title: "Agents GitHub App: Workflows permission on BikesAndBBQ/fantasy-cat-ios"
-    status: blocked
-    owner: ryan
-    created_at: 2026-09-20
-    note: |
-      **Still needed; it's now the GitHub App, not the PAT.** Agents push as
-      `braverson-agents[bot]` with a per-dispatch App token. Tested
-      2026-09-30 by pushing a scratch branch that adds
-      `.github/workflows/`: GitHub refused it with *"refusing to allow a
-      GitHub App to create or update workflow … without `workflows`
-      permission"*. The branch never reached GitHub, and I deleted it locally.
-
-      **Ask:** give the agents' GitHub App **Workflows: Read and write**
-      (GitHub → Settings → Developer settings → GitHub Apps → the app →
-      Permissions), then accept the permission change on the installation.
-      This blocks `f6fecb` (CI on a macOS runner) and any workflow edit in
-      `fantasy-cat` too.
-
-      *Original note:* pushing works (verified 2026-09-20); the first push
-      adding `.github/workflows/` would be refused without Workflows
-      permission. Not urgent until milestone 0.
-
   - id: 861b08
     title: "Register fantasy-cat-ios in agent-manager"
     status: done
@@ -73,41 +50,6 @@ items:
       a secondary, its `CLAUDE.md` loads, and `git -C`/`xcodebuild` work here.
       Category settled: claude-managed. Original ask was a registry.yaml entry
       + SIGHUP on :8092.
-
-  - id: c04c92
-    title: "Confirm or overturn the provisional choices in DECISIONS I2"
-    status: pending
-    owner: ryan
-    created_at: 2026-09-20
-    note: "SwiftUI, iOS 18 minimum, a checked-in Xcode project (I4 dropped XcodeGen), Swift OpenAPI Generator, bundle id co.fantasycat.app, TestFlight. Worth two minutes before milestone 0 builds on them."
-
-  - id: 871b96
-    title: "Milestone 2b: Google sign-in"
-    status: blocked
-    owner: ryan
-    created_at: 2026-09-20
-    note: |
-      Built and deployed 2026-09-20 (server D38): "Continue with Google" runs
-      the web flow in the system sign-in sheet and trades a one-time code for a
-      session. Server side is tested, including a stolen code; production
-      accepts the challenge and refuses a made-up code. The Google leg needs a
-      person: Ryan to sign in once, in the Simulator (`open -a Simulator`, then
-      `make run`) or on the phone, and say whether he lands in his league.
-
-  - id: 703a84
-    title: "Milestone 2c: passkeys, sign-up, password reset in the app"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: |
-      Sign-up and forgot-password are done (2026-09-20). Passkeys (and AutoFill of iCloud Keychain passwords) need the associated-domains entitlement, which free Personal Teams don't get: blocked on the paid developer membership and its Team ID.
-
-      **2026-09-28:** membership is paid (`509436` done). Now blocked on
-      getting a provisioning profile with Associated Domains, see `712f67`,
-      and on the server's association file (`bdccca`).
-      **Later 2026-09-28:** `712f67` done, a dispatch can now get profiles.
-      Next is `bdccca` (agent), then the entitlement here. Owner is now the
-      agent; the passkey sign-in itself still needs Ryan on a real phone.
 
   - id: 98dc77
     title: "Milestone 4b: try posting on a real phone"
@@ -125,41 +67,6 @@ items:
       ID is enough for this (Personal Team, 7-day build); no paid membership
       needed. Try: a short video, the long video that failed on the web, a
       video that lives in iCloud, a photo, and leaving the app while it uploads.
-
-  - id: dae423
-    title: "Trim bar: precise on a long video"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: |
-      Ryan, on his phone: on a two minute video the kept 30 seconds is a small
-      slice of the strip, so dragging the ends is imprecise. "Operable, leave
-      it in the backlog." Options: show a zoomed strip around the selection
-      (what Photos does: the strip is the selection's neighbourhood, not the
-      whole video); slow the drag when the finger moves away vertically; +/-
-      0.1 s nudge buttons by each handle. The arithmetic is in Core/Clip.swift
-      and is tested, so only the view changes.
-
-  - id: 8f136b
-    title: "Post: remaining pieces"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: "Camera capture is built (2026-09-20) but untried: nothing can tap the camera in a Simulator. Still to do: recover an upload that finished after the app was killed; one Swift 6 metatype warning on the PhotosPicker label helper."
-
-  - id: 5d9367
-    title: "In-app leftovers that still point at the web"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: "Done 2026-09-20: change or set a password, edit an open round's categories (admin, until the first post), reset the invite link. Still web-only: managing passkeys, and a league's posting limit and vote budget. Each screen says so."
-
-  - id: 221a9a
-    title: "CI for this repo"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: "`make test` (Core) runs anywhere Swift does. Building the app needs a macOS runner with Xcode 27. Also worth a drift check: `make api && make tokens`, then `git diff --exit-code`."
 
   - id: 7bcaeb
     title: "Milestone 0b: the app on Ryan's phone"
@@ -190,34 +97,6 @@ items:
       2. Install **TestFlight** from the App Store on the phone, open the
          invite, install.
       Builds last 90 days. The agent uploads new ones with `make testflight`.
-
-  - id: f6fecb
-    title: "CI: build and test on a macOS runner"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: "Needs the Agents PAT to have Workflows permission on this repo (see that item). GitHub's macOS runners must offer Xcode 27."
-
-  - id: bdccca
-    title: "Server: apple-app-site-association (webcredentials + applinks)"
-    status: pending
-    owner: agent
-    created_at: 2026-09-20
-    note: "Needs the Team ID. **Unblocked 2026-09-28:** paid team `Y837X7M3W4`, so the app ID is `Y837X7M3W4.co.fantasycat.app`. Server-side only; ready to build."
-
-  - id: ee47c1
-    title: "Delete my account, in the app"
-    status: pending
-    owner: agent
-    created_at: 2026-09-25
-    note: |
-      The server has `DELETE /me` (server D40, 2026-09-25): it removes the
-      account, its cats, posts, votes and every photo and video from storage,
-      and refuses (409, with the reason) when the person runs a league that
-      still has other managers. Apple requires in-app account deletion for
-      any App Store app that creates accounts; TestFlight doesn't, but the
-      account screen should offer it with the same two-step confirm as the
-      web, then clear the Keychain token and return to sign-in.
 
   - id: 712f67
     title: "Headless signing: an App Store Connect API key in the FantasyCat vault"
