@@ -38,6 +38,10 @@ at milestone 0; none has code depending on it yet.
   and can't use push or associated domains (so no passkeys), which rules it
   out for anyone but him.
 
+**Settled by use (2026-10-03).** The app was built and shipped to TestFlight
+on these choices, except XcodeGen, which I4 replaced with a checked-in
+project. Ryan uses the app daily, and no separate sign-off is pending (sc-297).
+
 ## I3 — What the server has to grow first (2026-09-20)
 
 Found by reading the API as a native client would:
