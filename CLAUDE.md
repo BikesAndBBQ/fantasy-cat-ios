@@ -85,7 +85,7 @@ re-implements a rule; it asks the API.
 - **No secrets in the repo, the app bundle or the build settings.** No API
   keys, no signing certificates, no `.p8`/`.p12`/`.mobileprovision` files.
   Signing is automatic through Ryan's Xcode account; anything else lives in
-  the `FantasyCat` 1Password vault and is read with the project token, never
+  the `fantasy-cat` 1Password vault and is read with the project token, never
   the agent's (server repo D19).
 - **Nothing is submitted to the App Store by the agent.** TestFlight uploads
   are allowed unattended while the league is pre-release (I8); revisit when

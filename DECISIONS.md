@@ -215,7 +215,7 @@ and must never submit to App Store review. The `xcrun altool` deny is removed
 because an upload to App Store Connect is how a build reaches TestFlight and
 cannot submit for review; `fastlane` and `notarytool` stay denied. No upload
 pipeline exists yet. When one is built, the App Store Connect key is read from
-the FantasyCat vault at run time and never lands in the repo (first hard line).
+the fantasy-cat vault at run time and never lands in the repo (first hard line).
 
 
 ## I9 — League screens: the web's content in the platform's frame (2026-09-20)
@@ -277,7 +277,7 @@ they were deleted, so there is one implementation and it is the tested one.
 ## I12 — Signing from a dispatch uses an App Store Connect API key (2026-09-28)
 A dispatched `xcodebuild` can't see the Apple ID signed in to Xcode ("No
 Accounts"), so it signs with an App Store Connect API key instead. The key
-lives in the FantasyCat vault item *App Store Connect API Key* (`credential`
+lives in the fantasy-cat vault item *App Store Connect API Key* (`credential`
 = the `.p8`, plus `key id` and `issuer id`) and is read with the project
 token. `scripts/ios-xcodebuild.sh` in the server repo (where dispatch
 permissions live) writes the `.p8` to a private temp directory outside both
