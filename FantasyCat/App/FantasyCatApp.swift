@@ -41,6 +41,19 @@ struct RootView: View {
         }
         .animation(.easeOut(duration: 0.2), value: model.phase)
         .animation(.easeOut(duration: 0.2), value: model.updateRequired)
+        // Universal links (fantasycat.co/join/…, release app only: the server's
+        // apple-app-site-association leaves the Debug app out).
+        .onOpenURL { model.open($0) }
+        .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+            if let url = activity.webpageURL { model.open(url) }
+        }
+        #if DEBUG
+        // `-openurl <url>`: what tapping that link does, for the Debug app that can't be given one.
+        .task {
+            let args = ProcessInfo.processInfo.arguments
+            if let i = args.firstIndex(of: "-openurl"), args.indices.contains(i + 1), let url = URL(string: args[i + 1]) { model.open(url) }
+        }
+        #endif
         .task { await model.start() }
         .task { await model.checkForUpdate() }
         .onChange(of: scenePhase) { _, phase in

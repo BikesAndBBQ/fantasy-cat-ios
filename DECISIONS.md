@@ -338,3 +338,22 @@ for a generic Simulator (`make build DESTINATION=… XCFLAGS=CODE_SIGNING_ALLOWE
   the newest Xcode on `macos-26` and moves to 27 by itself when GitHub adds it.
   Until then a green build means "builds with 26.x", which is close but not
   the toolchain that ships; TestFlight builds are still made locally with 27.
+
+## I15 — Invite links open the app; Associated Domains on Release only (2026-10-03)
+
+The server's apple-app-site-association (server sc-305) claims `/join/*` for
+the release app and shares fantasycat.co's credentials with both apps.
+`FantasyCat.entitlements` (`applinks:` and `webcredentials:fantasycat.co`) is
+set on the **Release** configuration only. Debug isn't in the applinks list
+anyway, and leaving it unentitled keeps `make device` working with the
+profile Ryan already has; passkeys in Debug (sc-299) can revisit that. The
+App ID's capability was added by automatic signing with the API key (I12) on
+the first TestFlight archive that carried it.
+
+A link mirrors the web's `/join/<code>`: signed out, sign-up opens with the
+code filled in (back to sign in for someone with an account, and the join
+screen is waiting after); signed in, the league chooser opens with the code
+filled in and the league previewed, one tap from joining. Only
+`https://fantasycat.co/join/<code>` counts (`Invite.code(fromLink:)`, tested).
+The Debug app can't be handed a universal link, so `-openurl <url>` does what
+the tap would.

@@ -36,6 +36,9 @@ struct SignUpView: View {
         } footer: {
             AuthFooterLink(lead: "Already have one?", action: "Sign in", perform: back)
         }
+        .onChange(of: model.pendingInvite, initial: true) { _, code in
+            if let code { invite = code } // opened from an invite link
+        }
         #if DEBUG
         .task {
             // `-autosignup <username>`: fill the form with that name and submit.

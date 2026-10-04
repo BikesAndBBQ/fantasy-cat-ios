@@ -12,6 +12,15 @@ final class AppModel {
     }
     private(set) var phase: Phase = .starting
 
+    /// The code of an invite link the app was opened with, kept until it's
+    /// used: by signing up with it, or on the join screen once signed in.
+    var pendingInvite: String?
+
+    /// A link the app was opened with. Only invites mean anything yet.
+    func open(_ url: URL) {
+        if let code = Invite.code(fromLink: url) { pendingInvite = code }
+    }
+
     /// On launch: a stored token is only a claim until the server agrees.
     func start() async {
         #if DEBUG
@@ -71,6 +80,7 @@ final class AppModel {
                 let out = try c.body.json
                 guard let token = out.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
                 Keychain.token = token
+                if invite != nil { pendingInvite = nil } // joined on the way in
                 phase = .signedIn(out.user, leagues: out.leagues ?? [])
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)

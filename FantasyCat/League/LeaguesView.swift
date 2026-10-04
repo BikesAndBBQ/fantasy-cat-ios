@@ -9,6 +9,8 @@ struct LeaguesView: View {
     let leagues: [Components.Schemas.LeagueSummary]
     let choose: (String) -> Void
     var openAccount: () -> Void = {}
+    /// The code of an invite link the app was opened with.
+    var link: String? = nil
 
     @State private var name = ""
     @State private var invite = ""
@@ -61,6 +63,9 @@ struct LeaguesView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(PageBackground())
+        .onChange(of: link, initial: true) { _, code in
+            if let code { invite = code } // the preview follows, through onChange(of: invite)
+        }
         #if DEBUG
         .task {
             // `-startleague <name>` / `-joinleague <code>`: the buttons, from the command line.

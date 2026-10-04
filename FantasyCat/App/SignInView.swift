@@ -129,6 +129,7 @@ struct GoogleMark: View {
 
 /// The signed-out screens and the way between them.
 struct AuthFlow: View {
+    @Environment(AppModel.self) private var model
     enum Screen { case signIn, signUp, forgot }
     @State private var screen: Screen = {
         let args = ProcessInfo.processInfo.arguments
@@ -144,5 +145,11 @@ struct AuthFlow: View {
             }
         }
         .animation(.easeOut(duration: 0.18), value: screen)
+        // An invite link while signed out goes to sign-up with the code in, as
+        // on the web. Someone with an account goes back to sign in, and the
+        // join screen is waiting after.
+        .onChange(of: model.pendingInvite, initial: true) { _, code in
+            if code != nil { screen = .signUp }
+        }
     }
 }

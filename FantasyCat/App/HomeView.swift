@@ -12,14 +12,26 @@ struct HomeView: View {
     }()
     @State private var picking = ProcessInfo.processInfo.arguments.contains("-leagues") // debug: open the chooser
     @State private var account = false
+    /// An invite link the app was opened with, filled into the join field.
+    @State private var invite: String?
 
     var body: some View {
         let slug = chosen.flatMap { c in leagues.contains { $0.slug == c } ? c : nil } ?? (leagues.count == 1 ? leagues[0].slug : nil)
-        if let slug, !picking {
-            LeagueShell(slug: slug, user: user, onLeagues: { picking = true }).id(slug)
-        } else {
-            LeaguesView(user: user, leagues: leagues, choose: { chosen = $0; picking = false }, openAccount: { account = true })
-                .sheet(isPresented: $account) { AccountView() }
+        Group {
+            if let slug, !picking, model.pendingInvite == nil {
+                LeagueShell(slug: slug, user: user, onLeagues: { picking = true }).id(slug)
+            } else {
+                LeaguesView(user: user, leagues: leagues, choose: { chosen = $0; picking = false; invite = nil }, openAccount: { account = true }, link: invite)
+                    .sheet(isPresented: $account) { AccountView() }
+            }
+        }
+        // An invite link, whenever it comes: the join field, filled in, one tap
+        // from joining (as the web's /join/<code> is).
+        .onChange(of: model.pendingInvite, initial: true) { _, code in
+            guard let code else { return }
+            invite = code
+            picking = true
+            model.pendingInvite = nil
         }
     }
 }

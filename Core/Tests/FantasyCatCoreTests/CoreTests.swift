@@ -129,4 +129,15 @@ import Testing
         #expect(Invite.code(from: "http://localhost:5173/join/pinestcats?utm=x") == "pinestcats")
         #expect(Invite.code(from: "") == "")
     }
+
+    @Test func openedLinks() {
+        #expect(Invite.code(fromLink: URL(string: "https://fantasycat.co/join/PineStCats")!) == "pinestcats")
+        #expect(Invite.code(fromLink: URL(string: "https://fantasycat.co/join/pinestcats/?utm=x")!) == "pinestcats")
+        #expect(Invite.code(fromLink: URL(string: "https://www.fantasycat.co/join/pinestcats")!) == "pinestcats")
+        #expect(Invite.code(fromLink: URL(string: "https://fantasycat.co/join/")!) == nil)
+        #expect(Invite.code(fromLink: URL(string: "https://fantasycat.co/l/pine-st-cat-league")!) == nil)
+        #expect(Invite.code(fromLink: URL(string: "https://fantasycat.co/join/a/b")!) == nil)
+        #expect(Invite.code(fromLink: URL(string: "https://example.com/join/pinestcats")!) == nil)
+        #expect(Invite.code(fromLink: URL(string: "http://fantasycat.co/join/pinestcats")!) == nil)
+    }
 }
