@@ -14,13 +14,15 @@ concurrency:
 # is checked in the server repo's CI: that repo is private, this one can't read it.
 jobs:
   ios:
-    runs-on: macos-27
+    # The app is made with Xcode 27, which no hosted image carries yet (2026-10:
+    # macos-26 tops out at 26.6, and there is no macos-27 label). So this takes
+    # the newest Xcode the image has, and moves to 27 by itself when it lands.
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - name: Xcode 27
+      - name: Newest Xcode
         run: |
-          ls -d /Applications/Xcode*.app
-          sudo xcode-select -s "$(ls -d /Applications/Xcode_27*.app | sort -V | tail -1)"
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
           xcodebuild -version
       - name: Core tests
         run: swift test --package-path Core
