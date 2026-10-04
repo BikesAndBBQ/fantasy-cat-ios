@@ -18,6 +18,7 @@ struct AccountView: View {
     private var user: Components.Schemas.UserView? { if case .signedIn(let u, _) = model.phase { u } else { nil } }
 
     var body: some View {
+        ScrollViewReader { proxy in
         ScrollView {
             if let user, let store {
                 VStack(alignment: .leading, spacing: 24) {
@@ -42,6 +43,8 @@ struct AccountView: View {
                         Text("Passkeys are still managed at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
                         Button("Sign out") { Task { dismiss(); await model.signOut() } }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("sign-out")
                     }
+                    Divider().overlay(Tokens.line)
+                    DeleteAccountSection().id("delete-account")
                 }
                 .padding(20)
             } else {
@@ -63,7 +66,10 @@ struct AccountView: View {
             if let i = args.firstIndex(of: "-setavatar"), args.indices.contains(i + 1) {
                 do { failure = await s.setAvatar(mediaID: try await MediaUpload.photo(URL(fileURLWithPath: args[i + 1]))) } catch { failure = Failure.from(error).message }
             }
+            // `-deleteaccount` (see DeleteAccountSection) also scrolls there, to see what it says.
+            if args.contains("-deleteaccount") { try? await Task.sleep(for: .seconds(1)); proxy.scrollTo("delete-account", anchor: .bottom) }
             #endif
+        }
         }
     }
 
@@ -190,6 +196,54 @@ private struct CatRow: View {
             if problem == nil { editing = false }
             busy = false
         }
+    }
+}
+
+/// The same two steps as the web's: ask, then confirm in place.
+private struct DeleteAccountSection: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    @State private var sure = false
+    @State private var busy = false
+    @State private var failure: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Eyebrow("Delete account")
+            Text("Removes your account, your cats, and every photo and video you posted, from our servers too. Your leagues keep going without you; the points other people earned stay.").type(.small).foregroundStyle(Tokens.muted)
+            if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+            if sure {
+                Text("Delete your account? This can't be undone.").type(.bodyStrong).foregroundStyle(Tokens.ink)
+                HStack(spacing: 10) {
+                    Button("Yes, delete everything") {
+                        busy = true
+                        failure = nil
+                        Task {
+                            do { try await model.deleteAccount(); dismiss() } catch { failure = Failure.from(error).message; sure = false }
+                            busy = false
+                        }
+                    }
+                    .buttonStyle(.fc(.danger, size: .sm, busy: busy))
+                    .disabled(busy)
+                    .accessibilityIdentifier("confirm-delete-account")
+                    Button("Keep it") { sure = false }.buttonStyle(.fc(size: .sm)).disabled(busy)
+                }
+            } else {
+                Button("Delete my account") { sure = true }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("delete-account")
+            }
+        }
+        #if DEBUG
+        // `-deleteaccount ask` presses the first button, `-deleteaccount yes` both.
+        .task {
+            let args = ProcessInfo.processInfo.arguments
+            guard let i = args.firstIndex(of: "-deleteaccount"), args.indices.contains(i + 1) else { return }
+            sure = true
+            guard args[i + 1] == "yes" else { return }
+            busy = true
+            do { try await model.deleteAccount() } catch { failure = Failure.from(error).message; sure = false }
+            busy = false
+        }
+        #endif
     }
 }
 

@@ -147,6 +147,21 @@ final class AppModel {
         }
     }
 
+    /// Deletes the account and everything it posted (server D40). The server
+    /// refuses, with a sentence saying why, while you run a league that still
+    /// has other managers; then nothing changes here.
+    func deleteAccount() async throws(Failure) {
+        do {
+            switch try await API.client.deleteMe(.init()) {
+            case .noContent:
+                Keychain.token = nil
+                phase = .signedOut
+            case .default(let status, let problem):
+                throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch { throw Failure.from(error) }
+    }
+
     func signOut() async {
         _ = try? await API.client.logout(.init()) // best effort: the local token goes either way
         Keychain.token = nil
