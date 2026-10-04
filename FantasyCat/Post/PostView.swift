@@ -70,7 +70,6 @@ struct PostView: View {
                         player?.pause()
                         seek(t)
                     }
-                    .coordinateSpace(name: "trim")
                     .disabled(model.busy)
                 }
                 HStack {

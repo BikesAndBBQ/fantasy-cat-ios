@@ -99,6 +99,27 @@ import Testing
             }
         }
     }
+
+    @Test func zoomOnlyOnALongVideo() {
+        #expect(!Clip.canZoom(30))
+        #expect(Clip.canZoom(120))
+    }
+
+    @Test func zoomKeepsTheHandleUnderTheFinger() {
+        // Handle at 60 s, finger at the middle of the strip.
+        #expect(Clip.zoomWindow(around: 60, at: 0.5, duration: 120) == 55...65)
+        // Near either end the window stops at the video's edge instead.
+        #expect(Clip.zoomWindow(around: 2, at: 0.5, duration: 120) == 0...10)
+        #expect(Clip.zoomWindow(around: 119, at: 0.9, duration: 120) == 110...120)
+    }
+
+    @Test func windowFollowsTheHandle() {
+        #expect(Clip.follow(55...65, 60, duration: 120) == 55...65)
+        #expect(Clip.follow(55...65, 67.5, duration: 120) == 57.5...67.5)
+        #expect(Clip.follow(55...65, 50, duration: 120) == 50...60)
+        #expect(Clip.follow(110...120, 125, duration: 120) == 110...120)
+        #expect(Clip.follow(0...10, -3, duration: 120) == 0...10)
+    }
 }
 
 @Suite struct InviteTests {
