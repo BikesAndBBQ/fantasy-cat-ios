@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Whether these copies match the server (the spec in Tools/openapi, Tokens.swift)
+# is checked in the server repo's CI: that repo is private, this one can't read it.
+jobs:
+  ios:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode 27
+        run: |
+          ls -d /Applications/Xcode*.app
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_27*.app | sort -V | tail -1)"
+          xcodebuild -version
+      - name: Core tests
+        run: swift test --package-path Core
+      - name: Generated API client is current
+        run: make api-gen && git diff --exit-code -- FantasyCat/API/Generated
+      - name: Build for the Simulator
+        run: make build DESTINATION='generic/platform=iOS Simulator' XCFLAGS=CODE_SIGNING_ALLOWED=NO

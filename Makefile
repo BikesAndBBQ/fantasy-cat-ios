@@ -5,12 +5,14 @@ SIM     ?= iPhone 18 Pro
 DERIVED := build
 APP     := $(DERIVED)/Build/Products/Debug-iphonesimulator/$(SCHEME).app
 THEME   ?= dark
-XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination 'platform=iOS Simulator,name=$(SIM)' -derivedDataPath $(DERIVED)
+# CI builds for any Simulator, unsigned: make build DESTINATION='generic/platform=iOS Simulator' XCFLAGS=CODE_SIGNING_ALLOWED=NO
+DESTINATION ?= platform=iOS Simulator,name=$(SIM)
+XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination '$(DESTINATION)' -derivedDataPath $(DERIVED)
 
-.PHONY: build test run shot tokens api console device testflight clean
+.PHONY: build test run shot tokens api api-gen console device testflight clean
 
 build: ## compile for the Simulator; warnings are printed, errors fail
-	@$(XCB) -quiet build
+	@$(XCB) -quiet $(XCFLAGS) build
 
 test: ## the pure logic in Core/ (dates, trim arithmetic, invite parsing): seconds, no Simulator
 	@swift test --package-path Core 2>&1 | tail -3
@@ -32,8 +34,11 @@ tokens: ## regenerate Design/Tokens.swift from the server repo's resolved tokens
 
 api: ## regenerate the API client from the server repo's OpenAPI spec
 	@cp ../fantasy-cat/web/openapi.json Tools/openapi/openapi.json
-	@cd Tools/openapi && swift run -c release swift-openapi-generator generate openapi.json --config openapi-generator-config.yaml --output-directory ../../FantasyCat/API/Generated 2>&1 | grep -i "error\|warning" || true
-	@echo "api: regenerated FantasyCat/API/Generated from ../fantasy-cat/web/openapi.json"
+	@$(MAKE) --no-print-directory api-gen
+
+api-gen: ## regenerate the API client from the spec already copied into Tools/openapi (what CI checks)
+	@cd Tools/openapi && out=$$(swift run -c release swift-openapi-generator generate openapi.json --config openapi-generator-config.yaml --output-directory ../../FantasyCat/API/Generated 2>&1) || { echo "$$out"; exit 1; }; echo "$$out" | grep -i "error\|warning" || true
+	@echo "api: regenerated FantasyCat/API/Generated from Tools/openapi/openapi.json"
 
 console: build ## run in the Simulator with the app's print() output in this terminal
 	@xcrun simctl boot '$(SIM)' 2>/dev/null || true
