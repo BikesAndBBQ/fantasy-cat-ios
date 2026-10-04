@@ -2,10 +2,12 @@ import SwiftUI
 
 /// The league itself: how to invite people, who's in it, and the way out.
 /// The admin can also change an open round's categories (until the first post
-/// lands) and reset the invite link. Posting limits still live on the web.
+/// lands), reset the invite link, and change the league's settings.
 struct LeagueDetailsView: View {
     let store: LeagueStore
     let onLeft: () -> Void
+    /// The league list shows the name, so a rename reloads it.
+    var onSaved: () -> Void = {}
     @Environment(\.dismiss) private var dismiss
     @State private var confirmingLeave = false
     @State private var leaving = false
@@ -15,6 +17,7 @@ struct LeagueDetailsView: View {
     @State private var rotating = false
 
     var body: some View {
+        ScrollViewReader { proxy in
         ScrollView {
             if let league = store.league {
                 let link = Server.url.appending(path: "join/\(league.inviteCode)")
@@ -60,6 +63,8 @@ struct LeagueDetailsView: View {
                     if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
                     if league.isAdmin {
                         if let round = league.currentRound, round.canEditCategories { CategoryEditor(store: store, round: round) }
+                        SettingsEditor(store: store, league: league, onSaved: onSaved).id("settings")
+                        Divider().overlay(Tokens.line)
                         VStack(alignment: .leading, spacing: 10) {
                             Eyebrow("Invite link")
                             Text("If the link has reached someone it shouldn't, reset it. The old one stops working at once.").type(.small).foregroundStyle(Tokens.muted)
@@ -71,7 +76,6 @@ struct LeagueDetailsView: View {
                                     }
                                 } message: { Text("Anyone who hasn't joined yet will need the new one.") }
                         }
-                        Text("Posting limits and vote budgets are still set at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
                     } else {
                         Button("Leave league") { confirmingLeave = true }.buttonStyle(.fc(.danger, size: .sm, busy: leaving))
                             .confirmationDialog("Leave \(league.name)?", isPresented: $confirmingLeave, titleVisibility: .visible) {
@@ -81,6 +85,10 @@ struct LeagueDetailsView: View {
                 }
                 .padding(20)
             }
+        }
+        #if DEBUG
+        .task(id: store.league == nil) { if ProcessInfo.processInfo.arguments.contains("-leaguesettings") { proxy.scrollTo("settings", anchor: .top) } } // debug: show the settings
+        #endif
         }
         .background(Tokens.paper)
     }
@@ -95,6 +103,76 @@ struct LeagueDetailsView: View {
                 }
             } catch { failure = Failure.from(error).message }
             leaving = false
+        }
+    }
+}
+
+/// The same settings as the web's league page. Fields hold text so a cleared
+/// posts limit can mean unlimited; the server checks every range on save.
+private struct SettingsEditor: View {
+    let store: LeagueStore
+    let league: League
+    let onSaved: () -> Void
+    @State private var name = ""
+    @State private var seasonRounds = ""
+    @State private var voteBudget = ""
+    @State private var submissionCap = ""
+    @State private var saving = false
+    @State private var failure: String?
+    @State private var saved = false
+
+    private var trimmed: (name: String, rounds: Int64?, budget: Int64?, cap: String) {
+        (name.trimmingCharacters(in: .whitespaces), Int64(seasonRounds.trimmingCharacters(in: .whitespaces)),
+         Int64(voteBudget.trimmingCharacters(in: .whitespaces)), submissionCap.trimmingCharacters(in: .whitespaces))
+    }
+    private var capInvalid: Bool { !trimmed.cap.isEmpty && Int64(trimmed.cap) == nil }
+    private var unchanged: Bool {
+        trimmed.name == league.name && trimmed.rounds == league.seasonRounds && trimmed.budget == league.voteBudget
+            && (trimmed.cap.isEmpty ? nil : Int64(trimmed.cap)) == league.submissionCap
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Eyebrow("Settings")
+            if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+            FCField(label: "League name", text: $name)
+            HStack(alignment: .top, spacing: 12) {
+                FCField(label: "Rounds in a season", text: $seasonRounds, keyboard: .numberPad)
+                FCField(label: "\(Tokens.votes(2).capitalized) per category", text: $voteBudget, keyboard: .numberPad)
+            }
+            FCField(label: "Posts allowed per category", text: $submissionCap,
+                    help: "Per manager. Leave empty for no limit.", error: capInvalid ? "A whole number, or empty for no limit." : nil, keyboard: .numberPad)
+            Button(saved ? "Saved" : "Save settings") { save() }
+                .buttonStyle(.fc(.ink, size: .sm, busy: saving))
+                .disabled(saving || trimmed.name.isEmpty || trimmed.rounds == nil || trimmed.budget == nil || capInvalid || unchanged)
+        }
+        .onChange(of: [name, seasonRounds, voteBudget, submissionCap]) { saved = false }
+        .task {
+            name = league.name
+            seasonRounds = String(league.seasonRounds)
+            voteBudget = String(league.voteBudget)
+            submissionCap = league.submissionCap.map(String.init) ?? ""
+            #if DEBUG
+            // `-setvotebudget <n>`: change the vote budget and save, as the button would.
+            let args = ProcessInfo.processInfo.arguments
+            if let i = args.firstIndex(of: "-setvotebudget"), args.indices.contains(i + 1), voteBudget != args[i + 1] {
+                voteBudget = args[i + 1]
+                save()
+            }
+            #endif
+        }
+    }
+
+    private func save() {
+        let t = trimmed
+        guard let rounds = t.rounds, let budget = t.budget else { return }
+        saving = true
+        Task {
+            // The per-post vote limit has no field here or on the web; send it back as it is.
+            failure = await store.updateSettings(.init(name: t.name, seasonRounds: rounds, submissionCap: Int64(t.cap),
+                                                       voteBudget: budget, voteMaxPerSubmission: league.voteMaxPerSubmission))
+            saving = false
+            if failure == nil { saved = true; onSaved() }
         }
     }
 }

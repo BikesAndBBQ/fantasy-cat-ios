@@ -42,7 +42,7 @@ struct LeagueShell: View {
             }
         }
         .sheet(isPresented: $account) { AccountView(onLeagues: onLeagues) }
-        .sheet(isPresented: $details) { LeagueDetailsView(store: store) { Task { await model.reload() } } }
+        .sheet(isPresented: $details) { LeagueDetailsView(store: store, onLeft: { Task { await model.reload() } }, onSaved: { Task { await model.reload() } }) }
     }
 
     private var header: LeagueHeader { LeagueHeader(name: store.league?.name ?? "", avatar: user.avatarUrl.flatMap(URL.init(string:)), openLeague: { details = true }) { account = true } }

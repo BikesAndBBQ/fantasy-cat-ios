@@ -114,6 +114,16 @@ final class LeagueStore {
         } catch { return Failure.from(error).message }
     }
 
+    /// The admin's settings. The server validates every value and has the last word.
+    func updateSettings(_ body: Components.Schemas.UpdateLeagueInputBody) async -> String? {
+        do {
+            switch try await API.client.updateLeague(path: .init(slug: slug), body: .json(body)) {
+            case .ok(let ok): league = try ok.body.json; await refresh(); return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
     /// A new invite link; the old one stops working.
     func rotateInvite() async -> String? {
         do {
