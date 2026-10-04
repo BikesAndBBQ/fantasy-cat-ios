@@ -319,3 +319,22 @@ README, "Forcing an iPhone app update".
   (Debug only) fakes the server's number to look at the screen.
 - Not done: the API doesn't refuse old clients itself. If a change breaks
   old builds, the switch goes on before the server change ships.
+
+## I14 — CI, split across the two repos (2026-10-03)
+
+`.github/workflows/ci.yml` here runs on a hosted macOS runner: `make test`
+(Core), `make api-gen` then `git diff` (the generated client matches the spec
+copy in `Tools/openapi`, the drift check I6 asked for), and an unsigned build
+for a generic Simulator (`make build DESTINATION=… XCFLAGS=CODE_SIGNING_ALLOWED=NO`).
+
+- **Whether the copies match the server is checked in the server's CI**, job
+  "iOS copies are current": the spec byte for byte, and `Tokens.swift`
+  regenerated from `design/tokens.resolved.json`. This repo is public and the
+  server's is private, so this repo's CI can't read it without a stored
+  token; the server's can check this one out freely. It goes red when a server
+  change hasn't reached the app; `make api tokens` here and push.
+- **Xcode 27 isn't on any hosted image yet** (2026-10: `macos-26` stops at
+  26.6; `macos-27` doesn't exist, a job asking for it just queues). CI takes
+  the newest Xcode on `macos-26` and moves to 27 by itself when GitHub adds it.
+  Until then a green build means "builds with 26.x", which is close but not
+  the toolchain that ships; TestFlight builds are still made locally with 27.
