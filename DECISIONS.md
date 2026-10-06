@@ -357,3 +357,28 @@ filled in and the league previewed, one tap from joining. Only
 `https://fantasycat.co/join/<code>` counts (`Invite.code(fromLink:)`, tested).
 The Debug app can't be handed a universal link, so `-openurl <url>` does what
 the tap would.
+
+## I16 — Signing from a build keychain, for runs started over SSH (2026-10-06)
+
+agent-manager moves to scooter, which starts gonzo's runs over SSH
+(agent-manager `DESIGN-gonzo-ssh-runner.md` §6.2). A process that sshd starts
+is outside Ryan's login session: the login Keychain lists the signing identity
+but refuses its private key (`errSecInternalComponent`, spike sc-629). A
+keychain of our own, unlocked by the command, signs there; that is what CI on
+a Mac does.
+
+- `~/Library/Keychains/fantasycat-build.keychain-db` holds copies of the
+  identities exported from the login Keychain (Apple Development, plus Apple
+  Distribution when it has a local key; with the API key, I12, the
+  distribution signature may come from Apple's cloud signing instead). Its
+  password is the vault item "iOS Build Keychain", read with the project token.
+  Set up once by Ryan in his login session: `scripts/ios-build-keychain.sh`
+  in the server repo. Exporting, rather than a new certificate, keeps one
+  development identity for the team.
+- `scripts/ios-xcodebuild.sh`, when that keychain exists, unlocks it, puts it
+  first in the user's keychain search list (keeping every keychain already
+  there; automatic signing finds identities through that list) and passes
+  `OTHER_CODE_SIGN_FLAGS=--keychain` to the archive. Without it, nothing
+  changes. The login Keychain's own settings and password are never touched.
+- Proof: `make testflight DEST=export` in a session sshd started, which is the
+  first run through the SSH runner (sc-64).
