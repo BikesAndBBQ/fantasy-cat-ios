@@ -13,6 +13,7 @@ struct AccountView: View {
     @State private var adding = false
     @State private var notice: String?
     @State private var failure: String?
+    @State private var blocked: [Components.Schemas.PersonView] = []
     var onLeagues: (() -> Void)?
 
     private var user: Components.Schemas.UserView? { if case .signedIn(let u, _) = model.phase { u } else { nil } }
@@ -43,6 +44,10 @@ struct AccountView: View {
                         Text("Passkeys are still managed at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
                         Button("Sign out") { Task { dismiss(); await model.signOut() } }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("sign-out")
                     }
+                    if !blocked.isEmpty {
+                        Divider().overlay(Tokens.line)
+                        BlockedSection(blocked: $blocked)
+                    }
                     Divider().overlay(Tokens.line)
                     DeleteAccountSection().id("delete-account")
                 }
@@ -59,6 +64,7 @@ struct AccountView: View {
             name = user?.displayName ?? ""
             username = user?.username ?? ""
             await s.loadPets()
+            blocked = await BlockedSection.load()
             #if DEBUG
             // `-addcat <name>` and `-setavatar <file>` press the same buttons from the command line.
             let args = ProcessInfo.processInfo.arguments
@@ -196,6 +202,54 @@ private struct CatRow: View {
             if problem == nil { editing = false }
             busy = false
         }
+    }
+}
+
+/// The members you've blocked (server D41), each with a way back. The
+/// account screen shows it only when there are any: most people never block
+/// anyone. (It loads them there: an absent view never runs its own `.task`.)
+private struct BlockedSection: View {
+    @Binding var blocked: [Components.Schemas.PersonView]
+    @State private var busy: Int64?
+    @State private var failure: String?
+
+    static func load() async -> [Components.Schemas.PersonView] {
+        guard case .ok(let ok) = try? await API.client.listBlocks(), let body = try? ok.body.json else { return [] }
+        return body.blocked ?? []
+    }
+
+    var body: some View {
+                VStack(alignment: .leading, spacing: 10) {
+                    Eyebrow("Blocked")
+                    Text("You don't see their posts. Unblock someone to see them again.").type(.small).foregroundStyle(Tokens.muted)
+                    if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+                    ForEach(blocked, id: \.id) { p in
+                        HStack(spacing: 12) {
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(p.displayName).type(.bodyStrong).foregroundStyle(Tokens.ink)
+                                Text("@\(p.username)").type(.small).foregroundStyle(Tokens.muted)
+                            }
+                            Spacer()
+                            Button("Unblock") { Task { await unblock(p) } }
+                                .buttonStyle(.fc(size: .sm, busy: busy == p.id))
+                        }
+                        .padding(.horizontal, 16).padding(.vertical, 12)
+                        .background(Tokens.surface)
+                        .overlay(RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous).stroke(Tokens.line, lineWidth: 1))
+                        .clipShape(RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous))
+                    }
+                }
+    }
+
+    private func unblock(_ p: Components.Schemas.PersonView) async {
+        busy = p.id
+        defer { busy = nil }
+        do {
+            switch try await API.client.unblockUser(path: .init(id: p.id)) {
+            case .noContent: failure = nil; blocked = await Self.load()
+            case .default(let status, let prob): failure = Failure.from(status: status, try? prob.body.applicationProblemJson).message
+            }
+        } catch { failure = Failure.from(error).message }
     }
 }
 

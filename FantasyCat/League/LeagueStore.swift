@@ -134,6 +134,39 @@ final class LeagueStore {
         } catch { return Failure.from(error).message }
     }
 
+    // MARK: Reporting and blocking (server D41)
+
+    /// Report someone else's post. The server hides it from you at once and
+    /// tells the people who run Fantasy Cat. Returns what to tell the person if it failed.
+    func report(_ s: Submission, reason: String) async -> String? {
+        let reason = reason.trimmingCharacters(in: .whitespacesAndNewlines)
+        do {
+            switch try await API.client.reportSubmission(path: .init(id: s.id), body: .json(.init(reason: reason.isEmpty ? nil : reason))) {
+            case .noContent: await reloadAfterHiding(); return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
+    /// Block the person who posted this: their posts stop showing to you.
+    func block(_ person: Components.Schemas.PersonView) async -> String? {
+        do {
+            switch try await API.client.blockUser(path: .init(id: person.id)) {
+            case .noContent: await reloadAfterHiding(); return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
+    /// What's on screen came from the server before something was hidden:
+    /// fetch again whatever is loaded, so it disappears everywhere.
+    private func reloadAfterHiding() async {
+        for id in feeds.keys { await loadFeed(id) }
+        for id in ballots.keys { _ = await loadBallot(id) }
+        for n in results.keys { await loadResults(n) }
+        await refresh()
+    }
+
     /// Take down your own post while submissions are open. Returns what to tell the person if it failed.
     func delete(_ s: Submission) async -> String? {
         do {

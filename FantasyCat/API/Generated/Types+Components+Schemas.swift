@@ -330,6 +330,46 @@ extension Components {
                 ])
             }
         }
+        /// - Remark: Generated from `#/components/schemas/BlocksOutputBody`.
+        internal struct BlocksOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/BlocksOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/BlocksOutputBody/blocked`.
+            internal var blocked: [Components.Schemas.PersonView]?
+            /// Creates a new `BlocksOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - blocked:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                blocked: [Components.Schemas.PersonView]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.blocked = blocked
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case blocked
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.blocked = try container.decodeIfPresent(
+                    [Components.Schemas.PersonView].self,
+                    forKey: .blocked
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "blocked"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/CategoryResultView`.
         internal struct CategoryResultView: Codable, Hashable, Sendable {
             /// - Remark: Generated from `#/components/schemas/CategoryResultView/category`.
@@ -1888,6 +1928,221 @@ extension Components {
                 ])
             }
         }
+        /// - Remark: Generated from `#/components/schemas/ReportInputBody`.
+        internal struct ReportInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// What's wrong with it, in the reporter's words. Optional.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportInputBody/reason`.
+            internal var reason: Swift.String?
+            /// Creates a new `ReportInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - reason: What's wrong with it, in the reporter's words. Optional.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                reason: Swift.String? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.reason = reason
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case reason
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.reason = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .reason
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "reason"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/ReportView`.
+        internal struct ReportView: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/ReportView/caption`.
+            internal var caption: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/ReportView/category`.
+            internal var category: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/ReportView/created_at`.
+            internal var createdAt: Foundation.Date
+            /// - Remark: Generated from `#/components/schemas/ReportView/id`.
+            internal var id: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/ReportView/league`.
+            internal var league: Swift.String?
+            /// Absent once the post is gone.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/media`.
+            internal var media: Components.Schemas.MediaView?
+            /// Taken down, or removed by its owner or with their account.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/post_is_gone`.
+            internal var postIsGone: Swift.Bool
+            /// Display name and @username of who posted it; absent if their account is gone.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/poster`.
+            internal var poster: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/ReportView/reason`.
+            internal var reason: Swift.String
+            /// Display name and @username of who reported it.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/reporter`.
+            internal var reporter: Swift.String
+            /// - Remark: Generated from `#/components/schemas/ReportView/resolution`.
+            internal enum ResolutionPayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case takenDown = "taken_down"
+            }
+            /// - Remark: Generated from `#/components/schemas/ReportView/resolution`.
+            internal var resolution: Components.Schemas.ReportView.ResolutionPayload?
+            /// - Remark: Generated from `#/components/schemas/ReportView/resolved_at`.
+            internal var resolvedAt: Foundation.Date?
+            /// Creates a new `ReportView`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - caption:
+            ///   - category:
+            ///   - createdAt:
+            ///   - id:
+            ///   - league:
+            ///   - media: Absent once the post is gone.
+            ///   - postIsGone: Taken down, or removed by its owner or with their account.
+            ///   - poster: Display name and @username of who posted it; absent if their account is gone.
+            ///   - reason:
+            ///   - reporter: Display name and @username of who reported it.
+            ///   - resolution:
+            ///   - resolvedAt:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                caption: Swift.String? = nil,
+                category: Swift.String? = nil,
+                createdAt: Foundation.Date,
+                id: Swift.Int64,
+                league: Swift.String? = nil,
+                media: Components.Schemas.MediaView? = nil,
+                postIsGone: Swift.Bool,
+                poster: Swift.String? = nil,
+                reason: Swift.String,
+                reporter: Swift.String,
+                resolution: Components.Schemas.ReportView.ResolutionPayload? = nil,
+                resolvedAt: Foundation.Date? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.caption = caption
+                self.category = category
+                self.createdAt = createdAt
+                self.id = id
+                self.league = league
+                self.media = media
+                self.postIsGone = postIsGone
+                self.poster = poster
+                self.reason = reason
+                self.reporter = reporter
+                self.resolution = resolution
+                self.resolvedAt = resolvedAt
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case caption
+                case category
+                case createdAt = "created_at"
+                case id
+                case league
+                case media
+                case postIsGone = "post_is_gone"
+                case poster
+                case reason
+                case reporter
+                case resolution
+                case resolvedAt = "resolved_at"
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.caption = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .caption
+                )
+                self.category = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .category
+                )
+                self.createdAt = try container.decode(
+                    Foundation.Date.self,
+                    forKey: .createdAt
+                )
+                self.id = try container.decode(
+                    Swift.Int64.self,
+                    forKey: .id
+                )
+                self.league = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .league
+                )
+                self.media = try container.decodeIfPresent(
+                    Components.Schemas.MediaView.self,
+                    forKey: .media
+                )
+                self.postIsGone = try container.decode(
+                    Swift.Bool.self,
+                    forKey: .postIsGone
+                )
+                self.poster = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .poster
+                )
+                self.reason = try container.decode(
+                    Swift.String.self,
+                    forKey: .reason
+                )
+                self.reporter = try container.decode(
+                    Swift.String.self,
+                    forKey: .reporter
+                )
+                self.resolution = try container.decodeIfPresent(
+                    Components.Schemas.ReportView.ResolutionPayload.self,
+                    forKey: .resolution
+                )
+                self.resolvedAt = try container.decodeIfPresent(
+                    Foundation.Date.self,
+                    forKey: .resolvedAt
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "caption",
+                    "category",
+                    "created_at",
+                    "id",
+                    "league",
+                    "media",
+                    "post_is_gone",
+                    "poster",
+                    "reason",
+                    "reporter",
+                    "resolution",
+                    "resolved_at"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/ResetInputBody`.
         internal struct ResetInputBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.
@@ -3030,6 +3285,46 @@ extension Components {
                     "my_count",
                     "round_status",
                     "submissions"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/TakeDownInputBody`.
+        internal struct TakeDownInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/TakeDownInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/TakeDownInputBody/token`.
+            internal var token: Swift.String
+            /// Creates a new `TakeDownInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - token:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                token: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.token = token
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case token
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.token = try container.decode(
+                    Swift.String.self,
+                    forKey: .token
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "token"
                 ])
             }
         }

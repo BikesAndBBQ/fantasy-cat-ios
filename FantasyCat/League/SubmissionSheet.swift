@@ -49,6 +49,7 @@ struct SubmissionSheet: View {
                     }
                     .buttonStyle(.fc(.danger, size: .sm, busy: deleting))
                 }
+                if !s.isMine { ReportOrBlock(submission: s, store: store) { dismiss() } }
             }
             .padding(16)
         }
@@ -68,6 +69,76 @@ struct SubmissionSheet: View {
     private var aspect: CGFloat {
         guard let w = submission.media.width, let h = submission.media.height, w > 0, h > 0 else { return Tokens.photoRatio }
         return CGFloat(w) / CGFloat(h)
+    }
+}
+
+/// Report this post, or block the person who posted it (server D41). Each
+/// asks once before it acts; both hide what they're about at once.
+private struct ReportOrBlock: View {
+    let submission: Submission
+    let store: LeagueStore
+    let done: () -> Void
+    private enum Step { case choose, report, block }
+    @State private var step = Step.choose
+    @State private var reason = ""
+    @State private var busy = false
+    @State private var failure: String?
+
+    init(submission: Submission, store: LeagueStore, done: @escaping () -> Void) {
+        self.submission = submission
+        self.store = store
+        self.done = done
+        #if DEBUG
+        // `-openpost report` / `-openpost block`: start at that step, to see it.
+        let args = ProcessInfo.processInfo.arguments
+        if let i = args.firstIndex(of: "-openpost"), args.indices.contains(i + 1) {
+            _step = State(initialValue: args[i + 1] == "report" ? .report : args[i + 1] == "block" ? .block : .choose)
+        }
+        #endif
+    }
+
+    var body: some View {
+        let name = submission.manager.displayName
+        VStack(alignment: .leading, spacing: 10) {
+            Divider().overlay(Tokens.line)
+            switch step {
+            case .choose:
+                HStack(spacing: 10) {
+                    Button("Report post") { step = .report }.buttonStyle(.fc(size: .sm)).accessibilityIdentifier("report-post")
+                    Button("Block \(name)") { step = .block }.buttonStyle(.fc(size: .sm)).accessibilityIdentifier("block-member")
+                }
+            case .report:
+                FCField(label: "What's wrong with it?", text: $reason, help: "Optional. Only the people who run Fantasy Cat see this.")
+                failureText
+                HStack(spacing: 10) {
+                    Button("Report this post") { act { await store.report(submission, reason: reason) } }
+                        .buttonStyle(.fc(.danger, size: .sm, busy: busy)).accessibilityIdentifier("send-report")
+                    Button("Cancel") { step = .choose }.buttonStyle(.fc(size: .sm))
+                }
+            case .block:
+                Text("Block \(name)? Their posts disappear for you: in the feed, on your ballot and in results. They aren't told. You can unblock them on your account page.")
+                    .type(.body).foregroundStyle(Tokens.ink)
+                failureText
+                HStack(spacing: 10) {
+                    Button("Block \(name)") { act { await store.block(submission.manager) } }
+                        .buttonStyle(.fc(.danger, size: .sm, busy: busy)).accessibilityIdentifier("confirm-block")
+                    Button("Cancel") { step = .choose }.buttonStyle(.fc(size: .sm))
+                }
+            }
+        }
+    }
+
+    @ViewBuilder private var failureText: some View {
+        if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+    }
+
+    private func act(_ call: @escaping () async -> String?) {
+        busy = true
+        Task {
+            failure = await call()
+            busy = false
+            if failure == nil { done() }
+        }
     }
 }
 

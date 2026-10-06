@@ -187,6 +187,11 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /me/avatar`.
     /// - Remark: Generated from `#/paths//me/avatar/delete(removeAvatar)`.
     func removeAvatar(_ input: Operations.RemoveAvatar.Input) async throws -> Operations.RemoveAvatar.Output
+    /// The members you have blocked
+    ///
+    /// - Remark: HTTP `GET /me/blocks`.
+    /// - Remark: Generated from `#/paths//me/blocks/get(listBlocks)`.
+    func listBlocks(_ input: Operations.ListBlocks.Input) async throws -> Operations.ListBlocks.Output
     /// Processing status of one of your uploads
     ///
     /// - Remark: HTTP `GET /media/{id}`.
@@ -199,6 +204,20 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `POST /media/{id}/trim`.
     /// - Remark: Generated from `#/paths//media/{id}/trim/post(trimMedia)`.
     func trimMedia(_ input: Operations.TrimMedia.Input) async throws -> Operations.TrimMedia.Output
+    /// A report, for the operator
+    ///
+    /// Authorized by the token in the operator's email, not by a session.
+    ///
+    /// - Remark: HTTP `GET /moderation/reports/{id}`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/get(getReport)`.
+    func getReport(_ input: Operations.GetReport.Input) async throws -> Operations.GetReport.Output
+    /// Take a reported post down, everywhere
+    ///
+    /// Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.
+    ///
+    /// - Remark: HTTP `POST /moderation/reports/{id}/takedown`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/takedown/post(takeDownReported)`.
+    func takeDownReported(_ input: Operations.TakeDownReported.Input) async throws -> Operations.TakeDownReported.Output
     /// Your cats
     ///
     /// - Remark: HTTP `GET /pets`.
@@ -224,6 +243,23 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /submissions/{id}`.
     /// - Remark: Generated from `#/paths//submissions/{id}/delete(deleteSubmission)`.
     func deleteSubmission(_ input: Operations.DeleteSubmission.Input) async throws -> Operations.DeleteSubmission.Output
+    /// Report a post
+    ///
+    /// Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.
+    ///
+    /// - Remark: HTTP `POST /submissions/{id}/report`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/report/post(reportSubmission)`.
+    func reportSubmission(_ input: Operations.ReportSubmission.Input) async throws -> Operations.ReportSubmission.Output
+    /// Block a member: their posts no longer show to you
+    ///
+    /// - Remark: HTTP `POST /users/{id}/block`.
+    /// - Remark: Generated from `#/paths//users/{id}/block/post(blockUser)`.
+    func blockUser(_ input: Operations.BlockUser.Input) async throws -> Operations.BlockUser.Output
+    /// Unblock a member
+    ///
+    /// - Remark: HTTP `DELETE /users/{id}/block`.
+    /// - Remark: Generated from `#/paths//users/{id}/block/delete(unblockUser)`.
+    func unblockUser(_ input: Operations.UnblockUser.Input) async throws -> Operations.UnblockUser.Output
 }
 
 /// Convenience overloads for operation inputs.
@@ -630,6 +666,13 @@ extension APIProtocol {
     internal func removeAvatar(headers: Operations.RemoveAvatar.Input.Headers = .init()) async throws -> Operations.RemoveAvatar.Output {
         try await removeAvatar(Operations.RemoveAvatar.Input(headers: headers))
     }
+    /// The members you have blocked
+    ///
+    /// - Remark: HTTP `GET /me/blocks`.
+    /// - Remark: Generated from `#/paths//me/blocks/get(listBlocks)`.
+    internal func listBlocks(headers: Operations.ListBlocks.Input.Headers = .init()) async throws -> Operations.ListBlocks.Output {
+        try await listBlocks(Operations.ListBlocks.Input(headers: headers))
+    }
     /// Processing status of one of your uploads
     ///
     /// - Remark: HTTP `GET /media/{id}`.
@@ -655,6 +698,40 @@ extension APIProtocol {
         body: Operations.TrimMedia.Input.Body
     ) async throws -> Operations.TrimMedia.Output {
         try await trimMedia(Operations.TrimMedia.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// A report, for the operator
+    ///
+    /// Authorized by the token in the operator's email, not by a session.
+    ///
+    /// - Remark: HTTP `GET /moderation/reports/{id}`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/get(getReport)`.
+    internal func getReport(
+        path: Operations.GetReport.Input.Path,
+        query: Operations.GetReport.Input.Query = .init(),
+        headers: Operations.GetReport.Input.Headers = .init()
+    ) async throws -> Operations.GetReport.Output {
+        try await getReport(Operations.GetReport.Input(
+            path: path,
+            query: query,
+            headers: headers
+        ))
+    }
+    /// Take a reported post down, everywhere
+    ///
+    /// Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.
+    ///
+    /// - Remark: HTTP `POST /moderation/reports/{id}/takedown`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/takedown/post(takeDownReported)`.
+    internal func takeDownReported(
+        path: Operations.TakeDownReported.Input.Path,
+        headers: Operations.TakeDownReported.Input.Headers = .init(),
+        body: Operations.TakeDownReported.Input.Body
+    ) async throws -> Operations.TakeDownReported.Output {
+        try await takeDownReported(Operations.TakeDownReported.Input(
             path: path,
             headers: headers,
             body: body
@@ -717,6 +794,49 @@ extension APIProtocol {
         headers: Operations.DeleteSubmission.Input.Headers = .init()
     ) async throws -> Operations.DeleteSubmission.Output {
         try await deleteSubmission(Operations.DeleteSubmission.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Report a post
+    ///
+    /// Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.
+    ///
+    /// - Remark: HTTP `POST /submissions/{id}/report`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/report/post(reportSubmission)`.
+    internal func reportSubmission(
+        path: Operations.ReportSubmission.Input.Path,
+        headers: Operations.ReportSubmission.Input.Headers = .init(),
+        body: Operations.ReportSubmission.Input.Body
+    ) async throws -> Operations.ReportSubmission.Output {
+        try await reportSubmission(Operations.ReportSubmission.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Block a member: their posts no longer show to you
+    ///
+    /// - Remark: HTTP `POST /users/{id}/block`.
+    /// - Remark: Generated from `#/paths//users/{id}/block/post(blockUser)`.
+    internal func blockUser(
+        path: Operations.BlockUser.Input.Path,
+        headers: Operations.BlockUser.Input.Headers = .init()
+    ) async throws -> Operations.BlockUser.Output {
+        try await blockUser(Operations.BlockUser.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Unblock a member
+    ///
+    /// - Remark: HTTP `DELETE /users/{id}/block`.
+    /// - Remark: Generated from `#/paths//users/{id}/block/delete(unblockUser)`.
+    internal func unblockUser(
+        path: Operations.UnblockUser.Input.Path,
+        headers: Operations.UnblockUser.Input.Headers = .init()
+    ) async throws -> Operations.UnblockUser.Output {
+        try await unblockUser(Operations.UnblockUser.Input(
             path: path,
             headers: headers
         ))

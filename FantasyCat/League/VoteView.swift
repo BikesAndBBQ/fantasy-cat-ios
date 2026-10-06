@@ -114,6 +114,8 @@ private struct BallotPanel: View {
             if ProcessInfo.processInfo.arguments.contains("-autovote"), let ids = store.ballots[categoryID]?.entries?.map(\.submission.id), ids.count >= 2, (points?.values.reduce(0, +) ?? 0) == 0 {
                 change(ids[0], 1); try? await Task.sleep(for: .milliseconds(150)); change(ids[0], 2); change(ids[1], 1)
             }
+            // `-openpost [report|block]`: open the first post, as a tap would (see ReportOrBlock for the second word).
+            if ProcessInfo.processInfo.arguments.contains("-openpost") { open = store.ballots[categoryID]?.entries?.first?.submission }
             #endif
         }
         .onDisappear { flush() }

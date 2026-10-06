@@ -174,6 +174,33 @@
         ],
         "type": "object"
       },
+      "BlocksOutputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/BlocksOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "blocked": {
+            "items": {
+              "$ref": "#/components/schemas/PersonView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "blocked"
+        ],
+        "type": "object"
+      },
       "CategoryResultView": {
         "additionalProperties": false,
         "properties": {
@@ -990,6 +1017,94 @@
         ],
         "type": "object"
       },
+      "ReportInputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/ReportInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "reason": {
+            "description": "What's wrong with it, in the reporter's words. Optional.",
+            "maxLength": 500,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ReportView": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/ReportView.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "league": {
+            "type": "string"
+          },
+          "media": {
+            "$ref": "#/components/schemas/MediaView",
+            "description": "Absent once the post is gone."
+          },
+          "post_is_gone": {
+            "description": "Taken down, or removed by its owner or with their account.",
+            "type": "boolean"
+          },
+          "poster": {
+            "description": "Display name and @username of who posted it; absent if their account is gone.",
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "reporter": {
+            "description": "Display name and @username of who reported it.",
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "taken_down"
+            ],
+            "type": "string"
+          },
+          "resolved_at": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "reason",
+          "reporter",
+          "post_is_gone"
+        ],
+        "type": "object"
+      },
       "ResetInputBody": {
         "additionalProperties": false,
         "properties": {
@@ -1596,6 +1711,28 @@
           "cap",
           "my_count",
           "submissions"
+        ],
+        "type": "object"
+      },
+      "TakeDownInputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/TakeDownInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 100,
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
         ],
         "type": "object"
       },
@@ -3246,6 +3383,37 @@
         ]
       }
     },
+    "/me/blocks": {
+      "get": {
+        "operationId": "listBlocks",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlocksOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The members you have blocked",
+        "tags": [
+          "moderation"
+        ]
+      }
+    },
     "/media/{id}": {
       "get": {
         "operationId": "getMedia",
@@ -3338,6 +3506,111 @@
         "summary": "Keep only part of a video you uploaded",
         "tags": [
           "media"
+        ]
+      }
+    },
+    "/moderation/reports/{id}": {
+      "get": {
+        "description": "Authorized by the token in the operator's email, not by a session.",
+        "operationId": "getReport",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "explode": false,
+            "in": "query",
+            "name": "token",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "A report, for the operator",
+        "tags": [
+          "moderation"
+        ]
+      }
+    },
+    "/moderation/reports/{id}/takedown": {
+      "post": {
+        "description": "Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.",
+        "operationId": "takeDownReported",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TakeDownInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Take a reported post down, everywhere",
+        "tags": [
+          "moderation"
         ]
       }
     },
@@ -3528,6 +3801,120 @@
         "summary": "Take down your own post while submissions are open",
         "tags": [
           "submissions"
+        ]
+      }
+    },
+    "/submissions/{id}/report": {
+      "post": {
+        "description": "Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.",
+        "operationId": "reportSubmission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a post",
+        "tags": [
+          "moderation"
+        ]
+      }
+    },
+    "/users/{id}/block": {
+      "delete": {
+        "operationId": "unblockUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unblock a member",
+        "tags": [
+          "moderation"
+        ]
+      },
+      "post": {
+        "operationId": "blockUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Block a member: their posts no longer show to you",
+        "tags": [
+          "moderation"
         ]
       }
     }
