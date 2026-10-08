@@ -52,6 +52,13 @@ final class PostModel {
     func post() async {
         guard let media, let categoryID, canPost else { return }
         failure = nil
+        let category = categories.first { $0.id == categoryID }?.name ?? "the round"
+        // Written down before the upload starts, so a relaunched app can finish
+        // the post if iOS ends this one meanwhile (PostRecovery).
+        var post = PendingPost(league: league.slug, categoryID: categoryID, categoryName: category, petID: petID,
+                               newCatName: petID == nil ? newCatName.trimmingCharacters(in: .whitespaces) : nil, caption: caption, created: .now)
+        let recovery = PostRecovery.shared
+        defer { recovery.end(post.id) }
         do {
             var file = media.url
             if media.kind == .video {
@@ -61,23 +68,19 @@ final class PostModel {
                 }
             }
             stage = .uploading(0)
-            let uploaded = try await Uploader.shared.upload(file) { [weak self] p in
+            recovery.begin(post)
+            let uploaded = try await Uploader.shared.upload(file, post: post.id) { [weak self] p in
                 Task { @MainActor in if case .uploading = self?.stage { self?.stage = .uploading(p) } }
             }
             stage = .submitting
-            var pet = petID
-            if pet == nil {
-                let out = try await API.client.createPet(body: .json(.init(name: newCatName.trimmingCharacters(in: .whitespaces))))
-                guard case .created(let c) = out else { throw Failure(message: "Couldn't add that cat. Try again.") }
-                pet = try c.body.json.id
+            post.mediaID = uploaded.id
+            recovery.update(post)
+            try await PostSubmission.submit(post, media: uploaded.id, recovering: false) { pet in
+                post.petID = pet
+                post.newCatName = nil
+                recovery.update(post)
             }
-            let out = try await API.client.createSubmission(path: .init(id: categoryID), body: .json(.init(caption: caption, mediaId: uploaded.id, petId: pet!)))
-            switch out {
-            case .created:
-                stage = .posted(category: categories.first { $0.id == categoryID }?.name ?? "the round")
-            case .default(let status, let problem):
-                throw Failure.from(status: status, try? problem.body.applicationProblemJson)
-            }
+            stage = .posted(category: category)
         } catch {
             failure = Failure.from(error).message
             stage = .ready

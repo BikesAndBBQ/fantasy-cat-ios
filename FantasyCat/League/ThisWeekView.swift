@@ -48,6 +48,12 @@ struct ThisWeekView: View {
             if let league = store.league { PostView(league: league, category: activeID) }
         }
         .task(id: activeID) { if let id = activeID { await store.loadFeed(id) } }
+        .task { await PostRecovery.shared.check() }
+        // A post finished by PostRecovery (one the app was ended in the middle of) is now in the feed.
+        .onChange(of: PostRecovery.shared.posts.map(\.id)) { old, new in
+            guard !Set(old).subtracting(new).isEmpty else { return }
+            Task { await store.refresh(); if let id = activeID { await store.loadFeed(id) } }
+        }
         // A fresh post is still being processed by the server (a video takes tens of
         // seconds to transcode). Loading the feed once, right after posting, left
         // Ryan's first video on a spinner forever although it was ready 20 seconds
@@ -95,6 +101,10 @@ struct ThisWeekView: View {
             }
         } else {
             Banner(label: "This round", value: round.status == .voting ? "VOTE" : "FINAL", detail: "Submissions are closed")
+        }
+        ForEach(PostRecovery.shared.posts.filter { $0.league == league.slug }, id: \.id) { p in
+            PendingPostNotice(post: p, postAgain: submitting ? { categoryID = p.categoryID; PostRecovery.shared.dismiss(p.id); posting = true } : nil,
+                              dismiss: { PostRecovery.shared.dismiss(p.id) })
         }
         if let voting = store.rounds.first(where: { $0.status == .voting }), voting.number != round.number {
             Button(action: goVote) {

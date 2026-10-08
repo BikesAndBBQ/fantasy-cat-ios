@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct FantasyCatApp: App {
+    @UIApplicationDelegateAdaptor private var delegate: AppDelegate
     @State private var model = AppModel()
 
     init() { Typefaces.register() }
@@ -17,6 +18,22 @@ struct FantasyCatApp: App {
             }
             .environment(model)
         }
+    }
+}
+
+/// For what SwiftUI has no word for: the upload session waking the app.
+/// A launch for that may be in the background with no window, so recovery
+/// starts here rather than in a view.
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        Uploader.shared.reconnect()
+        PostRecovery.shared.sweep()
+        return true
+    }
+
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        nonisolated(unsafe) let done = completionHandler // called once, on the main queue
+        Uploader.shared.reconnect { done() }
     }
 }
 

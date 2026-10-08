@@ -1,3 +1,4 @@
+import FantasyCatCore
 import SwiftUI
 
 /// Every component on one screen, for looking at. Launch with `-gallery`
@@ -14,6 +15,8 @@ struct GalleryView: View {
                 PageTitle(eyebrow: "Round 3 of 8", title: "This week") { Chip("Open", tone: .live) }
                 Banner(label: "Submissions close in", value: "2d 04:17", detail: "Saturday at 11:59 PM")
                 Banner(label: "You earned", value: "+10", detail: "7 treats, 3 for showing up", inverted: false)
+                PendingPostNotice(post: Self.pending(media: nil, failure: nil))
+                PendingPostNotice(post: Self.pending(media: 1, failure: "Submissions for this round have closed."), postAgain: {})
                 section("Buttons") {
                     Button("Post it") {}.buttonStyle(.fc(.primary, block: true))
                     HStack {
@@ -59,6 +62,13 @@ struct GalleryView: View {
             .padding(16)
         }
         .background(PageBackground())
+    }
+
+    private static func pending(media: Int64?, failure: String?) -> PendingPost {
+        var p = PendingPost(league: "pine-st", categoryID: 1, categoryName: "Sploot", petID: 1, newCatName: nil, caption: "", created: .now)
+        p.mediaID = media
+        p.failure = failure
+        return p
     }
 
     private func section<C: View>(_ title: String, @ViewBuilder _ content: () -> C) -> some View {

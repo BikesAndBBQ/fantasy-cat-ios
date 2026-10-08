@@ -106,8 +106,10 @@ struct PostView: View {
     /// silently for long videos in the web picker (server D34).
     private func picker<L: View>(@ViewBuilder label: () -> L) -> some View {
         // Built here on the main actor and only ever rendered there; PhotosPicker's
-        // label closure is nonetheless typed @Sendable.
-        nonisolated(unsafe) let content = label()
+        // label closure is nonetheless typed @Sendable. Erased to AnyView so the
+        // closure doesn't capture the generic L's metatype, which Swift 6 can't
+        // prove Sendable for an opaque label.
+        nonisolated(unsafe) let content = AnyView(label())
         return PhotosPicker(selection: $selection, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current) { content }
             .accessibilityIdentifier("post-picker")
     }

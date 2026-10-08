@@ -141,3 +141,47 @@ import Testing
         #expect(Invite.code(fromLink: URL(string: "http://fantasycat.co/join/pinestcats")!) == nil)
     }
 }
+
+@Suite struct PendingPostTests {
+    let now = Date(timeIntervalSince1970: 1_800_000_000)
+
+    func store() -> PendingPosts {
+        PendingPosts(directory: FileManager.default.temporaryDirectory.appending(path: "pending-\(UUID().uuidString)"))
+    }
+
+    func post(_ id: String, age: TimeInterval) -> PendingPost {
+        PendingPost(id: id, league: "pine-st", categoryID: 7, categoryName: "Loaf", petID: 3, newCatName: nil, caption: "", created: now.addingTimeInterval(-age))
+    }
+
+    @Test func survivesARelaunch() throws {
+        let s = store()
+        var p = post("a", age: 60)
+        try s.save(p)
+        #expect(PendingPosts(directory: s.directory).load("a") == p) // a fresh store on the same directory is a relaunch
+        #expect(p.stage == .uploading)
+        p.mediaID = 42
+        try s.save(p)
+        #expect(s.load("a")?.stage == .submitting)
+        p.failure = "Submissions for this round have closed."
+        try s.save(p)
+        #expect(s.load("a")?.stage == .failed("Submissions for this round have closed."))
+        s.remove("a")
+        #expect(s.load("a") == nil)
+        #expect(s.all(now: now).isEmpty)
+    }
+
+    @Test func oldestFirstAndStaleOnesDropped() throws {
+        let s = store()
+        try s.save(post("new", age: 60))
+        try s.save(post("old", age: 3600))
+        try s.save(post("stale", age: PendingPosts.maxAge + 1))
+        try Data("not json".utf8).write(to: s.directory.appending(path: "junk.json"))
+        #expect(s.all(now: now).map(\.id) == ["old", "new"])
+        #expect(s.load("stale") == nil) // deleted, not just skipped
+        #expect(!FileManager.default.fileExists(atPath: s.directory.appending(path: "junk.json").path))
+    }
+
+    @Test func emptyWhenNothingWasEverSaved() {
+        #expect(store().all(now: now).isEmpty)
+    }
+}
