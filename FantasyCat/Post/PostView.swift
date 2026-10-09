@@ -10,6 +10,7 @@ struct PostView: View {
     @State private var player: AVPlayer?
     @State private var loopObserver: Any?
     @State private var camera = false
+    @State private var choosing = false
     @Environment(\.dismiss) private var dismiss
 
     init(league: Components.Schemas.LeagueView, category: Int64? = nil) {
@@ -39,6 +40,7 @@ struct PostView: View {
         .background(PageBackground())
         .task { await model.loadPets() }
         .task(id: autopost) { await runAutopost() }
+        .photosPicker(isPresented: $choosing, selection: $selection, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current)
         .onChange(of: selection) { _, item in if let item { load(item) } }
         .onChange(of: model.media) { _, m in startPlayer(for: m) }
         .onChange(of: model.trim) { old, new in
@@ -104,13 +106,11 @@ struct PostView: View {
     /// `.current` asks Photos for the file as it is. The default, `.compatible`,
     /// converts video to H.264 first: slow, bigger, and the step that fails
     /// silently for long videos in the web picker (server D34).
+    /// A plain button that opens the picker (`.photosPicker` on the body), not a
+    /// PhotosPicker view: that one proposes no width to its label, so the
+    /// full-width drop box shrank to its ideal size and cut its text off.
     private func picker<L: View>(@ViewBuilder label: () -> L) -> some View {
-        // Built here on the main actor and only ever rendered there; PhotosPicker's
-        // label closure is nonetheless typed @Sendable. Erased to AnyView so the
-        // closure doesn't capture the generic L's metatype, which Swift 6 can't
-        // prove Sendable for an opaque label.
-        nonisolated(unsafe) let content = AnyView(label())
-        return PhotosPicker(selection: $selection, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current) { content }
+        Button { choosing = true } label: { label() }
             .accessibilityIdentifier("post-picker")
     }
 

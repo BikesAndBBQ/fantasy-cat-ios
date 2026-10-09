@@ -7,7 +7,7 @@ struct ThisWeekView: View {
     var goVote: () -> Void = {}
     @State private var categoryID: Int64?
     @State private var open: Submission?
-    @State private var posting = false
+    @State private var posting = ProcessInfo.processInfo.arguments.contains("-posting") // debug: open the post sheet
 
     var body: some View {
         ScrollView {
