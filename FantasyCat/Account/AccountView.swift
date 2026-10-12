@@ -42,6 +42,8 @@ struct AccountView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         if let onLeagues { Button("Start or join another league") { dismiss(); onLeagues() }.buttonStyle(.fc(size: .sm)) }
                         Text("Passkeys are still managed at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
+                        // App Review 5.1.1(i): the policy is reachable inside the app (server sc-704).
+                        Link("Privacy policy", destination: Server.url.appending(path: "privacy")).type(.smallStrong).foregroundStyle(Tokens.ink).underline()
                         Button("Sign out") { Task { dismiss(); await model.signOut() } }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("sign-out")
                     }
                     if !blocked.isEmpty {
