@@ -382,3 +382,22 @@ a Mac does.
   changes. The login Keychain's own settings and password are never touched.
 - Proof: `make testflight DEST=export` in a session sshd started, which is the
   first run through the SSH runner (sc-64).
+
+## I17 — Sign in with Apple, with Apple's own button (2026-10-12)
+
+Server D43, sc-702. `AppleSignInButton` (`App/AppleSignIn.swift`) is on sign
+in and on sign up, shown only when the server's `/auth/providers` says
+`apple`. It asks for name and email, makes a nonce, gives Apple its SHA-256
+and sends the token, the code, the nonce and the name to `POST /auth/apple`,
+which returns the bearer session.
+
+- **The button is Apple's `SignInWithAppleButton`, an exception to "UI is
+  built only from `FantasyCat/Design`".** Apple's guidelines fix its mark,
+  wording and colors, and App Review checks them. It is black in the light
+  theme and white in the dark one, and clipped to the capsule of our buttons.
+  It is the only such exception.
+- **The entitlement `com.apple.developer.applesignin` is on Release only**,
+  with the rest of `FantasyCat.entitlements` (I15). So the Debug app
+  (Simulator, `make device`) shows the button but the sheet fails there; the
+  real sign-in can only be tried in a TestFlight build, against a server that
+  has `APPLE_AUDIENCES` set.

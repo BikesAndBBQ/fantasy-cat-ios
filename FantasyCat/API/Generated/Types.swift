@@ -23,6 +23,13 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `POST /auth/app/exchange`.
     /// - Remark: Generated from `#/paths//auth/app/exchange/post(exchangeAppLogin)`.
     func exchangeAppLogin(_ input: Operations.ExchangeAppLogin.Input) async throws -> Operations.ExchangeAppLogin.Output
+    /// Sign in with Apple, from the native app
+    ///
+    /// Sign-up and sign-in are the same call. Always returns the session as a bearer token. 404 when the server doesn't offer it (see /auth/providers).
+    ///
+    /// - Remark: HTTP `POST /auth/apple`.
+    /// - Remark: Generated from `#/paths//auth/apple/post(appleSignIn)`.
+    func appleSignIn(_ input: Operations.AppleSignIn.Input) async throws -> Operations.AppleSignIn.Output
     /// Email a password reset link
     ///
     /// Always answers 204, whether or not the address has an account.
@@ -282,6 +289,21 @@ extension APIProtocol {
         body: Operations.ExchangeAppLogin.Input.Body
     ) async throws -> Operations.ExchangeAppLogin.Output {
         try await exchangeAppLogin(Operations.ExchangeAppLogin.Input(
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Sign in with Apple, from the native app
+    ///
+    /// Sign-up and sign-in are the same call. Always returns the session as a bearer token. 404 when the server doesn't offer it (see /auth/providers).
+    ///
+    /// - Remark: HTTP `POST /auth/apple`.
+    /// - Remark: Generated from `#/paths//auth/apple/post(appleSignIn)`.
+    internal func appleSignIn(
+        headers: Operations.AppleSignIn.Input.Headers = .init(),
+        body: Operations.AppleSignIn.Input.Body
+    ) async throws -> Operations.AppleSignIn.Output {
+        try await appleSignIn(Operations.AppleSignIn.Input(
             headers: headers,
             body: body
         ))

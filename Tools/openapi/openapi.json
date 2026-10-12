@@ -71,6 +71,87 @@
         ],
         "type": "object"
       },
+      "AppleSessionBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/AppleSessionBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "created": {
+            "description": "True when this sign-in made a new account, so the app can show onboarding.",
+            "type": "boolean"
+          },
+          "leagues": {
+            "items": {
+              "$ref": "#/components/schemas/LeagueSummary"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "session_token": {
+            "description": "Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserView"
+          }
+        },
+        "required": [
+          "created",
+          "user",
+          "leagues"
+        ],
+        "type": "object"
+      },
+      "AppleSignInInputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/AppleSignInInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "authorization_code": {
+            "description": "The authorization code from the same credential.",
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "identity_token": {
+            "description": "The identity token (a JWT) from ASAuthorizationAppleIDCredential.",
+            "maxLength": 8000,
+            "minLength": 20,
+            "type": "string"
+          },
+          "name": {
+            "description": "The person's name. Apple gives it to the app only the first time.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "nonce": {
+            "description": "The random value whose SHA-256 (lowercase hex) the app gave Apple as the request's nonce.",
+            "maxLength": 200,
+            "minLength": 16,
+            "type": "string"
+          }
+        },
+        "required": [
+          "identity_token",
+          "nonce"
+        ],
+        "type": "object"
+      },
       "BallotAllocation": {
         "additionalProperties": false,
         "properties": {
@@ -980,12 +1061,17 @@
             "readOnly": true,
             "type": "string"
           },
+          "apple": {
+            "description": "Whether POST /auth/apple is offered.",
+            "type": "boolean"
+          },
           "google": {
             "type": "boolean"
           }
         },
         "required": [
-          "google"
+          "google",
+          "apple"
         ],
         "type": "object"
       },
@@ -2023,6 +2109,57 @@
           }
         },
         "summary": "Finish a browser sign-in started by the native app",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/apple": {
+      "post": {
+        "description": "Sign-up and sign-in are the same call. Always returns the session as a bearer token. 404 when the server doesn't offer it (see /auth/providers).",
+        "operationId": "appleSignIn",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "User-Agent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppleSignInInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppleSessionBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Sign in with Apple, from the native app",
         "tags": [
           "auth"
         ]

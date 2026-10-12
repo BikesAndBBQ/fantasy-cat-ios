@@ -19,6 +19,7 @@ struct SignUpView: View {
 
     var body: some View {
         AuthPage(title: "Create an account", lede: "Takes a minute. Then add your cats.") {
+            if model.appleAvailable { AppleSignInButton { failure = $0 } }
             if let failure { AuthNotice(text: failure, bad: true) }
             FCField(label: "Your name", text: $name, help: "What the other managers see.", contentType: .name)
             FCField(label: "Username", text: $username, help: "Letters, numbers and underscores.", contentType: .username)
@@ -36,6 +37,7 @@ struct SignUpView: View {
         } footer: {
             AuthFooterLink(lead: "Already have one?", action: "Sign in", perform: back)
         }
+        .task { await model.loadProviders() }
         .onChange(of: model.pendingInvite, initial: true) { _, code in
             if let code { invite = code } // opened from an invite link
         }

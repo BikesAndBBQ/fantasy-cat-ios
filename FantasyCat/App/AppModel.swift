@@ -136,8 +136,30 @@ final class AppModel {
 
     /// Whether the server offers Google at all (it's configuration there).
     private(set) var googleAvailable = false
+    /// The same for Sign in with Apple (server D43).
+    private(set) var appleAvailable = false
     func loadProviders() async {
-        if case .ok(let ok) = try? await API.client.authProviders(.init()), let body = try? ok.body.json { googleAvailable = body.google }
+        if case .ok(let ok) = try? await API.client.authProviders(.init()), let body = try? ok.body.json {
+            googleAvailable = body.google
+            appleAvailable = body.apple
+        }
+    }
+
+    func signInWithApple(identityToken: String, authorizationCode: String?, nonce: String, name: String?) async throws(Failure) {
+        do {
+            let name = name.flatMap { $0.isEmpty ? nil : $0 }
+            switch try await API.client.appleSignIn(body: .json(.init(authorizationCode: authorizationCode, identityToken: identityToken, name: name, nonce: nonce))) {
+            case .ok(let ok):
+                let body = try ok.body.json
+                guard let token = body.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
+                Keychain.token = token
+                phase = .signedIn(body.user, leagues: body.leagues ?? [])
+            case .default(let status, let problem):
+                throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch {
+            throw Failure.from(error)
+        }
     }
 
     func signInWithGoogle() async throws(Failure) {

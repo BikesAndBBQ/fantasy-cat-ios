@@ -26,6 +26,9 @@ struct SignInView: View {
                     Text("Sign in to see what the cats have been up to.").type(.body).foregroundStyle(Tokens.muted)
                 }
                 VStack(alignment: .leading, spacing: 16) {
+                    if model.appleAvailable {
+                        AppleSignInButton { failure = $0 }.disabled(busy || googling)
+                    }
                     if model.googleAvailable {
                         Button { google() } label: {
                             HStack(spacing: 10) { GoogleMark().frame(width: 18, height: 18); Text("Continue with Google") }
@@ -33,6 +36,8 @@ struct SignInView: View {
                         .buttonStyle(.fc(block: true, busy: googling))
                         .disabled(busy || googling)
                         .accessibilityIdentifier("signin-google")
+                    }
+                    if model.appleAvailable || model.googleAvailable {
                         HStack(spacing: 10) {
                             Rectangle().fill(Tokens.line).frame(height: 1)
                             Text("or").type(.small).foregroundStyle(Tokens.muted)

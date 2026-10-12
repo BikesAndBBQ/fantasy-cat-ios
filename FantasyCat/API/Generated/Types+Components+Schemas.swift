@@ -135,6 +135,164 @@ extension Components {
                 ])
             }
         }
+        /// - Remark: Generated from `#/components/schemas/AppleSessionBody`.
+        internal struct AppleSessionBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// True when this sign-in made a new account, so the app can show onboarding.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/created`.
+            internal var created: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/leagues`.
+            internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/session_token`.
+            internal var sessionToken: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/user`.
+            internal var user: Components.Schemas.UserView
+            /// Creates a new `AppleSessionBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - created: True when this sign-in made a new account, so the app can show onboarding.
+            ///   - leagues:
+            ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
+            ///   - user:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                created: Swift.Bool,
+                leagues: [Components.Schemas.LeagueSummary]? = nil,
+                sessionToken: Swift.String? = nil,
+                user: Components.Schemas.UserView
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.created = created
+                self.leagues = leagues
+                self.sessionToken = sessionToken
+                self.user = user
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case created
+                case leagues
+                case sessionToken = "session_token"
+                case user
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.created = try container.decode(
+                    Swift.Bool.self,
+                    forKey: .created
+                )
+                self.leagues = try container.decodeIfPresent(
+                    [Components.Schemas.LeagueSummary].self,
+                    forKey: .leagues
+                )
+                self.sessionToken = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .sessionToken
+                )
+                self.user = try container.decode(
+                    Components.Schemas.UserView.self,
+                    forKey: .user
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "created",
+                    "leagues",
+                    "session_token",
+                    "user"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody`.
+        internal struct AppleSignInInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// The authorization code from the same credential.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody/authorization_code`.
+            internal var authorizationCode: Swift.String?
+            /// The identity token (a JWT) from ASAuthorizationAppleIDCredential.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody/identity_token`.
+            internal var identityToken: Swift.String
+            /// The person's name. Apple gives it to the app only the first time.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody/name`.
+            internal var name: Swift.String?
+            /// The random value whose SHA-256 (lowercase hex) the app gave Apple as the request's nonce.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody/nonce`.
+            internal var nonce: Swift.String
+            /// Creates a new `AppleSignInInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - authorizationCode: The authorization code from the same credential.
+            ///   - identityToken: The identity token (a JWT) from ASAuthorizationAppleIDCredential.
+            ///   - name: The person's name. Apple gives it to the app only the first time.
+            ///   - nonce: The random value whose SHA-256 (lowercase hex) the app gave Apple as the request's nonce.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                authorizationCode: Swift.String? = nil,
+                identityToken: Swift.String,
+                name: Swift.String? = nil,
+                nonce: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.authorizationCode = authorizationCode
+                self.identityToken = identityToken
+                self.name = name
+                self.nonce = nonce
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case authorizationCode = "authorization_code"
+                case identityToken = "identity_token"
+                case name
+                case nonce
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.authorizationCode = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .authorizationCode
+                )
+                self.identityToken = try container.decode(
+                    Swift.String.self,
+                    forKey: .identityToken
+                )
+                self.name = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .name
+                )
+                self.nonce = try container.decode(
+                    Swift.String.self,
+                    forKey: .nonce
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "authorization_code",
+                    "identity_token",
+                    "name",
+                    "nonce"
+                ])
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/BallotAllocation`.
         internal struct BallotAllocation: Codable, Hashable, Sendable {
             /// How many of the budget go to this post. Leave a post out to give it none.
@@ -1854,22 +2012,30 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/ProvidersOutputBody/$schema`.
             internal var _dollar_schema: Swift.String?
+            /// Whether POST /auth/apple is offered.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ProvidersOutputBody/apple`.
+            internal var apple: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/ProvidersOutputBody/google`.
             internal var google: Swift.Bool
             /// Creates a new `ProvidersOutputBody`.
             ///
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - apple: Whether POST /auth/apple is offered.
             ///   - google:
             internal init(
                 _dollar_schema: Swift.String? = nil,
+                apple: Swift.Bool,
                 google: Swift.Bool
             ) {
                 self._dollar_schema = _dollar_schema
+                self.apple = apple
                 self.google = google
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
+                case apple
                 case google
             }
             internal init(from decoder: any Swift.Decoder) throws {
@@ -1878,12 +2044,17 @@ extension Components {
                     Swift.String.self,
                     forKey: ._dollar_schema
                 )
+                self.apple = try container.decode(
+                    Swift.Bool.self,
+                    forKey: .apple
+                )
                 self.google = try container.decode(
                     Swift.Bool.self,
                     forKey: .google
                 )
                 try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "$schema",
+                    "apple",
                     "google"
                 ])
             }
