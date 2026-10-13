@@ -153,6 +153,7 @@ struct PostView: View {
             }
         }
         FCField(label: "Caption", text: $model.caption, help: "Optional.")
+        Text("Only post what you made or may share.").type(.small).foregroundStyle(Tokens.muted)
         HStack(spacing: 10) {
             Button("Cancel") { dismiss() }.buttonStyle(.fc()).disabled(model.busy)
             Button("Post it") { Task { await model.post() } }

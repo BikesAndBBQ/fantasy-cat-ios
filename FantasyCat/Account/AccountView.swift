@@ -44,6 +44,8 @@ struct AccountView: View {
                         Text("Passkeys are still managed at fantasycat.co.").type(.small).foregroundStyle(Tokens.muted)
                         // App Review 5.1.1(i): the policy is reachable inside the app (server sc-704).
                         Link("Privacy policy", destination: Server.url.appending(path: "privacy")).type(.smallStrong).foregroundStyle(Tokens.ink).underline()
+                        Link("Terms", destination: Server.url.appending(path: "terms")).type(.smallStrong).foregroundStyle(Tokens.ink).underline()
+                        Link("Copyright", destination: Server.url.appending(path: "copyright")).type(.smallStrong).foregroundStyle(Tokens.ink).underline()
                         Button("Sign out") { Task { dismiss(); await model.signOut() } }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("sign-out")
                     }
                     if !blocked.isEmpty {
