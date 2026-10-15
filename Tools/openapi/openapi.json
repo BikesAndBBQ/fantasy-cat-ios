@@ -96,6 +96,10 @@
               "null"
             ]
           },
+          "picture_offer": {
+            "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
+            "type": "string"
+          },
           "session_token": {
             "description": "Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.",
             "type": "string"
@@ -774,6 +778,10 @@
               "null"
             ]
           },
+          "picture_offer": {
+            "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
+            "type": "string"
+          },
           "user": {
             "$ref": "#/components/schemas/UserView"
           }
@@ -1019,6 +1027,28 @@
         },
         "required": [
           "pets"
+        ],
+        "type": "object"
+      },
+      "PictureOfferInputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/PictureOfferInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "use": {
+            "description": "True copies your Google picture in, which takes a few seconds; false declines.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "use"
         ],
         "type": "object"
       },
@@ -1478,6 +1508,10 @@
               "array",
               "null"
             ]
+          },
+          "picture_offer": {
+            "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
+            "type": "string"
           },
           "session_token": {
             "description": "Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.",
@@ -3548,6 +3582,47 @@
         "summary": "The members you have blocked",
         "tags": [
           "moderation"
+        ]
+      }
+    },
+    "/me/picture-offer": {
+      "post": {
+        "operationId": "answerPictureOffer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PictureOfferInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Use your Google picture, or say no and never be asked again",
+        "tags": [
+          "auth"
         ]
       }
     },

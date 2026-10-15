@@ -12,6 +12,10 @@ final class AppModel {
     }
     private(set) var phase: Phase = .starting
 
+    /// Your Google picture, offered once while you have none (server D47).
+    /// Comes with every answer that says who you are; either reply ends it.
+    private(set) var pictureOffer: String?
+
     /// The code of an invite link the app was opened with, kept until it's
     /// used: by signing up with it, or on the join screen once signed in.
     var pendingInvite: String?
@@ -32,7 +36,7 @@ final class AppModel {
             switch try await API.client.me(.init()) {
             case .ok(let ok):
                 let me = try ok.body.json
-                phase = .signedIn(me.user, leagues: me.leagues ?? [])
+                apply(me)
             case .default(let status, _):
                 if status == 401 { Keychain.token = nil } // revoked or expired
                 phase = .signedOut
@@ -54,6 +58,7 @@ final class AppModel {
                 }
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
+                pictureOffer = body.pictureOffer
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -65,6 +70,7 @@ final class AppModel {
     /// The server sent a fresh picture of the account (after a profile change).
     func apply(_ me: Components.Schemas.MeBody) {
         phase = .signedIn(me.user, leagues: me.leagues ?? [])
+        pictureOffer = me.pictureOffer
     }
 
     /// Re-read who we are and which leagues we're in (after creating, joining or leaving one).
@@ -82,10 +88,29 @@ final class AppModel {
                 Keychain.token = token
                 if invite != nil { pendingInvite = nil } // joined on the way in
                 phase = .signedIn(out.user, leagues: out.leagues ?? [])
+                pictureOffer = out.pictureOffer
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
         } catch { throw Failure.from(error) }
+    }
+
+    /// Use the offered picture, or say no. Either way the server never asks
+    /// again. The copy is made in the background, so the picture is fetched
+    /// again a few seconds after a yes.
+    func answerPictureOffer(use: Bool) async throws(Failure) {
+        do {
+            switch try await API.client.answerPictureOffer(body: .json(.init(use: use))) {
+            case .ok(let ok): apply(try ok.body.json)
+            case .default(let status, let problem): throw Failure.from(status: status, try? problem.body.applicationProblemJson)
+            }
+        } catch { throw Failure.from(error) }
+        if use {
+            Task {
+                try? await Task.sleep(for: .seconds(4))
+                await reload()
+            }
+        }
     }
 
     /// `current` is nil for an account that has no password yet (Google or passkey only).
@@ -154,6 +179,7 @@ final class AppModel {
                 guard let token = body.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
+                pictureOffer = body.pictureOffer
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -171,6 +197,7 @@ final class AppModel {
                 guard let token = body.sessionToken, !token.isEmpty else { throw Failure(message: "The server didn't return a session. Update the app.") }
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
+                pictureOffer = body.pictureOffer
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -188,6 +215,7 @@ final class AppModel {
             case .noContent:
                 Keychain.token = nil
                 phase = .signedOut
+                pictureOffer = nil
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -198,5 +226,6 @@ final class AppModel {
         _ = try? await API.client.logout(.init()) // best effort: the local token goes either way
         Keychain.token = nil
         phase = .signedOut
+        pictureOffer = nil
     }
 }

@@ -5,6 +5,7 @@ struct ThisWeekView: View {
     let store: LeagueStore
     let header: LeagueHeader
     var goVote: () -> Void = {}
+    @Environment(AppModel.self) private var model
     @State private var categoryID: Int64?
     @State private var open: Submission?
     @State private var posting = ProcessInfo.processInfo.arguments.contains("-posting") // debug: open the post sheet
@@ -13,6 +14,11 @@ struct ThisWeekView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 header
+                if let offer = pictureOffer {
+                    PictureOfferCard(picture: URL(string: offer)) { use in
+                        do { try await model.answerPictureOffer(use: use); return nil } catch { return Failure.from(error).message }
+                    }
+                }
                 if let league = store.league {
                     if let round = league.currentRound {
                         if round.status == .final, round.number >= league.seasonRounds {
@@ -86,6 +92,14 @@ struct ThisWeekView: View {
         guard let id = activeID, let items = store.feeds[id]?.submissions else { return nil }
         let pending = items.filter { $0.media.status == .processing }.map(\.id)
         return pending.isEmpty ? nil : "\(id):\(pending)"
+    }
+
+    private var pictureOffer: String? {
+        #if DEBUG
+        // `-pictureoffer`: show the card without a Google sign-in (the Simulator has none).
+        if ProcessInfo.processInfo.arguments.contains("-pictureoffer") { return model.pictureOffer ?? "" }
+        #endif
+        return model.pictureOffer
     }
 
     private var activeID: Int64? { categoryID ?? store.league?.currentRound?.categories?.first?.id }

@@ -147,6 +147,10 @@ extension Components {
             internal var created: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/picture_offer`.
+            internal var pictureOffer: Swift.String?
             /// Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/session_token`.
@@ -159,18 +163,21 @@ extension Components {
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - created: True when this sign-in made a new account, so the app can show onboarding.
             ///   - leagues:
+            ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///   - user:
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 created: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
                 self._dollar_schema = _dollar_schema
                 self.created = created
                 self.leagues = leagues
+                self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
                 self.user = user
             }
@@ -178,6 +185,7 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case created
                 case leagues
+                case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
             }
@@ -195,6 +203,10 @@ extension Components {
                     [Components.Schemas.LeagueSummary].self,
                     forKey: .leagues
                 )
+                self.pictureOffer = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .pictureOffer
+                )
                 self.sessionToken = try container.decodeIfPresent(
                     Swift.String.self,
                     forKey: .sessionToken
@@ -207,6 +219,7 @@ extension Components {
                     "$schema",
                     "created",
                     "leagues",
+                    "picture_offer",
                     "session_token",
                     "user"
                 ])
@@ -1452,6 +1465,10 @@ extension Components {
             internal var _dollar_schema: Swift.String?
             /// - Remark: Generated from `#/components/schemas/MeBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MeBody/picture_offer`.
+            internal var pictureOffer: Swift.String?
             /// - Remark: Generated from `#/components/schemas/MeBody/user`.
             internal var user: Components.Schemas.UserView
             /// Creates a new `MeBody`.
@@ -1459,19 +1476,23 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - leagues:
+            ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - user:
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                pictureOffer: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
                 self._dollar_schema = _dollar_schema
                 self.leagues = leagues
+                self.pictureOffer = pictureOffer
                 self.user = user
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case leagues
+                case pictureOffer = "picture_offer"
                 case user
             }
             internal init(from decoder: any Swift.Decoder) throws {
@@ -1484,6 +1505,10 @@ extension Components {
                     [Components.Schemas.LeagueSummary].self,
                     forKey: .leagues
                 )
+                self.pictureOffer = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .pictureOffer
+                )
                 self.user = try container.decode(
                     Components.Schemas.UserView.self,
                     forKey: .user
@@ -1491,6 +1516,7 @@ extension Components {
                 try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "$schema",
                     "leagues",
+                    "picture_offer",
                     "user"
                 ])
             }
@@ -1963,6 +1989,48 @@ extension Components {
                 try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "$schema",
                     "pets"
+                ])
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/PictureOfferInputBody`.
+        internal struct PictureOfferInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/PictureOfferInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// True copies your Google picture in, which takes a few seconds; false declines.
+            ///
+            /// - Remark: Generated from `#/components/schemas/PictureOfferInputBody/use`.
+            internal var use: Swift.Bool
+            /// Creates a new `PictureOfferInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - use: True copies your Google picture in, which takes a few seconds; false declines.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                use: Swift.Bool
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.use = use
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case use
+            }
+            internal init(from decoder: any Swift.Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self._dollar_schema = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: ._dollar_schema
+                )
+                self.use = try container.decode(
+                    Swift.Bool.self,
+                    forKey: .use
+                )
+                try decoder.ensureNoAdditionalProperties(knownKeys: [
+                    "$schema",
+                    "use"
                 ])
             }
         }
@@ -2812,6 +2880,10 @@ extension Components {
             internal var _dollar_schema: Swift.String?
             /// - Remark: Generated from `#/components/schemas/SessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SessionBody/picture_offer`.
+            internal var pictureOffer: Swift.String?
             /// Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///
             /// - Remark: Generated from `#/components/schemas/SessionBody/session_token`.
@@ -2823,22 +2895,26 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - leagues:
+            ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///   - user:
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
                 self._dollar_schema = _dollar_schema
                 self.leagues = leagues
+                self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
                 self.user = user
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case leagues
+                case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
             }
@@ -2852,6 +2928,10 @@ extension Components {
                     [Components.Schemas.LeagueSummary].self,
                     forKey: .leagues
                 )
+                self.pictureOffer = try container.decodeIfPresent(
+                    Swift.String.self,
+                    forKey: .pictureOffer
+                )
                 self.sessionToken = try container.decodeIfPresent(
                     Swift.String.self,
                     forKey: .sessionToken
@@ -2863,6 +2943,7 @@ extension Components {
                 try decoder.ensureNoAdditionalProperties(knownKeys: [
                     "$schema",
                     "leagues",
+                    "picture_offer",
                     "session_token",
                     "user"
                 ])

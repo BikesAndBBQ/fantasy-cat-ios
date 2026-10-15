@@ -199,6 +199,11 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /me/blocks`.
     /// - Remark: Generated from `#/paths//me/blocks/get(listBlocks)`.
     func listBlocks(_ input: Operations.ListBlocks.Input) async throws -> Operations.ListBlocks.Output
+    /// Use your Google picture, or say no and never be asked again
+    ///
+    /// - Remark: HTTP `POST /me/picture-offer`.
+    /// - Remark: Generated from `#/paths//me/picture-offer/post(answerPictureOffer)`.
+    func answerPictureOffer(_ input: Operations.AnswerPictureOffer.Input) async throws -> Operations.AnswerPictureOffer.Output
     /// Processing status of one of your uploads
     ///
     /// - Remark: HTTP `GET /media/{id}`.
@@ -694,6 +699,19 @@ extension APIProtocol {
     /// - Remark: Generated from `#/paths//me/blocks/get(listBlocks)`.
     internal func listBlocks(headers: Operations.ListBlocks.Input.Headers = .init()) async throws -> Operations.ListBlocks.Output {
         try await listBlocks(Operations.ListBlocks.Input(headers: headers))
+    }
+    /// Use your Google picture, or say no and never be asked again
+    ///
+    /// - Remark: HTTP `POST /me/picture-offer`.
+    /// - Remark: Generated from `#/paths//me/picture-offer/post(answerPictureOffer)`.
+    internal func answerPictureOffer(
+        headers: Operations.AnswerPictureOffer.Input.Headers = .init(),
+        body: Operations.AnswerPictureOffer.Input.Body
+    ) async throws -> Operations.AnswerPictureOffer.Output {
+        try await answerPictureOffer(Operations.AnswerPictureOffer.Input(
+            headers: headers,
+            body: body
+        ))
     }
     /// Processing status of one of your uploads
     ///

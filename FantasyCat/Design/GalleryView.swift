@@ -17,6 +17,7 @@ struct GalleryView: View {
                 Banner(label: "You earned", value: "+10", detail: "7 treats, 3 for showing up", inverted: false)
                 PendingPostNotice(post: Self.pending(media: nil, failure: nil))
                 PendingPostNotice(post: Self.pending(media: 1, failure: "Submissions for this round have closed."), postAgain: {})
+                PictureOfferCard(picture: nil) { _ in nil }
                 section("Buttons") {
                     Button("Post it") {}.buttonStyle(.fc(.primary, block: true))
                     HStack {
