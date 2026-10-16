@@ -4422,6 +4422,377 @@ internal enum Operations {
             }
         }
     }
+    /// The next round's planned categories (admin)
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)`.
+    internal enum GetNextCategories {
+        internal static let id: Swift.String = "getNextCategories"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/path`.
+            internal struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/path/slug`.
+                internal var slug: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - slug:
+                internal init(slug: Swift.String) {
+                    self.slug = slug
+                }
+            }
+            internal var path: Operations.GetNextCategories.Input.Path
+            /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetNextCategories.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.GetNextCategories.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.GetNextCategories.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            internal init(
+                path: Operations.GetNextCategories.Input.Path,
+                headers: Operations.GetNextCategories.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/responses/200/content/application\/json`.
+                    case json(Components.Schemas.NextCategoriesView)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.NextCategoriesView {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.GetNextCategories.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.GetNextCategories.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.GetNextCategories.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.GetNextCategories.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/GET/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.GetNextCategories.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.GetNextCategories.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.GetNextCategories.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.GetNextCategories.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
+    /// Change the next round's planned categories (admin, until it opens)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)`.
+    internal enum SetNextCategories {
+        internal static let id: Swift.String = "setNextCategories"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/path`.
+            internal struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/path/slug`.
+                internal var slug: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - slug:
+                internal init(slug: Swift.String) {
+                    self.slug = slug
+                }
+            }
+            internal var path: Operations.SetNextCategories.Input.Path
+            /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.SetNextCategories.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.SetNextCategories.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.SetNextCategories.Input.Headers
+            /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/requestBody`.
+            internal enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/requestBody/content/application\/json`.
+                case json(Components.Schemas.SetNextCategoriesInputBody)
+            }
+            internal var body: Operations.SetNextCategories.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            internal init(
+                path: Operations.SetNextCategories.Input.Path,
+                headers: Operations.SetNextCategories.Input.Headers = .init(),
+                body: Operations.SetNextCategories.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/responses/200/content/application\/json`.
+                    case json(Components.Schemas.NextCategoriesView)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.NextCategoriesView {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.SetNextCategories.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.SetNextCategories.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.SetNextCategories.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.SetNextCategories.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/next-categories/PUT/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.SetNextCategories.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.SetNextCategories.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.SetNextCategories.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.SetNextCategories.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
     /// Every round this season
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/rounds`.
@@ -6138,6 +6509,171 @@ internal enum Operations {
             /// - Throws: An error if `self` is not `.`default``.
             /// - SeeAlso: `.`default``.
             internal var `default`: Operations.RemoveAvatar.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
+    /// Make your Google picture your picture
+    ///
+    /// Replaces the picture you have now. The copy is made in the background and lands within seconds. Needs google_picture on /me; when has_google is true and that is missing, sign in with Google once to record it.
+    ///
+    /// - Remark: HTTP `POST /me/avatar/google`.
+    /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)`.
+    internal enum UseGooglePicture {
+        internal static let id: Swift.String = "useGooglePicture"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/me/avatar/google/POST/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.UseGooglePicture.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.UseGooglePicture.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.UseGooglePicture.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - headers:
+            internal init(headers: Operations.UseGooglePicture.Input.Headers = .init()) {
+                self.headers = headers
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/me/avatar/google/POST/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/me/avatar/google/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.MeBody)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.MeBody {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.UseGooglePicture.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.UseGooglePicture.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.UseGooglePicture.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.UseGooglePicture.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/me/avatar/google/POST/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/me/avatar/google/POST/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.UseGooglePicture.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.UseGooglePicture.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.UseGooglePicture.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.UseGooglePicture.Output.Default {
                 get throws {
                     switch self {
                     case let .`default`(_, response):

@@ -46,26 +46,6 @@ extension Components {
                 case code
                 case verifier
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.code = try container.decode(
-                    Swift.String.self,
-                    forKey: .code
-                )
-                self.verifier = try container.decode(
-                    Swift.String.self,
-                    forKey: .verifier
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "code",
-                    "verifier"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/AppVersionOutputBody`.
         internal struct AppVersionOutputBody: Codable, Hashable, Sendable {
@@ -109,31 +89,6 @@ extension Components {
                 case minBuild = "min_build"
                 case updateUrl = "update_url"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.message = try container.decode(
-                    Swift.String.self,
-                    forKey: .message
-                )
-                self.minBuild = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .minBuild
-                )
-                self.updateUrl = try container.decode(
-                    Swift.String.self,
-                    forKey: .updateUrl
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "message",
-                    "min_build",
-                    "update_url"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/AppleSessionBody`.
         internal struct AppleSessionBody: Codable, Hashable, Sendable {
@@ -145,6 +100,14 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/created`.
             internal var created: Swift.Bool
+            /// Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/google_picture`.
+            internal var googlePicture: Swift.String?
+            /// Whether Google is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/has_google`.
+            internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -162,6 +125,8 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - created: True when this sign-in made a new account, so the app can show onboarding.
+            ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
@@ -169,6 +134,8 @@ extension Components {
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 created: Swift.Bool,
+                googlePicture: Swift.String? = nil,
+                hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
@@ -176,6 +143,8 @@ extension Components {
             ) {
                 self._dollar_schema = _dollar_schema
                 self.created = created
+                self.googlePicture = googlePicture
+                self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
@@ -184,45 +153,12 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case created
+                case googlePicture = "google_picture"
+                case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.created = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .created
-                )
-                self.leagues = try container.decodeIfPresent(
-                    [Components.Schemas.LeagueSummary].self,
-                    forKey: .leagues
-                )
-                self.pictureOffer = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .pictureOffer
-                )
-                self.sessionToken = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .sessionToken
-                )
-                self.user = try container.decode(
-                    Components.Schemas.UserView.self,
-                    forKey: .user
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "created",
-                    "leagues",
-                    "picture_offer",
-                    "session_token",
-                    "user"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/AppleSignInInputBody`.
@@ -275,36 +211,6 @@ extension Components {
                 case name
                 case nonce
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.authorizationCode = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .authorizationCode
-                )
-                self.identityToken = try container.decode(
-                    Swift.String.self,
-                    forKey: .identityToken
-                )
-                self.name = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.nonce = try container.decode(
-                    Swift.String.self,
-                    forKey: .nonce
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "authorization_code",
-                    "identity_token",
-                    "name",
-                    "nonce"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/BallotAllocation`.
         internal struct BallotAllocation: Codable, Hashable, Sendable {
@@ -330,21 +236,6 @@ extension Components {
                 case points
                 case submissionId = "submission_id"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.points = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .points
-                )
-                self.submissionId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .submissionId
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "points",
-                    "submission_id"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/BallotEntry`.
         internal struct BallotEntry: Codable, Hashable, Sendable {
@@ -369,21 +260,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case points
                 case submission
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.points = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .points
-                )
-                self.submission = try container.decode(
-                    Components.Schemas.SubmissionView.self,
-                    forKey: .submission
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "points",
-                    "submission"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/BallotView`.
@@ -455,51 +331,6 @@ extension Components {
                 case roundStatus = "round_status"
                 case spent
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.budget = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .budget
-                )
-                self.category = try container.decode(
-                    Swift.String.self,
-                    forKey: .category
-                )
-                self.categoryId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .categoryId
-                )
-                self.entries = try container.decodeIfPresent(
-                    [Components.Schemas.BallotEntry].self,
-                    forKey: .entries
-                )
-                self.maxPerSubmission = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .maxPerSubmission
-                )
-                self.roundStatus = try container.decode(
-                    Components.Schemas.BallotView.RoundStatusPayload.self,
-                    forKey: .roundStatus
-                )
-                self.spent = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .spent
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "budget",
-                    "category",
-                    "category_id",
-                    "entries",
-                    "max_per_submission",
-                    "round_status",
-                    "spent"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/BlocksOutputBody`.
         internal struct BlocksOutputBody: Codable, Hashable, Sendable {
@@ -524,21 +355,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case blocked
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.blocked = try container.decodeIfPresent(
-                    [Components.Schemas.PersonView].self,
-                    forKey: .blocked
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "blocked"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/CategoryResultView`.
@@ -570,26 +386,6 @@ extension Components {
                 case category
                 case categoryId = "category_id"
                 case entries
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.category = try container.decode(
-                    Swift.String.self,
-                    forKey: .category
-                )
-                self.categoryId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .categoryId
-                )
-                self.entries = try container.decodeIfPresent(
-                    [Components.Schemas.ResultEntry].self,
-                    forKey: .entries
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "category",
-                    "category_id",
-                    "entries"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/CategoryView`.
@@ -638,41 +434,6 @@ extension Components {
                 case sort
                 case submissionCount = "submission_count"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.mySubmissionCount = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .mySubmissionCount
-                )
-                self.myVotesSpent = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .myVotesSpent
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.sort = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .sort
-                )
-                self.submissionCount = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .submissionCount
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "id",
-                    "my_submission_count",
-                    "my_votes_spent",
-                    "name",
-                    "sort",
-                    "submission_count"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/ChangePasswordInputBody`.
         internal struct ChangePasswordInputBody: Codable, Hashable, Sendable {
@@ -706,26 +467,6 @@ extension Components {
                 case currentPassword = "current_password"
                 case newPassword = "new_password"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.currentPassword = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .currentPassword
-                )
-                self.newPassword = try container.decode(
-                    Swift.String.self,
-                    forKey: .newPassword
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "current_password",
-                    "new_password"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/CreateLeagueInputBody`.
         internal struct CreateLeagueInputBody: Codable, Hashable, Sendable {
@@ -758,26 +499,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case name
                 case timezone
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.timezone = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .timezone
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "name",
-                    "timezone"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/CreateSubmissionInputBody`.
@@ -816,31 +537,6 @@ extension Components {
                 case mediaId = "media_id"
                 case petId = "pet_id"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.caption = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .caption
-                )
-                self.mediaId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .mediaId
-                )
-                self.petId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .petId
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "caption",
-                    "media_id",
-                    "pet_id"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/ErrorDetail`.
         internal struct ErrorDetail: Codable, Hashable, Sendable {
@@ -875,26 +571,6 @@ extension Components {
                 case location
                 case message
                 case value
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.location = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .location
-                )
-                self.message = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .message
-                )
-                self.value = try container.decodeIfPresent(
-                    OpenAPIRuntime.OpenAPIValueContainer.self,
-                    forKey: .value
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "location",
-                    "message",
-                    "value"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ErrorModel`.
@@ -963,46 +639,6 @@ extension Components {
                 case title
                 case _type = "type"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.detail = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .detail
-                )
-                self.errors = try container.decodeIfPresent(
-                    [Components.Schemas.ErrorDetail].self,
-                    forKey: .errors
-                )
-                self.instance = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .instance
-                )
-                self.status = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .status
-                )
-                self.title = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .title
-                )
-                self._type = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._type
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "detail",
-                    "errors",
-                    "instance",
-                    "status",
-                    "title",
-                    "type"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/ForgotInputBody`.
         internal struct ForgotInputBody: Codable, Hashable, Sendable {
@@ -1027,21 +663,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case email
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.email = try container.decode(
-                    Swift.String.self,
-                    forKey: .email
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "email"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/HealthOutputBody`.
@@ -1069,21 +690,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case status
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.status = try container.decode(
-                    Swift.String.self,
-                    forKey: .status
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "status"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/InviteOutputBody`.
@@ -1122,31 +728,6 @@ extension Components {
                 case leagueName = "league_name"
                 case memberCount = "member_count"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.adminName = try container.decode(
-                    Swift.String.self,
-                    forKey: .adminName
-                )
-                self.leagueName = try container.decode(
-                    Swift.String.self,
-                    forKey: .leagueName
-                )
-                self.memberCount = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .memberCount
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "admin_name",
-                    "league_name",
-                    "member_count"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/JoinInputBody`.
         internal struct JoinInputBody: Codable, Hashable, Sendable {
@@ -1171,21 +752,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case inviteCode = "invite_code"
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.inviteCode = try container.decode(
-                    Swift.String.self,
-                    forKey: .inviteCode
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "invite_code"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/LeagueSummary`.
@@ -1221,31 +787,6 @@ extension Components {
                 case memberCount = "member_count"
                 case name
                 case slug
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.isAdmin = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isAdmin
-                )
-                self.memberCount = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .memberCount
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.slug = try container.decode(
-                    Swift.String.self,
-                    forKey: .slug
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "is_admin",
-                    "member_count",
-                    "name",
-                    "slug"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/LeagueView`.
@@ -1338,71 +879,6 @@ extension Components {
                 case voteBudget = "vote_budget"
                 case voteMaxPerSubmission = "vote_max_per_submission"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.currentRound = try container.decodeIfPresent(
-                    Components.Schemas.RoundView.self,
-                    forKey: .currentRound
-                )
-                self.inviteCode = try container.decode(
-                    Swift.String.self,
-                    forKey: .inviteCode
-                )
-                self.isAdmin = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isAdmin
-                )
-                self.members = try container.decodeIfPresent(
-                    [Components.Schemas.MemberView].self,
-                    forKey: .members
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.seasonRounds = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .seasonRounds
-                )
-                self.slug = try container.decode(
-                    Swift.String.self,
-                    forKey: .slug
-                )
-                self.submissionCap = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .submissionCap
-                )
-                self.timezone = try container.decode(
-                    Swift.String.self,
-                    forKey: .timezone
-                )
-                self.voteBudget = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .voteBudget
-                )
-                self.voteMaxPerSubmission = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .voteMaxPerSubmission
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "current_round",
-                    "invite_code",
-                    "is_admin",
-                    "members",
-                    "name",
-                    "season_rounds",
-                    "slug",
-                    "submission_cap",
-                    "timezone",
-                    "vote_budget",
-                    "vote_max_per_submission"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/LoginInputBody`.
         internal struct LoginInputBody: Codable, Hashable, Sendable {
@@ -1436,26 +912,6 @@ extension Components {
                 case login
                 case password
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.login = try container.decode(
-                    Swift.String.self,
-                    forKey: .login
-                )
-                self.password = try container.decode(
-                    Swift.String.self,
-                    forKey: .password
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "login",
-                    "password"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/MeBody`.
         internal struct MeBody: Codable, Hashable, Sendable {
@@ -1463,6 +919,14 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/MeBody/$schema`.
             internal var _dollar_schema: Swift.String?
+            /// Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MeBody/google_picture`.
+            internal var googlePicture: Swift.String?
+            /// Whether Google is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MeBody/has_google`.
+            internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/MeBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -1475,50 +939,33 @@ extension Components {
             ///
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - user:
             internal init(
                 _dollar_schema: Swift.String? = nil,
+                googlePicture: Swift.String? = nil,
+                hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
                 self._dollar_schema = _dollar_schema
+                self.googlePicture = googlePicture
+                self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
                 self.user = user
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
+                case googlePicture = "google_picture"
+                case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
                 case user
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.leagues = try container.decodeIfPresent(
-                    [Components.Schemas.LeagueSummary].self,
-                    forKey: .leagues
-                )
-                self.pictureOffer = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .pictureOffer
-                )
-                self.user = try container.decode(
-                    Components.Schemas.UserView.self,
-                    forKey: .user
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "leagues",
-                    "picture_offer",
-                    "user"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/MediaView`.
@@ -1610,66 +1057,6 @@ extension Components {
                 case thumbUrl = "thumb_url"
                 case width
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.displayUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .displayUrl
-                )
-                self.durationMs = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .durationMs
-                )
-                self.error = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .error
-                )
-                self.height = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .height
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.kind = try container.decode(
-                    Components.Schemas.MediaView.KindPayload.self,
-                    forKey: .kind
-                )
-                self.posterUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .posterUrl
-                )
-                self.status = try container.decode(
-                    Components.Schemas.MediaView.StatusPayload.self,
-                    forKey: .status
-                )
-                self.thumbUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .thumbUrl
-                )
-                self.width = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .width
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "display_url",
-                    "duration_ms",
-                    "error",
-                    "height",
-                    "id",
-                    "kind",
-                    "poster_url",
-                    "status",
-                    "thumb_url",
-                    "width"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/MemberView`.
         internal struct MemberView: Codable, Hashable, Sendable {
@@ -1717,40 +1104,44 @@ extension Components {
                 case joinedAt = "joined_at"
                 case username
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.avatarUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .avatarUrl
-                )
-                self.displayName = try container.decode(
-                    Swift.String.self,
-                    forKey: .displayName
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.isAdmin = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isAdmin
-                )
-                self.joinedAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .joinedAt
-                )
-                self.username = try container.decode(
-                    Swift.String.self,
-                    forKey: .username
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "avatar_url",
-                    "display_name",
-                    "id",
-                    "is_admin",
-                    "joined_at",
-                    "username"
-                ])
+        }
+        /// - Remark: Generated from `#/components/schemas/NextCategoriesView`.
+        internal struct NextCategoriesView: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NextCategoriesView/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/NextCategoriesView/categories`.
+            internal var categories: [Swift.String]?
+            /// When the round opens and these become its categories.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NextCategoriesView/opens_at`.
+            internal var opensAt: Foundation.Date
+            /// - Remark: Generated from `#/components/schemas/NextCategoriesView/round_number`.
+            internal var roundNumber: Swift.Int64
+            /// Creates a new `NextCategoriesView`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - categories:
+            ///   - opensAt: When the round opens and these become its categories.
+            ///   - roundNumber:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                categories: [Swift.String]? = nil,
+                opensAt: Foundation.Date,
+                roundNumber: Swift.Int64
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.categories = categories
+                self.opensAt = opensAt
+                self.roundNumber = roundNumber
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case categories
+                case opensAt = "opens_at"
+                case roundNumber = "round_number"
             }
         }
         /// - Remark: Generated from `#/components/schemas/PersonView`.
@@ -1789,31 +1180,6 @@ extension Components {
                 case id
                 case username
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.avatarUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .avatarUrl
-                )
-                self.displayName = try container.decode(
-                    Swift.String.self,
-                    forKey: .displayName
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.username = try container.decode(
-                    Swift.String.self,
-                    forKey: .username
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "avatar_url",
-                    "display_name",
-                    "id",
-                    "username"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/PetBody`.
         internal struct PetBody: Codable, Hashable, Sendable {
@@ -1844,26 +1210,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case name
                 case photoMediaId = "photo_media_id"
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.photoMediaId = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .photoMediaId
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "name",
-                    "photo_media_id"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/PetView`.
@@ -1916,41 +1262,6 @@ extension Components {
                 case photo
                 case species
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.createdAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .createdAt
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.photo = try container.decodeIfPresent(
-                    Components.Schemas.MediaView.self,
-                    forKey: .photo
-                )
-                self.species = try container.decode(
-                    Swift.String.self,
-                    forKey: .species
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "created_at",
-                    "id",
-                    "name",
-                    "photo",
-                    "species"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/PetsOutputBody`.
         internal struct PetsOutputBody: Codable, Hashable, Sendable {
@@ -1975,21 +1286,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case pets
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.pets = try container.decodeIfPresent(
-                    [Components.Schemas.PetView].self,
-                    forKey: .pets
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "pets"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/PictureOfferInputBody`.
@@ -2018,21 +1314,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case use
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.use = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .use
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "use"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/PoolOutputBody`.
         internal struct PoolOutputBody: Codable, Hashable, Sendable {
@@ -2057,21 +1338,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case categories
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.categories = try container.decodeIfPresent(
-                    [Swift.String].self,
-                    forKey: .categories
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "categories"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ProvidersOutputBody`.
@@ -2106,26 +1372,6 @@ extension Components {
                 case apple
                 case google
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.apple = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .apple
-                )
-                self.google = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .google
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "apple",
-                    "google"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/PutBallotInputBody`.
         internal struct PutBallotInputBody: Codable, Hashable, Sendable {
@@ -2150,21 +1396,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case allocations
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.allocations = try container.decodeIfPresent(
-                    [Components.Schemas.BallotAllocation].self,
-                    forKey: .allocations
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "allocations"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ReportInputBody`.
@@ -2192,21 +1423,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case reason
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.reason = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .reason
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "reason"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ReportView`.
@@ -2311,76 +1527,6 @@ extension Components {
                 case resolution
                 case resolvedAt = "resolved_at"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.caption = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .caption
-                )
-                self.category = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .category
-                )
-                self.createdAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .createdAt
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.league = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .league
-                )
-                self.media = try container.decodeIfPresent(
-                    Components.Schemas.MediaView.self,
-                    forKey: .media
-                )
-                self.postIsGone = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .postIsGone
-                )
-                self.poster = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .poster
-                )
-                self.reason = try container.decode(
-                    Swift.String.self,
-                    forKey: .reason
-                )
-                self.reporter = try container.decode(
-                    Swift.String.self,
-                    forKey: .reporter
-                )
-                self.resolution = try container.decodeIfPresent(
-                    Components.Schemas.ReportView.ResolutionPayload.self,
-                    forKey: .resolution
-                )
-                self.resolvedAt = try container.decodeIfPresent(
-                    Foundation.Date.self,
-                    forKey: .resolvedAt
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "caption",
-                    "category",
-                    "created_at",
-                    "id",
-                    "league",
-                    "media",
-                    "post_is_gone",
-                    "poster",
-                    "reason",
-                    "reporter",
-                    "resolution",
-                    "resolved_at"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/ResetInputBody`.
         internal struct ResetInputBody: Codable, Hashable, Sendable {
@@ -2412,26 +1558,6 @@ extension Components {
                 case newPassword = "new_password"
                 case token
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.newPassword = try container.decode(
-                    Swift.String.self,
-                    forKey: .newPassword
-                )
-                self.token = try container.decode(
-                    Swift.String.self,
-                    forKey: .token
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "new_password",
-                    "token"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/ResultEntry`.
         internal struct ResultEntry: Codable, Hashable, Sendable {
@@ -2462,26 +1588,6 @@ extension Components {
                 case place
                 case submission
                 case votes
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.place = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .place
-                )
-                self.submission = try container.decode(
-                    Components.Schemas.SubmissionView.self,
-                    forKey: .submission
-                )
-                self.votes = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .votes
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "place",
-                    "submission",
-                    "votes"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ResultsOutputBody`.
@@ -2519,31 +1625,6 @@ extension Components {
                 case categories
                 case number
                 case scores
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.categories = try container.decodeIfPresent(
-                    [Components.Schemas.CategoryResultView].self,
-                    forKey: .categories
-                )
-                self.number = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .number
-                )
-                self.scores = try container.decodeIfPresent(
-                    [Components.Schemas.ScoreView].self,
-                    forKey: .scores
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "categories",
-                    "number",
-                    "scores"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/RoundSummary`.
@@ -2592,36 +1673,6 @@ extension Components {
                 case status
                 case submitCloseAt = "submit_close_at"
                 case voteCloseAt = "vote_close_at"
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.categories = try container.decodeIfPresent(
-                    [Swift.String].self,
-                    forKey: .categories
-                )
-                self.number = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .number
-                )
-                self.status = try container.decode(
-                    Components.Schemas.RoundSummary.StatusPayload.self,
-                    forKey: .status
-                )
-                self.submitCloseAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .submitCloseAt
-                )
-                self.voteCloseAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .voteCloseAt
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "categories",
-                    "number",
-                    "status",
-                    "submit_close_at",
-                    "vote_close_at"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/RoundView`.
@@ -2699,56 +1750,6 @@ extension Components {
                 case submitOpenAt = "submit_open_at"
                 case voteCloseAt = "vote_close_at"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.canEditCategories = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .canEditCategories
-                )
-                self.categories = try container.decodeIfPresent(
-                    [Components.Schemas.CategoryView].self,
-                    forKey: .categories
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.number = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .number
-                )
-                self.status = try container.decode(
-                    Components.Schemas.RoundView.StatusPayload.self,
-                    forKey: .status
-                )
-                self.submitCloseAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .submitCloseAt
-                )
-                self.submitOpenAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .submitOpenAt
-                )
-                self.voteCloseAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .voteCloseAt
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "can_edit_categories",
-                    "categories",
-                    "id",
-                    "number",
-                    "status",
-                    "submit_close_at",
-                    "submit_open_at",
-                    "vote_close_at"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/RoundsOutputBody`.
         internal struct RoundsOutputBody: Codable, Hashable, Sendable {
@@ -2773,21 +1774,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case rounds
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.rounds = try container.decodeIfPresent(
-                    [Components.Schemas.RoundSummary].self,
-                    forKey: .rounds
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "rounds"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/ScoreView`.
@@ -2836,41 +1822,6 @@ extension Components {
                 case votePoints = "vote_points"
                 case winPoints = "win_points"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.isMe = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isMe
-                )
-                self.manager = try container.decode(
-                    Components.Schemas.PersonView.self,
-                    forKey: .manager
-                )
-                self.participationPoints = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .participationPoints
-                )
-                self.total = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .total
-                )
-                self.votePoints = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .votePoints
-                )
-                self.winPoints = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .winPoints
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "is_me",
-                    "manager",
-                    "participation_points",
-                    "total",
-                    "vote_points",
-                    "win_points"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/SessionBody`.
         internal struct SessionBody: Codable, Hashable, Sendable {
@@ -2878,6 +1829,14 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/SessionBody/$schema`.
             internal var _dollar_schema: Swift.String?
+            /// Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SessionBody/google_picture`.
+            internal var googlePicture: Swift.String?
+            /// Whether Google is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SessionBody/has_google`.
+            internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/SessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -2894,18 +1853,24 @@ extension Components {
             ///
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///   - user:
             internal init(
                 _dollar_schema: Swift.String? = nil,
+                googlePicture: Swift.String? = nil,
+                hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
                 self._dollar_schema = _dollar_schema
+                self.googlePicture = googlePicture
+                self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
@@ -2913,40 +1878,12 @@ extension Components {
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
+                case googlePicture = "google_picture"
+                case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.leagues = try container.decodeIfPresent(
-                    [Components.Schemas.LeagueSummary].self,
-                    forKey: .leagues
-                )
-                self.pictureOffer = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .pictureOffer
-                )
-                self.sessionToken = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .sessionToken
-                )
-                self.user = try container.decode(
-                    Components.Schemas.UserView.self,
-                    forKey: .user
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "leagues",
-                    "picture_offer",
-                    "session_token",
-                    "user"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/SetAvatarInputBody`.
@@ -2975,21 +1912,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case mediaId = "media_id"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.mediaId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .mediaId
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "media_id"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/SetCategoriesInputBody`.
         internal struct SetCategoriesInputBody: Codable, Hashable, Sendable {
@@ -3017,20 +1939,32 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case names
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.names = try container.decodeIfPresent(
-                    [Swift.String].self,
-                    forKey: .names
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "names"
-                ])
+        }
+        /// - Remark: Generated from `#/components/schemas/SetNextCategoriesInputBody`.
+        internal struct SetNextCategoriesInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SetNextCategoriesInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Exactly three, per the rules.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SetNextCategoriesInputBody/names`.
+            internal var names: [Swift.String]?
+            /// Creates a new `SetNextCategoriesInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - names: Exactly three, per the rules.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                names: [Swift.String]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.names = names
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case names
             }
         }
         /// - Remark: Generated from `#/components/schemas/SignupInputBody`.
@@ -3101,51 +2035,6 @@ extension Components {
                 case phone
                 case username
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.displayName = try container.decode(
-                    Swift.String.self,
-                    forKey: .displayName
-                )
-                self.email = try container.decode(
-                    Swift.String.self,
-                    forKey: .email
-                )
-                self.inviteCode = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .inviteCode
-                )
-                self.notifyEmail = try container.decodeIfPresent(
-                    Swift.Bool.self,
-                    forKey: .notifyEmail
-                )
-                self.password = try container.decode(
-                    Swift.String.self,
-                    forKey: .password
-                )
-                self.phone = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .phone
-                )
-                self.username = try container.decode(
-                    Swift.String.self,
-                    forKey: .username
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "display_name",
-                    "email",
-                    "invite_code",
-                    "notify_email",
-                    "password",
-                    "phone",
-                    "username"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/StandingView`.
         internal struct StandingView: Codable, Hashable, Sendable {
@@ -3203,46 +2092,6 @@ extension Components {
                 case votePoints = "vote_points"
                 case wins
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.isMe = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isMe
-                )
-                self.manager = try container.decode(
-                    Components.Schemas.PersonView.self,
-                    forKey: .manager
-                )
-                self.rank = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .rank
-                )
-                self.roundsScored = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .roundsScored
-                )
-                self.total = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .total
-                )
-                self.votePoints = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .votePoints
-                )
-                self.wins = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .wins
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "is_me",
-                    "manager",
-                    "rank",
-                    "rounds_scored",
-                    "total",
-                    "vote_points",
-                    "wins"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/StandingsOutputBody`.
         internal struct StandingsOutputBody: Codable, Hashable, Sendable {
@@ -3279,31 +2128,6 @@ extension Components {
                 case roundsFinal = "rounds_final"
                 case seasonRounds = "season_rounds"
                 case standings
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.roundsFinal = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .roundsFinal
-                )
-                self.seasonRounds = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .seasonRounds
-                )
-                self.standings = try container.decodeIfPresent(
-                    [Components.Schemas.StandingView].self,
-                    forKey: .standings
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "rounds_final",
-                    "season_rounds",
-                    "standings"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/SubmissionView`.
@@ -3386,66 +2210,6 @@ extension Components {
                 case petName = "pet_name"
                 case petPhotoUrl = "pet_photo_url"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.caption = try container.decode(
-                    Swift.String.self,
-                    forKey: .caption
-                )
-                self.categoryId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .categoryId
-                )
-                self.createdAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .createdAt
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.isMine = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .isMine
-                )
-                self.manager = try container.decode(
-                    Components.Schemas.PersonView.self,
-                    forKey: .manager
-                )
-                self.media = try container.decode(
-                    Components.Schemas.MediaView.self,
-                    forKey: .media
-                )
-                self.petId = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .petId
-                )
-                self.petName = try container.decode(
-                    Swift.String.self,
-                    forKey: .petName
-                )
-                self.petPhotoUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .petPhotoUrl
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "caption",
-                    "category_id",
-                    "created_at",
-                    "id",
-                    "is_mine",
-                    "manager",
-                    "media",
-                    "pet_id",
-                    "pet_name",
-                    "pet_photo_url"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/SubmissionsOutputBody`.
         internal struct SubmissionsOutputBody: Codable, Hashable, Sendable {
@@ -3504,41 +2268,6 @@ extension Components {
                 case roundStatus = "round_status"
                 case submissions
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.cap = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .cap
-                )
-                self.category = try container.decode(
-                    Swift.String.self,
-                    forKey: .category
-                )
-                self.myCount = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .myCount
-                )
-                self.roundStatus = try container.decode(
-                    Components.Schemas.SubmissionsOutputBody.RoundStatusPayload.self,
-                    forKey: .roundStatus
-                )
-                self.submissions = try container.decodeIfPresent(
-                    [Components.Schemas.SubmissionView].self,
-                    forKey: .submissions
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "cap",
-                    "category",
-                    "my_count",
-                    "round_status",
-                    "submissions"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/TakeDownInputBody`.
         internal struct TakeDownInputBody: Codable, Hashable, Sendable {
@@ -3564,21 +2293,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case token
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.token = try container.decode(
-                    Swift.String.self,
-                    forKey: .token
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "token"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/TokenInputBody`.
         internal struct TokenInputBody: Codable, Hashable, Sendable {
@@ -3603,21 +2317,6 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case token
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.token = try container.decode(
-                    Swift.String.self,
-                    forKey: .token
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "token"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/TrimMediaInputBody`.
@@ -3653,26 +2352,6 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case endMs = "end_ms"
                 case startMs = "start_ms"
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.endMs = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .endMs
-                )
-                self.startMs = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .startMs
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "end_ms",
-                    "start_ms"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/UpdateLeagueInputBody`.
@@ -3727,41 +2406,6 @@ extension Components {
                 case voteBudget = "vote_budget"
                 case voteMaxPerSubmission = "vote_max_per_submission"
             }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.name = try container.decode(
-                    Swift.String.self,
-                    forKey: .name
-                )
-                self.seasonRounds = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .seasonRounds
-                )
-                self.submissionCap = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .submissionCap
-                )
-                self.voteBudget = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .voteBudget
-                )
-                self.voteMaxPerSubmission = try container.decodeIfPresent(
-                    Swift.Int64.self,
-                    forKey: .voteMaxPerSubmission
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "name",
-                    "season_rounds",
-                    "submission_cap",
-                    "vote_budget",
-                    "vote_max_per_submission"
-                ])
-            }
         }
         /// - Remark: Generated from `#/components/schemas/UpdateMeInputBody`.
         internal struct UpdateMeInputBody: Codable, Hashable, Sendable {
@@ -3808,36 +2452,6 @@ extension Components {
                 case notifyEmail = "notify_email"
                 case phone
                 case username
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self._dollar_schema = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: ._dollar_schema
-                )
-                self.displayName = try container.decode(
-                    Swift.String.self,
-                    forKey: .displayName
-                )
-                self.notifyEmail = try container.decodeIfPresent(
-                    Swift.Bool.self,
-                    forKey: .notifyEmail
-                )
-                self.phone = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .phone
-                )
-                self.username = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .username
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "$schema",
-                    "display_name",
-                    "notify_email",
-                    "phone",
-                    "username"
-                ])
             }
         }
         /// - Remark: Generated from `#/components/schemas/UserView`.
@@ -3913,61 +2527,6 @@ extension Components {
                 case notifyEmail = "notify_email"
                 case phone
                 case username
-            }
-            internal init(from decoder: any Swift.Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.avatarUrl = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .avatarUrl
-                )
-                self.createdAt = try container.decode(
-                    Foundation.Date.self,
-                    forKey: .createdAt
-                )
-                self.displayName = try container.decode(
-                    Swift.String.self,
-                    forKey: .displayName
-                )
-                self.email = try container.decode(
-                    Swift.String.self,
-                    forKey: .email
-                )
-                self.emailVerified = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .emailVerified
-                )
-                self.hasPassword = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .hasPassword
-                )
-                self.id = try container.decode(
-                    Swift.Int64.self,
-                    forKey: .id
-                )
-                self.notifyEmail = try container.decode(
-                    Swift.Bool.self,
-                    forKey: .notifyEmail
-                )
-                self.phone = try container.decodeIfPresent(
-                    Swift.String.self,
-                    forKey: .phone
-                )
-                self.username = try container.decode(
-                    Swift.String.self,
-                    forKey: .username
-                )
-                try decoder.ensureNoAdditionalProperties(knownKeys: [
-                    "avatar_url",
-                    "created_at",
-                    "display_name",
-                    "email",
-                    "email_verified",
-                    "has_password",
-                    "id",
-                    "notify_email",
-                    "phone",
-                    "username"
-                ])
             }
         }
     }

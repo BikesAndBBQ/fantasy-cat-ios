@@ -2062,6 +2062,173 @@ internal struct Client: APIProtocol {
             }
         )
     }
+    /// The next round's planned categories (admin)
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)`.
+    internal func getNextCategories(_ input: Operations.GetNextCategories.Input) async throws -> Operations.GetNextCategories.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.GetNextCategories.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/leagues/{}/next-categories",
+                    parameters: [
+                        input.path.slug
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .get
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.GetNextCategories.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NextCategoriesView.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.GetNextCategories.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
+    /// Change the next round's planned categories (admin, until it opens)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)`.
+    internal func setNextCategories(_ input: Operations.SetNextCategories.Input) async throws -> Operations.SetNextCategories.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.SetNextCategories.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/leagues/{}/next-categories",
+                    parameters: [
+                        input.path.slug
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .put
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                let body: OpenAPIRuntime.HTTPBody?
+                switch input.body {
+                case let .json(value):
+                    body = try converter.setRequiredRequestBodyAsJSON(
+                        value,
+                        headerFields: &request.headerFields,
+                        contentType: "application/json; charset=utf-8"
+                    )
+                }
+                return (request, body)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.SetNextCategories.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.NextCategoriesView.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.SetNextCategories.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
     /// Every round this season
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/rounds`.
@@ -2831,6 +2998,85 @@ internal struct Client: APIProtocol {
                 default:
                     let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
                     let body: Operations.RemoveAvatar.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
+    /// Make your Google picture your picture
+    ///
+    /// Replaces the picture you have now. The copy is made in the background and lands within seconds. Needs google_picture on /me; when has_google is true and that is missing, sign in with Google once to record it.
+    ///
+    /// - Remark: HTTP `POST /me/avatar/google`.
+    /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)`.
+    internal func useGooglePicture(_ input: Operations.UseGooglePicture.Input) async throws -> Operations.UseGooglePicture.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.UseGooglePicture.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/me/avatar/google",
+                    parameters: []
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .post
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.UseGooglePicture.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.MeBody.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.UseGooglePicture.Output.Default.Body
                     let chosenContentType = try converter.bestContentType(
                         received: contentType,
                         options: [

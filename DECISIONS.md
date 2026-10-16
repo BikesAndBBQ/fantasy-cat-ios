@@ -401,3 +401,17 @@ which returns the bearer session.
   (Simulator, `make device`) shows the button but the sheet fails there; the
   real sign-in can only be tried in a TestFlight build, against a server that
   has `APPLE_AUDIENCES` set.
+
+## I18 — The client accepts fields it does not know (2026-10-16)
+
+The server marks its schemas `additionalProperties: false`, and Swift OpenAPI
+Generator turned that into `ensureNoAdditionalProperties`: a response that
+gained a field failed to decode. On 2026-10-16 the server added `has_google`
+and `google_picture` to sign-in and `/me` (server sc-288), and every build on a
+phone failed right after Google sign-in (sc-2381).
+
+- `make api` copies the spec through `scripts/copy-spec.py`, which drops every
+  `additionalProperties: false`. The app only sends what it was built with,
+  so requests lose nothing, and responses may grow without breaking old builds.
+- Removing or renaming a field, or making a new one required in a request, still
+  breaks old builds: that is the server repo's concern when it changes the API.

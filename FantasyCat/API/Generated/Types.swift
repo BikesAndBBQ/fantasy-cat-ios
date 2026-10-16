@@ -144,6 +144,16 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /leagues/{slug}/members/me`.
     /// - Remark: Generated from `#/paths//leagues/{slug}/members/me/delete(leaveLeague)`.
     func leaveLeague(_ input: Operations.LeaveLeague.Input) async throws -> Operations.LeaveLeague.Output
+    /// The next round's planned categories (admin)
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)`.
+    func getNextCategories(_ input: Operations.GetNextCategories.Input) async throws -> Operations.GetNextCategories.Output
+    /// Change the next round's planned categories (admin, until it opens)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)`.
+    func setNextCategories(_ input: Operations.SetNextCategories.Input) async throws -> Operations.SetNextCategories.Output
     /// Every round this season
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/rounds`.
@@ -194,6 +204,13 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /me/avatar`.
     /// - Remark: Generated from `#/paths//me/avatar/delete(removeAvatar)`.
     func removeAvatar(_ input: Operations.RemoveAvatar.Input) async throws -> Operations.RemoveAvatar.Output
+    /// Make your Google picture your picture
+    ///
+    /// Replaces the picture you have now. The copy is made in the background and lands within seconds. Needs google_picture on /me; when has_google is true and that is missing, sign in with Google once to record it.
+    ///
+    /// - Remark: HTTP `POST /me/avatar/google`.
+    /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)`.
+    func useGooglePicture(_ input: Operations.UseGooglePicture.Input) async throws -> Operations.UseGooglePicture.Output
     /// The members you have blocked
     ///
     /// - Remark: HTTP `GET /me/blocks`.
@@ -579,6 +596,34 @@ extension APIProtocol {
             headers: headers
         ))
     }
+    /// The next round's planned categories (admin)
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/get(getNextCategories)`.
+    internal func getNextCategories(
+        path: Operations.GetNextCategories.Input.Path,
+        headers: Operations.GetNextCategories.Input.Headers = .init()
+    ) async throws -> Operations.GetNextCategories.Output {
+        try await getNextCategories(Operations.GetNextCategories.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Change the next round's planned categories (admin, until it opens)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/next-categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/next-categories/put(setNextCategories)`.
+    internal func setNextCategories(
+        path: Operations.SetNextCategories.Input.Path,
+        headers: Operations.SetNextCategories.Input.Headers = .init(),
+        body: Operations.SetNextCategories.Input.Body
+    ) async throws -> Operations.SetNextCategories.Output {
+        try await setNextCategories(Operations.SetNextCategories.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
     /// Every round this season
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/rounds`.
@@ -692,6 +737,15 @@ extension APIProtocol {
     /// - Remark: Generated from `#/paths//me/avatar/delete(removeAvatar)`.
     internal func removeAvatar(headers: Operations.RemoveAvatar.Input.Headers = .init()) async throws -> Operations.RemoveAvatar.Output {
         try await removeAvatar(Operations.RemoveAvatar.Input(headers: headers))
+    }
+    /// Make your Google picture your picture
+    ///
+    /// Replaces the picture you have now. The copy is made in the background and lands within seconds. Needs google_picture on /me; when has_google is true and that is missing, sign in with Google once to record it.
+    ///
+    /// - Remark: HTTP `POST /me/avatar/google`.
+    /// - Remark: Generated from `#/paths//me/avatar/google/post(useGooglePicture)`.
+    internal func useGooglePicture(headers: Operations.UseGooglePicture.Input.Headers = .init()) async throws -> Operations.UseGooglePicture.Output {
+        try await useGooglePicture(Operations.UseGooglePicture.Input(headers: headers))
     }
     /// The members you have blocked
     ///

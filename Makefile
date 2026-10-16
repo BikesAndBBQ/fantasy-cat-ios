@@ -33,7 +33,7 @@ tokens: ## regenerate Design/Tokens.swift from the server repo's resolved tokens
 	@python3 scripts/gen-tokens.py
 
 api: ## regenerate the API client from the server repo's OpenAPI spec
-	@cp ../fantasy-cat/web/openapi.json Tools/openapi/openapi.json
+	@python3 scripts/copy-spec.py ../fantasy-cat/web/openapi.json
 	@$(MAKE) --no-print-directory api-gen
 
 api-gen: ## regenerate the API client from the spec already copied into Tools/openapi (what CI checks)
