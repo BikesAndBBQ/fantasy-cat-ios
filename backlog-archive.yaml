@@ -146,3 +146,218 @@ items:
       a secondary, its `CLAUDE.md` loads, and `git -C`/`xcodebuild` work here.
       Category settled: claude-managed. Original ask was a registry.yaml entry
       + SIGHUP on :8092.
+
+  - id: 509436
+    title: "Apple Developer Program membership, and the Team ID"
+    status: done
+    owner: ryan
+    created_at: 2026-09-20
+    done_at: 2026-09-28
+    archived_at: 2026-10-17
+    note: |
+      **Done 2026-09-28.** Ryan confirmed the paid membership:
+      developer.apple.com/account -> Membership details shows Team ID
+      `Y837X7M3W4`, annual fee US$99, renewal 2026-09-20 -> 2027-09-20. Same ID
+      as before, so the project's `DEVELOPMENT_TEAM` needs no change. Signing
+      from a dispatch is still blocked separately, see `712f67`.
+
+      $99/year at developer.apple.com/programs (individual is fine). Needed for
+      TestFlight, push, and associated domains (passkeys, invite links). A free
+      Apple ID only gets a 7-day build on your own phone. Then sign in to
+      Xcode (Settings -> Accounts) and tell the agent the 10-character Team ID
+      (developer.apple.com/account -> Membership details). It isn't a secret.
+
+      **2026-09-25: Ryan sent `Y837X7M3W4`, but that is the ID of the free
+      "Ryan OLSON (Personal Team)"** recorded on 2026-09-20, and it is already
+      the project's `DEVELOPMENT_TEAM`. A Personal Team has a Team ID too, so
+      the ID alone doesn't show the paid membership exists. Probed from a
+      dispatch: a device build signed with the cached profile succeeds, but
+      adding the Associated Domains entitlement fails ("profile doesn't
+      include the capability") and Xcode can't refresh it headless ("No
+      Accounts"), so paid-vs-free can't be verified from here. **Still
+      needed from Ryan, one of:**
+      - developer.apple.com/account shows an active *Apple Developer Program*
+        membership (with a renewal date). If the Team ID shown there is still
+        `Y837X7M3W4`, say so and the agent proceeds with nothing to change.
+      - Or Xcode -> Settings -> Accounts lists the team without "(Personal
+        Team)". Xcode currently reports the Personal Team as free.
+      - If not enrolled yet: enroll ($99, individual), then re-check the ID;
+        it may change on enrollment.
+
+  - id: 98dc77
+    title: "Milestone 4b: try posting on a real phone"
+    status: done
+    owner: ryan
+    created_at: 2026-09-20
+    done_at: 2026-09-29
+    archived_at: 2026-10-17
+    note: |
+      **2026-09-29:** Ryan posted photos and **the long video** from his
+      phone through the app. Verified by his report only: the production
+      log reaches back only to the 2026-09-28 21:51 deploy and holds no
+      upload from it. Not reported: an iCloud-only video, or leaving the
+      app mid-upload.
+      The reason this app exists, and only a phone can prove it. A free Apple
+      ID is enough for this (Personal Team, 7-day build); no paid membership
+      needed. Try: a short video, the long video that failed on the web, a
+      video that lives in iCloud, a photo, and leaving the app while it uploads.
+
+  - id: 7bcaeb
+    title: "Milestone 0b: the app on Ryan's phone"
+    status: done
+    owner: ryan
+    created_at: 2026-09-20
+    done_at: 2026-09-29
+    archived_at: 2026-10-17
+    note: |
+      **2026-09-29:** closed by Ryan.
+      Signing works (2026-09-20): team Y837X7M3W4 "Ryan OLSON (Personal Team)",
+      the free tier, set in the project; Debug builds are co.fantasycat.app.dev
+      ("Cat League Dev") so the free team never claims the real bundle id. A
+      generic device build succeeds and is signed. What's left is on the phone:
+      1. Settings -> Privacy & Security -> Developer Mode -> on (it restarts).
+      2. Run from Xcode, or `make device`.
+      3. First launch: Settings -> General -> VPN & Device Management -> trust
+         the developer certificate.
+      Free-tier builds expire after 7 days. When the paid membership is active,
+      swap DEVELOPMENT_TEAM for the paid team's id.
+      **2026-09-28:** the paid team kept the same id, `Y837X7M3W4`; nothing
+      to swap. Builds signed now should last a year, not 7 days.
+      **2026-09-28: TestFlight is the easier route now.** Build
+      `1.0 (202609281509)` is on TestFlight, pointed at fantasycat.co, and
+      needs no Developer Mode or certificate trust. To install it:
+      1. appstoreconnect.apple.com -> Apps -> Fantasy Cat -> TestFlight ->
+         Internal Testing -> **+**, make a group, add yourself (and Rebecca,
+         if she's a user on the account).
+      2. Install **TestFlight** from the App Store on the phone, open the
+         invite, install.
+      Builds last 90 days. The agent uploads new ones with `make testflight`.
+
+  - id: 712f67
+    title: "Headless signing: an App Store Connect API key in the FantasyCat vault"
+    status: done
+    owner: agent
+    created_at: 2026-09-28
+    done_at: 2026-09-28
+    archived_at: 2026-10-17
+    note: |
+      ### Done 2026-09-28: Admin key works
+      Ryan replaced the key with an **Admin** Team Key and revoked the
+      Developer one. Verified: archive + export for App Store Connect
+      succeeded from a dispatch. The `.ipa` is signed *Apple Distribution:
+      Ryan OLSON (Y837X7M3W4)* with an App Store profile for
+      `co.fantasycat.app` (TestFlight enabled, expires 2027-09-28). Not yet
+      uploaded: that needs the app record (`8fd754`). Still open: the
+      allow rule for `scripts/ios-xcodebuild.sh` in the server repo's
+      `.claude/settings.json` (a dispatch can't write it).
+
+      ### 2026-09-28, third pass: Developer role tested
+      Key ID and Issuer ID are in the vault item. `scripts/ios-xcodebuild.sh`
+      (server repo, decision I12) signs with the key.
+      - **Works:** a signed Release device build. It registered the real
+        app id `co.fantasycat.app`, and the team profile runs to 2027-09-28.
+        So the "No Accounts" problem is solved for development builds.
+      - **Fails:** exporting for App Store Connect, which TestFlight needs:
+        "Cloud signing permission error", "No signing certificate iOS
+        Distribution". A Developer key can't create the distribution
+        certificate.
+      - **Ryan's next step:** make a new Team Key with the **Admin** role,
+        which I'm confident can do cloud distribution signing. App Manager
+        may work if the key is given access to cloud-managed distribution
+        certificates, but I haven't confirmed that. Replace the three fields
+        in the same vault item, and revoke the Developer key if you like.
+        Admin can technically submit for review; the agent never does (I8).
+      - **Allow-list:** add `Bash(scripts/ios-xcodebuild.sh:*)` to the
+        server repo's `.claude/settings.json`; a dispatch can't edit that
+        file. Until then it runs through `python3`.
+
+      **2026-09-28, second pass:** the vault item *App Store Connect API Key*
+      exists, with the `.p8` private key in its `credential` field. **Still
+      missing: the Key ID and the Issuer ID.** Signing needs all three, so
+      nothing could be tested yet. Both are on App Store Connect -> Users and
+      Access -> Integrations -> Team Keys: the Issuer ID above the list, the
+      Key ID in the key's row. Add them to the same item as two text fields
+      named `key id` and `issuer id`. Neither is secret, but they belong
+      together.
+
+      **Role:** the key has **Developer**. My understanding, not yet tested, is
+      that this can build and sign for your devices but can't create the
+      distribution certificate TestFlight needs; that takes **App Manager**
+      (or Admin). The agent tests with the Developer key first and asks for
+      a new App Manager key only if it fails.
+
+      With the paid membership confirmed, a dispatch still can't sign. Probed
+      2026-09-28: a Release device build with `-allowProvisioningUpdates`
+      fails with **"No Accounts"** and "No profiles for `co.fantasycat.app`".
+      `xcodebuild` in a dispatch doesn't see the Apple ID signed in to Xcode.
+      This blocks the real bundle id, Associated Domains (`703a84`) and
+      every TestFlight upload.
+
+      **The durable fix:** an App Store Connect API key that `xcodebuild`
+      uses directly (`-authenticationKeyPath/-ID/-IssuerID`).
+      - App Store Connect -> Users and Access -> Integrations -> Team Keys,
+        role **App Manager** (enough to register the app id, manage profiles
+        and upload to TestFlight; it cannot submit for review).
+      - Put it in the **FantasyCat** vault: the `.p8` contents, the Key ID
+        and the Issuer ID. Never in either repo (hard line).
+      - The agent then adds a script that loads it with the project token,
+        writes the key to a temp file outside the repo for one build, and
+        deletes it, and records the decision.
+
+      **Quicker, but only for Ryan at the Mac:** open the project in Xcode,
+      Settings -> Accounts, check the team no longer says "(Personal Team)",
+      then build to your phone once from Xcode. That creates profiles by hand
+      but doesn't let a dispatch sign.
+
+  - id: 8fd754
+    title: "Create the app record in App Store Connect"
+    status: done
+    owner: ryan
+    created_at: 2026-09-28
+    done_at: 2026-09-28
+    archived_at: 2026-10-17
+    note: |
+      **Done 2026-09-28.** Ryan created it: *Fantasy Cat*, SKU `fantasycat-ios`,
+      Apple id `6817008793` (confirmed through the API). The first build,
+      `1.0 (202609281509)`, was uploaded with `make testflight` and processed
+      as **VALID**, ready for internal testing.
+
+      TestFlight needs an app record, and **the App Store Connect API can't
+      create one**: that is web-only, whatever the key's role. The agent can
+      register the bundle id `co.fantasycat.app` first (a signed build does
+      it) so it appears in the form. Then, on appstoreconnect.apple.com:
+      - Apps -> **+** -> New App, platform **iOS**
+      - Name: *Fantasy Cat League* (or your pick; changeable before release)
+      - Primary language English (U.S.), bundle ID `co.fantasycat.app`
+      - SKU: anything unique, e.g. `fantasycat-ios`
+      - User access: Full Access
+      This does not submit anything for review. Waits on `712f67` so the
+      bundle id exists; you can also register it yourself under
+      developer.apple.com -> Identifiers.
+      **2026-09-28: `co.fantasycat.app` is registered now**, so it is in the
+      form's bundle ID list. Ready for you.
+
+  - id: 97a07a
+    title: "Forced update: a server switch that blocks old app builds"
+    status: done
+    owner: agent
+    created_at: 2026-09-28
+    done_at: 2026-09-28
+    archived_at: 2026-10-17
+    note: |
+      Ryan asked for it before any launch, as a safety net (decision I13).
+      - **Server:** `GET /api/app/ios` returns `min_build` from
+        `IOS_MIN_BUILD` in `deploy/env.production` (0 = off). Deployed
+        2026-09-28; production answers `min_build: 0`.
+      - **App:** checks at launch and on every return to the foreground;
+        below the minimum it shows only "Time to update" with a TestFlight
+        button. Fails open when offline.
+      - **To pull it:** set `IOS_MIN_BUILD` to the fixed build's number,
+        commit, `scripts/deploy.sh`. Runbook: server README, "Forcing an
+        iPhone app update".
+      - **Verified in the Simulator** against `./dev.sh`: off, forced by the
+        server value, cleared while the app was open, both themes. Not
+        checked on a real phone, and the TestFlight button itself can't be
+        tried in a Simulator.
+      - First build with the check: `1.0 (202609282151)`. The earlier
+        `202609281509` can't be blocked.
