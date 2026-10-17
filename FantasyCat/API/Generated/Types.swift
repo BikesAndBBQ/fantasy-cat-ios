@@ -179,6 +179,51 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /leagues/{slug}/rounds/{number}/results`.
     /// - Remark: Generated from `#/paths//leagues/{slug}/rounds/{number}/results/get(roundResults)`.
     func roundResults(_ input: Operations.RoundResults.Input) async throws -> Operations.RoundResults.Output
+    /// Every season, with its podium
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/get(listSeasons)`.
+    func listSeasons(_ input: Operations.ListSeasons.Input) async throws -> Operations.ListSeasons.Output
+    /// Start the next season (admin, once the current one is complete)
+    ///
+    /// - Remark: HTTP `POST /leagues/{slug}/seasons`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/post(startSeason)`.
+    func startSeason(_ input: Operations.StartSeason.Input) async throws -> Operations.StartSeason.Output
+    /// One season and its podium
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/get(getSeason)`.
+    func getSeason(_ input: Operations.GetSeason.Input) async throws -> Operations.GetSeason.Output
+    /// Rename a season (admin)
+    ///
+    /// - Remark: HTTP `PATCH /leagues/{slug}/seasons/{season}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/patch(renameSeason)`.
+    func renameSeason(_ input: Operations.RenameSeason.Input) async throws -> Operations.RenameSeason.Output
+    /// Every round of a season
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/get(listSeasonRounds)`.
+    func listSeasonRounds(_ input: Operations.ListSeasonRounds.Input) async throws -> Operations.ListSeasonRounds.Output
+    /// One round of a season and its categories
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds/{number}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/get(getSeasonRound)`.
+    func getSeasonRound(_ input: Operations.GetSeasonRound.Input) async throws -> Operations.GetSeasonRound.Output
+    /// Choose a round's categories (admin, before anyone posts)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/seasons/{season}/rounds/{number}/categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/categories/put(setSeasonRoundCategories)`.
+    func setSeasonRoundCategories(_ input: Operations.SetSeasonRoundCategories.Input) async throws -> Operations.SetSeasonRoundCategories.Output
+    /// Who won a finished round of a season
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds/{number}/results`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/results/get(seasonRoundResults)`.
+    func seasonRoundResults(_ input: Operations.SeasonRoundResults.Input) async throws -> Operations.SeasonRoundResults.Output
+    /// A season's leaderboard
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/standings`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/standings/get(seasonStandings)`.
+    func seasonStandings(_ input: Operations.SeasonStandings.Input) async throws -> Operations.SeasonStandings.Output
     /// Season leaderboard
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/standings`.
@@ -698,16 +743,141 @@ extension APIProtocol {
             headers: headers
         ))
     }
+    /// Every season, with its podium
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/get(listSeasons)`.
+    internal func listSeasons(
+        path: Operations.ListSeasons.Input.Path,
+        headers: Operations.ListSeasons.Input.Headers = .init()
+    ) async throws -> Operations.ListSeasons.Output {
+        try await listSeasons(Operations.ListSeasons.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Start the next season (admin, once the current one is complete)
+    ///
+    /// - Remark: HTTP `POST /leagues/{slug}/seasons`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/post(startSeason)`.
+    internal func startSeason(
+        path: Operations.StartSeason.Input.Path,
+        headers: Operations.StartSeason.Input.Headers = .init(),
+        body: Operations.StartSeason.Input.Body
+    ) async throws -> Operations.StartSeason.Output {
+        try await startSeason(Operations.StartSeason.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// One season and its podium
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/get(getSeason)`.
+    internal func getSeason(
+        path: Operations.GetSeason.Input.Path,
+        headers: Operations.GetSeason.Input.Headers = .init()
+    ) async throws -> Operations.GetSeason.Output {
+        try await getSeason(Operations.GetSeason.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Rename a season (admin)
+    ///
+    /// - Remark: HTTP `PATCH /leagues/{slug}/seasons/{season}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/patch(renameSeason)`.
+    internal func renameSeason(
+        path: Operations.RenameSeason.Input.Path,
+        headers: Operations.RenameSeason.Input.Headers = .init(),
+        body: Operations.RenameSeason.Input.Body
+    ) async throws -> Operations.RenameSeason.Output {
+        try await renameSeason(Operations.RenameSeason.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Every round of a season
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/get(listSeasonRounds)`.
+    internal func listSeasonRounds(
+        path: Operations.ListSeasonRounds.Input.Path,
+        headers: Operations.ListSeasonRounds.Input.Headers = .init()
+    ) async throws -> Operations.ListSeasonRounds.Output {
+        try await listSeasonRounds(Operations.ListSeasonRounds.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// One round of a season and its categories
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds/{number}`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/get(getSeasonRound)`.
+    internal func getSeasonRound(
+        path: Operations.GetSeasonRound.Input.Path,
+        headers: Operations.GetSeasonRound.Input.Headers = .init()
+    ) async throws -> Operations.GetSeasonRound.Output {
+        try await getSeasonRound(Operations.GetSeasonRound.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Choose a round's categories (admin, before anyone posts)
+    ///
+    /// - Remark: HTTP `PUT /leagues/{slug}/seasons/{season}/rounds/{number}/categories`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/categories/put(setSeasonRoundCategories)`.
+    internal func setSeasonRoundCategories(
+        path: Operations.SetSeasonRoundCategories.Input.Path,
+        headers: Operations.SetSeasonRoundCategories.Input.Headers = .init(),
+        body: Operations.SetSeasonRoundCategories.Input.Body
+    ) async throws -> Operations.SetSeasonRoundCategories.Output {
+        try await setSeasonRoundCategories(Operations.SetSeasonRoundCategories.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Who won a finished round of a season
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/rounds/{number}/results`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/rounds/{number}/results/get(seasonRoundResults)`.
+    internal func seasonRoundResults(
+        path: Operations.SeasonRoundResults.Input.Path,
+        headers: Operations.SeasonRoundResults.Input.Headers = .init()
+    ) async throws -> Operations.SeasonRoundResults.Output {
+        try await seasonRoundResults(Operations.SeasonRoundResults.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// A season's leaderboard
+    ///
+    /// - Remark: HTTP `GET /leagues/{slug}/seasons/{season}/standings`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/seasons/{season}/standings/get(seasonStandings)`.
+    internal func seasonStandings(
+        path: Operations.SeasonStandings.Input.Path,
+        headers: Operations.SeasonStandings.Input.Headers = .init()
+    ) async throws -> Operations.SeasonStandings.Output {
+        try await seasonStandings(Operations.SeasonStandings.Input(
+            path: path,
+            headers: headers
+        ))
+    }
     /// Season leaderboard
     ///
     /// - Remark: HTTP `GET /leagues/{slug}/standings`.
     /// - Remark: Generated from `#/paths//leagues/{slug}/standings/get(standings)`.
     internal func standings(
         path: Operations.Standings.Input.Path,
+        query: Operations.Standings.Input.Query = .init(),
         headers: Operations.Standings.Input.Headers = .init()
     ) async throws -> Operations.Standings.Output {
         try await standings(Operations.Standings.Input(
             path: path,
+            query: query,
             headers: headers
         ))
     }

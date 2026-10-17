@@ -16,6 +16,20 @@ final class AppModel {
     /// Comes with every answer that says who you are; either reply ends it.
     private(set) var pictureOffer: String?
 
+    /// Which sign-ins the account has connected (server sc-702). Comes with
+    /// every answer that says who you are; the account screen names them.
+    struct SignIns: Equatable {
+        var google = false
+        var apple = false
+        /// "Google and Apple", or "a passkey" when neither: how the account
+        /// screen says how you get in without a password, as the web does.
+        var name: String {
+            let ways = [google ? "Google" : nil, apple ? "Apple" : nil].compactMap { $0 }
+            return ways.isEmpty ? "a passkey" : ways.joined(separator: " and ")
+        }
+    }
+    private(set) var signIns = SignIns()
+
     /// The code of an invite link the app was opened with, kept until it's
     /// used: by signing up with it, or on the join screen once signed in.
     var pendingInvite: String?
@@ -59,6 +73,7 @@ final class AppModel {
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
                 pictureOffer = body.pictureOffer
+                signIns = SignIns(google: body.hasGoogle, apple: body.hasApple)
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -71,6 +86,7 @@ final class AppModel {
     func apply(_ me: Components.Schemas.MeBody) {
         phase = .signedIn(me.user, leagues: me.leagues ?? [])
         pictureOffer = me.pictureOffer
+        signIns = SignIns(google: me.hasGoogle, apple: me.hasApple)
     }
 
     /// Re-read who we are and which leagues we're in (after creating, joining or leaving one).
@@ -89,6 +105,7 @@ final class AppModel {
                 if invite != nil { pendingInvite = nil } // joined on the way in
                 phase = .signedIn(out.user, leagues: out.leagues ?? [])
                 pictureOffer = out.pictureOffer
+                signIns = SignIns(google: out.hasGoogle, apple: out.hasApple)
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -180,6 +197,7 @@ final class AppModel {
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
                 pictureOffer = body.pictureOffer
+                signIns = SignIns(google: body.hasGoogle, apple: body.hasApple)
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -198,6 +216,7 @@ final class AppModel {
                 Keychain.token = token
                 phase = .signedIn(body.user, leagues: body.leagues ?? [])
                 pictureOffer = body.pictureOffer
+                signIns = SignIns(google: body.hasGoogle, apple: body.hasApple)
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -215,7 +234,7 @@ final class AppModel {
             case .noContent:
                 Keychain.token = nil
                 phase = .signedOut
-                pictureOffer = nil
+                pictureOffer = nil; signIns = SignIns()
             case .default(let status, let problem):
                 throw Failure.from(status: status, try? problem.body.applicationProblemJson)
             }
@@ -226,6 +245,6 @@ final class AppModel {
         _ = try? await API.client.logout(.init()) // best effort: the local token goes either way
         Keychain.token = nil
         phase = .signedOut
-        pictureOffer = nil
+        pictureOffer = nil; signIns = SignIns()
     }
 }

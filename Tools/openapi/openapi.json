@@ -88,6 +88,10 @@
             "description": "Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.",
             "type": "string"
           },
+          "has_apple": {
+            "description": "Whether Apple is one of your ways to sign in.",
+            "type": "boolean"
+          },
           "has_google": {
             "description": "Whether Google is one of your ways to sign in.",
             "type": "boolean"
@@ -117,7 +121,8 @@
           "created",
           "user",
           "leagues",
-          "has_google"
+          "has_google",
+          "has_apple"
         ],
         "type": "object"
       },
@@ -782,6 +787,10 @@
             "description": "Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.",
             "type": "string"
           },
+          "has_apple": {
+            "description": "Whether Apple is one of your ways to sign in.",
+            "type": "boolean"
+          },
           "has_google": {
             "description": "Whether Google is one of your ways to sign in.",
             "type": "boolean"
@@ -806,7 +815,8 @@
         "required": [
           "user",
           "leagues",
-          "has_google"
+          "has_google",
+          "has_apple"
         ],
         "type": "object"
       },
@@ -1100,6 +1110,37 @@
         ],
         "type": "object"
       },
+      "PodiumView": {
+        "properties": {
+          "is_champion": {
+            "description": "Rank 1 with points on the board. Two tied at the top are both champions.",
+            "type": "boolean"
+          },
+          "is_me": {
+            "type": "boolean"
+          },
+          "manager": {
+            "$ref": "#/components/schemas/PersonView"
+          },
+          "rank": {
+            "description": "1, 2 or 3; ties share a rank and skip the ones after (1, 1, 3).",
+            "format": "int64",
+            "type": "integer"
+          },
+          "total": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rank",
+          "manager",
+          "total",
+          "is_champion",
+          "is_me"
+        ],
+        "type": "object"
+      },
       "PoolOutputBody": {
         "properties": {
           "$schema": {
@@ -1175,6 +1216,28 @@
         },
         "required": [
           "allocations"
+        ],
+        "type": "object"
+      },
+      "RenameSeasonInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/RenameSeasonInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 60,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ],
         "type": "object"
       },
@@ -1524,6 +1587,97 @@
         ],
         "type": "object"
       },
+      "SeasonView": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/SeasonView.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "ended_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "number": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "podium": {
+            "description": "The top three of the season's table, champion first; the standings so far while it runs. Empty until someone has scored.",
+            "items": {
+              "$ref": "#/components/schemas/PodiumView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "rounds": {
+            "description": "Planned length.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "rounds_final": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "started_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "running",
+              "complete"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "name",
+          "rounds",
+          "rounds_final",
+          "state",
+          "started_at",
+          "podium"
+        ],
+        "type": "object"
+      },
+      "SeasonsOutputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/SeasonsOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "seasons": {
+            "description": "Oldest first; the last one is the current season.",
+            "items": {
+              "$ref": "#/components/schemas/SeasonView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "seasons"
+        ],
+        "type": "object"
+      },
       "SessionBody": {
         "properties": {
           "$schema": {
@@ -1538,6 +1692,10 @@
           "google_picture": {
             "description": "Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.",
             "type": "string"
+          },
+          "has_apple": {
+            "description": "Whether Apple is one of your ways to sign in.",
+            "type": "boolean"
           },
           "has_google": {
             "description": "Whether Google is one of your ways to sign in.",
@@ -1567,7 +1725,8 @@
         "required": [
           "user",
           "leagues",
-          "has_google"
+          "has_google",
+          "has_apple"
         ],
         "type": "object"
       },
@@ -1628,6 +1787,35 @@
             "description": "A URL to the JSON Schema for this object.",
             "examples": [
               "/api/schemas/SetNextCategoriesInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "names": {
+            "description": "Exactly three, per the rules.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "names"
+        ],
+        "type": "object"
+      },
+      "SetSeasonCategoriesInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/SetSeasonCategoriesInputBody.json"
             ],
             "format": "uri",
             "readOnly": true,
@@ -1765,7 +1953,20 @@
             "format": "int64",
             "type": "integer"
           },
+          "season": {
+            "description": "The season's number.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "season_complete": {
+            "description": "True once the season's last round is final: this table is its final table.",
+            "type": "boolean"
+          },
+          "season_name": {
+            "type": "string"
+          },
           "season_rounds": {
+            "description": "The season's planned length.",
             "format": "int64",
             "type": "integer"
           },
@@ -1780,10 +1981,39 @@
           }
         },
         "required": [
+          "season",
+          "season_name",
+          "season_complete",
           "rounds_final",
           "season_rounds",
           "standings"
         ],
+        "type": "object"
+      },
+      "StartSeasonInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/StartSeasonInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "Shown instead of \"Season N\". Blank keeps the default.",
+            "maxLength": 60,
+            "type": "string"
+          },
+          "rounds": {
+            "description": "Length; the league's default when omitted.",
+            "format": "int64",
+            "maximum": 52,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
         "type": "object"
       },
       "SubmissionView": {
@@ -3547,6 +3777,510 @@
         ]
       }
     },
+    "/leagues/{slug}/seasons": {
+      "get": {
+        "operationId": "listSeasons",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Every season, with its podium",
+        "tags": [
+          "seasons"
+        ]
+      },
+      "post": {
+        "operationId": "startSeason",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartSeasonInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonView"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Start the next season (admin, once the current one is complete)",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}": {
+      "get": {
+        "operationId": "getSeason",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "One season and its podium",
+        "tags": [
+          "seasons"
+        ]
+      },
+      "patch": {
+        "operationId": "renameSeason",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameSeasonInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Rename a season (admin)",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}/rounds": {
+      "get": {
+        "operationId": "listSeasonRounds",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Every round of a season",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}/rounds/{number}": {
+      "get": {
+        "operationId": "getSeasonRound",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "One round of a season and its categories",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}/rounds/{number}/categories": {
+      "put": {
+        "operationId": "setSeasonRoundCategories",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetSeasonCategoriesInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Choose a round's categories (admin, before anyone posts)",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}/rounds/{number}/results": {
+      "get": {
+        "operationId": "seasonRoundResults",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Who won a finished round of a season",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
+    "/leagues/{slug}/seasons/{season}/standings": {
+      "get": {
+        "operationId": "seasonStandings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "A season's leaderboard",
+        "tags": [
+          "seasons"
+        ]
+      }
+    },
     "/leagues/{slug}/standings": {
       "get": {
         "operationId": "standings",
@@ -3558,6 +4292,18 @@
             "schema": {
               "maxLength": 48,
               "type": "string"
+            }
+          },
+          {
+            "description": "A season's number; the current season when omitted.",
+            "explode": false,
+            "in": "query",
+            "name": "season",
+            "schema": {
+              "description": "A season's number; the current season when omitted.",
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             }
           }
         ],

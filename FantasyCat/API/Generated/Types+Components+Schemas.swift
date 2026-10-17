@@ -104,6 +104,10 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/google_picture`.
             internal var googlePicture: Swift.String?
+            /// Whether Apple is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/has_apple`.
+            internal var hasApple: Swift.Bool
             /// Whether Google is one of your ways to sign in.
             ///
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/has_google`.
@@ -126,6 +130,7 @@ extension Components {
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - created: True when this sign-in made a new account, so the app can show onboarding.
             ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -135,6 +140,7 @@ extension Components {
                 _dollar_schema: Swift.String? = nil,
                 created: Swift.Bool,
                 googlePicture: Swift.String? = nil,
+                hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
@@ -144,6 +150,7 @@ extension Components {
                 self._dollar_schema = _dollar_schema
                 self.created = created
                 self.googlePicture = googlePicture
+                self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
@@ -154,6 +161,7 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case created
                 case googlePicture = "google_picture"
+                case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
@@ -950,6 +958,10 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/MeBody/google_picture`.
             internal var googlePicture: Swift.String?
+            /// Whether Apple is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MeBody/has_apple`.
+            internal var hasApple: Swift.Bool
             /// Whether Google is one of your ways to sign in.
             ///
             /// - Remark: Generated from `#/components/schemas/MeBody/has_google`.
@@ -967,6 +979,7 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -974,6 +987,7 @@ extension Components {
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 googlePicture: Swift.String? = nil,
+                hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
@@ -981,6 +995,7 @@ extension Components {
             ) {
                 self._dollar_schema = _dollar_schema
                 self.googlePicture = googlePicture
+                self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
@@ -989,6 +1004,7 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case googlePicture = "google_picture"
+                case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
@@ -1342,6 +1358,51 @@ extension Components {
                 case use
             }
         }
+        /// - Remark: Generated from `#/components/schemas/PodiumView`.
+        internal struct PodiumView: Codable, Hashable, Sendable {
+            /// Rank 1 with points on the board. Two tied at the top are both champions.
+            ///
+            /// - Remark: Generated from `#/components/schemas/PodiumView/is_champion`.
+            internal var isChampion: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/PodiumView/is_me`.
+            internal var isMe: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/PodiumView/manager`.
+            internal var manager: Components.Schemas.PersonView
+            /// 1, 2 or 3; ties share a rank and skip the ones after (1, 1, 3).
+            ///
+            /// - Remark: Generated from `#/components/schemas/PodiumView/rank`.
+            internal var rank: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/PodiumView/total`.
+            internal var total: Swift.Int64
+            /// Creates a new `PodiumView`.
+            ///
+            /// - Parameters:
+            ///   - isChampion: Rank 1 with points on the board. Two tied at the top are both champions.
+            ///   - isMe:
+            ///   - manager:
+            ///   - rank: 1, 2 or 3; ties share a rank and skip the ones after (1, 1, 3).
+            ///   - total:
+            internal init(
+                isChampion: Swift.Bool,
+                isMe: Swift.Bool,
+                manager: Components.Schemas.PersonView,
+                rank: Swift.Int64,
+                total: Swift.Int64
+            ) {
+                self.isChampion = isChampion
+                self.isMe = isMe
+                self.manager = manager
+                self.rank = rank
+                self.total = total
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case isChampion = "is_champion"
+                case isMe = "is_me"
+                case manager
+                case rank
+                case total
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/PoolOutputBody`.
         internal struct PoolOutputBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.
@@ -1423,6 +1484,31 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case allocations
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/RenameSeasonInputBody`.
+        internal struct RenameSeasonInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/RenameSeasonInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/RenameSeasonInputBody/name`.
+            internal var name: Swift.String
+            /// Creates a new `RenameSeasonInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - name:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                name: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.name = name
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case name
             }
         }
         /// - Remark: Generated from `#/components/schemas/ReportInputBody`.
@@ -1850,6 +1936,109 @@ extension Components {
                 case winPoints = "win_points"
             }
         }
+        /// - Remark: Generated from `#/components/schemas/SeasonView`.
+        internal struct SeasonView: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SeasonView/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/SeasonView/ended_at`.
+            internal var endedAt: Foundation.Date?
+            /// - Remark: Generated from `#/components/schemas/SeasonView/name`.
+            internal var name: Swift.String
+            /// - Remark: Generated from `#/components/schemas/SeasonView/number`.
+            internal var number: Swift.Int64
+            /// The top three of the season's table, champion first; the standings so far while it runs. Empty until someone has scored.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SeasonView/podium`.
+            internal var podium: [Components.Schemas.PodiumView]?
+            /// Planned length.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SeasonView/rounds`.
+            internal var rounds: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/SeasonView/rounds_final`.
+            internal var roundsFinal: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/SeasonView/started_at`.
+            internal var startedAt: Foundation.Date
+            /// - Remark: Generated from `#/components/schemas/SeasonView/state`.
+            internal enum StatePayload: String, Codable, Hashable, Sendable, CaseIterable {
+                case running = "running"
+                case complete = "complete"
+            }
+            /// - Remark: Generated from `#/components/schemas/SeasonView/state`.
+            internal var state: Components.Schemas.SeasonView.StatePayload
+            /// Creates a new `SeasonView`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - endedAt:
+            ///   - name:
+            ///   - number:
+            ///   - podium: The top three of the season's table, champion first; the standings so far while it runs. Empty until someone has scored.
+            ///   - rounds: Planned length.
+            ///   - roundsFinal:
+            ///   - startedAt:
+            ///   - state:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                endedAt: Foundation.Date? = nil,
+                name: Swift.String,
+                number: Swift.Int64,
+                podium: [Components.Schemas.PodiumView]? = nil,
+                rounds: Swift.Int64,
+                roundsFinal: Swift.Int64,
+                startedAt: Foundation.Date,
+                state: Components.Schemas.SeasonView.StatePayload
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.endedAt = endedAt
+                self.name = name
+                self.number = number
+                self.podium = podium
+                self.rounds = rounds
+                self.roundsFinal = roundsFinal
+                self.startedAt = startedAt
+                self.state = state
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case endedAt = "ended_at"
+                case name
+                case number
+                case podium
+                case rounds
+                case roundsFinal = "rounds_final"
+                case startedAt = "started_at"
+                case state
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/SeasonsOutputBody`.
+        internal struct SeasonsOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SeasonsOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Oldest first; the last one is the current season.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SeasonsOutputBody/seasons`.
+            internal var seasons: [Components.Schemas.SeasonView]?
+            /// Creates a new `SeasonsOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - seasons: Oldest first; the last one is the current season.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                seasons: [Components.Schemas.SeasonView]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.seasons = seasons
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case seasons
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/SessionBody`.
         internal struct SessionBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.
@@ -1860,6 +2049,10 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/SessionBody/google_picture`.
             internal var googlePicture: Swift.String?
+            /// Whether Apple is one of your ways to sign in.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SessionBody/has_apple`.
+            internal var hasApple: Swift.Bool
             /// Whether Google is one of your ways to sign in.
             ///
             /// - Remark: Generated from `#/components/schemas/SessionBody/has_google`.
@@ -1881,6 +2074,7 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - googlePicture: Your Google picture as of your last Google sign-in; POST /me/avatar/google makes it yours.
+            ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
@@ -1889,6 +2083,7 @@ extension Components {
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 googlePicture: Swift.String? = nil,
+                hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
                 pictureOffer: Swift.String? = nil,
@@ -1897,6 +2092,7 @@ extension Components {
             ) {
                 self._dollar_schema = _dollar_schema
                 self.googlePicture = googlePicture
+                self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
                 self.pictureOffer = pictureOffer
@@ -1906,6 +2102,7 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case googlePicture = "google_picture"
+                case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
                 case pictureOffer = "picture_offer"
@@ -1978,6 +2175,33 @@ extension Components {
             /// - Remark: Generated from `#/components/schemas/SetNextCategoriesInputBody/names`.
             internal var names: [Swift.String]?
             /// Creates a new `SetNextCategoriesInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - names: Exactly three, per the rules.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                names: [Swift.String]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.names = names
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case names
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/SetSeasonCategoriesInputBody`.
+        internal struct SetSeasonCategoriesInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SetSeasonCategoriesInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Exactly three, per the rules.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SetSeasonCategoriesInputBody/names`.
+            internal var names: [Swift.String]?
+            /// Creates a new `SetSeasonCategoriesInputBody`.
             ///
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
@@ -2128,6 +2352,18 @@ extension Components {
             internal var _dollar_schema: Swift.String?
             /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/rounds_final`.
             internal var roundsFinal: Swift.Int64
+            /// The season's number.
+            ///
+            /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/season`.
+            internal var season: Swift.Int64
+            /// True once the season's last round is final: this table is its final table.
+            ///
+            /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/season_complete`.
+            internal var seasonComplete: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/season_name`.
+            internal var seasonName: Swift.String
+            /// The season's planned length.
+            ///
             /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/season_rounds`.
             internal var seasonRounds: Swift.Int64
             /// - Remark: Generated from `#/components/schemas/StandingsOutputBody/standings`.
@@ -2137,24 +2373,71 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - roundsFinal:
-            ///   - seasonRounds:
+            ///   - season: The season's number.
+            ///   - seasonComplete: True once the season's last round is final: this table is its final table.
+            ///   - seasonName:
+            ///   - seasonRounds: The season's planned length.
             ///   - standings:
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 roundsFinal: Swift.Int64,
+                season: Swift.Int64,
+                seasonComplete: Swift.Bool,
+                seasonName: Swift.String,
                 seasonRounds: Swift.Int64,
                 standings: [Components.Schemas.StandingView]? = nil
             ) {
                 self._dollar_schema = _dollar_schema
                 self.roundsFinal = roundsFinal
+                self.season = season
+                self.seasonComplete = seasonComplete
+                self.seasonName = seasonName
                 self.seasonRounds = seasonRounds
                 self.standings = standings
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case roundsFinal = "rounds_final"
+                case season
+                case seasonComplete = "season_complete"
+                case seasonName = "season_name"
                 case seasonRounds = "season_rounds"
                 case standings
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/StartSeasonInputBody`.
+        internal struct StartSeasonInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/StartSeasonInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Shown instead of "Season N". Blank keeps the default.
+            ///
+            /// - Remark: Generated from `#/components/schemas/StartSeasonInputBody/name`.
+            internal var name: Swift.String?
+            /// Length; the league's default when omitted.
+            ///
+            /// - Remark: Generated from `#/components/schemas/StartSeasonInputBody/rounds`.
+            internal var rounds: Swift.Int64?
+            /// Creates a new `StartSeasonInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - name: Shown instead of "Season N". Blank keeps the default.
+            ///   - rounds: Length; the league's default when omitted.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                name: Swift.String? = nil,
+                rounds: Swift.Int64? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.name = name
+                self.rounds = rounds
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case name
+                case rounds
             }
         }
         /// - Remark: Generated from `#/components/schemas/SubmissionView`.

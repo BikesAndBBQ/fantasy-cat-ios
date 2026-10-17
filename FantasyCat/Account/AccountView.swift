@@ -317,8 +317,14 @@ private struct PasswordSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Eyebrow("Password")
+            // The connected sign-ins and the no-password copy name the real
+            // ways in, as the web's account page does (sc-702).
+            if model.signIns.google || model.signIns.apple {
+                Text("Connected: \(model.signIns.name).").type(.small).foregroundStyle(Tokens.muted)
+                    .accessibilityIdentifier("connected-sign-ins")
+            }
             if !hasPassword {
-                Text("You sign in with Google or a passkey. Adding a password gives you another way in.").type(.small).foregroundStyle(Tokens.muted)
+                Text("You sign in with \(model.signIns.name). Adding a password gives you another way in.").type(.small).foregroundStyle(Tokens.muted)
             }
             if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
             if done { Text(hasPassword ? "Password changed." : "Password set.").type(.small).foregroundStyle(Tokens.good) }
