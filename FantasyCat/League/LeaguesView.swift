@@ -27,6 +27,13 @@ struct LeaguesView: View {
                 if leagues.isEmpty {
                     Text("Start one and invite your friends, or join theirs.").type(.body).foregroundStyle(Tokens.muted)
                 }
+                // Someone who has no league yet never reaches This week, so the
+                // offer is made here too (sc-2381).
+                if let offer = model.offeredPicture {
+                    PictureOfferCard(picture: URL(string: offer)) { use in
+                        do { try await model.answerPictureOffer(use: use); return nil } catch { return Failure.from(error).message }
+                    }
+                }
                 ForEach(leagues, id: \.slug) { league in
                     Button { choose(league.slug) } label: {
                         Card {

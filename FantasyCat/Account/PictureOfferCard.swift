@@ -43,3 +43,14 @@ struct PictureOfferCard: View {
         }
     }
 }
+
+extension AppModel {
+    /// The Google picture to offer on the screen you land on, or nil.
+    var offeredPicture: String? {
+        #if DEBUG
+        // `-pictureoffer`: show the card without a Google sign-in (the Simulator has none).
+        if ProcessInfo.processInfo.arguments.contains("-pictureoffer") { return pictureOffer ?? "" }
+        #endif
+        return pictureOffer
+    }
+}
