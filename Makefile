@@ -9,7 +9,7 @@ THEME   ?= dark
 DESTINATION ?= platform=iOS Simulator,name=$(SIM)
 XCB     := xcodebuild -project $(SCHEME).xcodeproj -scheme $(SCHEME) -destination '$(DESTINATION)' -derivedDataPath $(DERIVED)
 
-.PHONY: build test run shot tokens api api-gen console device testflight clean
+.PHONY: build test run shot tokens api api-gen console device testflight builds clean
 
 build: ## compile for the Simulator; warnings are printed, errors fail
 	@$(XCB) -quiet $(XCFLAGS) build
@@ -60,6 +60,9 @@ testflight: ## archive, sign for the App Store and upload to TestFlight (never s
 	@sed 's|<string>export</string>|<string>$(or $(DEST),upload)</string>|' ExportOptions.plist > build-device/ExportOptions.plist
 	@../fantasy-cat/scripts/ios-xcodebuild.sh -exportArchive -archivePath build-device/$(SCHEME).xcarchive -exportOptionsPlist build-device/ExportOptions.plist -exportPath build-device/export
 	@echo "testflight: build $(BUILD_NUMBER)"
+
+builds: ## the latest TestFlight builds in App Store Connect and whether each is processed: make builds [COUNT=5]
+	@../fantasy-cat/scripts/ios-asc-builds.sh co.fantasycat.app $(or $(COUNT),5)
 
 clean:
 	@rm -r $(DERIVED) 2>/dev/null || true
