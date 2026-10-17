@@ -744,6 +744,29 @@
         ],
         "type": "object"
       },
+      "MakeAdminInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/MakeAdminInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "username": {
+            "description": "A member of the league.",
+            "maxLength": 40,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "type": "object"
+      },
       "MeBody": {
         "properties": {
           "$schema": {
@@ -3090,6 +3113,58 @@
           }
         },
         "summary": "Change league settings (admin)",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/leagues/{slug}/admins": {
+      "post": {
+        "operationId": "makeAdmin",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 48,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MakeAdminInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeagueView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Make a member an admin (admin). Takes effect at once and can't be undone in the app.",
         "tags": [
           "leagues"
         ]

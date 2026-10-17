@@ -913,6 +913,33 @@ extension Components {
                 case password
             }
         }
+        /// - Remark: Generated from `#/components/schemas/MakeAdminInputBody`.
+        internal struct MakeAdminInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MakeAdminInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// A member of the league.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MakeAdminInputBody/username`.
+            internal var username: Swift.String
+            /// Creates a new `MakeAdminInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - username: A member of the league.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                username: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.username = username
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case username
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/MeBody`.
         internal struct MeBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.

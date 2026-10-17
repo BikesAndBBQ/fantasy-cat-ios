@@ -134,6 +134,11 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `PATCH /leagues/{slug}`.
     /// - Remark: Generated from `#/paths//leagues/{slug}/patch(updateLeague)`.
     func updateLeague(_ input: Operations.UpdateLeague.Input) async throws -> Operations.UpdateLeague.Output
+    /// Make a member an admin (admin). Takes effect at once and can't be undone in the app.
+    ///
+    /// - Remark: HTTP `POST /leagues/{slug}/admins`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/admins/post(makeAdmin)`.
+    func makeAdmin(_ input: Operations.MakeAdmin.Input) async throws -> Operations.MakeAdmin.Output
     /// Invalidate the invite link and make a new one (admin)
     ///
     /// - Remark: HTTP `POST /leagues/{slug}/invite/rotate`.
@@ -565,6 +570,21 @@ extension APIProtocol {
         body: Operations.UpdateLeague.Input.Body
     ) async throws -> Operations.UpdateLeague.Output {
         try await updateLeague(Operations.UpdateLeague.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Make a member an admin (admin). Takes effect at once and can't be undone in the app.
+    ///
+    /// - Remark: HTTP `POST /leagues/{slug}/admins`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/admins/post(makeAdmin)`.
+    internal func makeAdmin(
+        path: Operations.MakeAdmin.Input.Path,
+        headers: Operations.MakeAdmin.Input.Headers = .init(),
+        body: Operations.MakeAdmin.Input.Body
+    ) async throws -> Operations.MakeAdmin.Output {
+        try await makeAdmin(Operations.MakeAdmin.Input(
             path: path,
             headers: headers,
             body: body

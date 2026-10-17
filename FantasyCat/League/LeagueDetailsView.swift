@@ -15,6 +15,9 @@ struct LeagueDetailsView: View {
     @State private var copied = false
     @State private var confirmingRotate = false
     @State private var rotating = false
+    /// The member an admin is about to make an admin (server D48).
+    @State private var promoting: Components.Schemas.MemberView?
+    @State private var promotingUsername: String?
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -53,12 +56,24 @@ struct LeagueDetailsView: View {
                                 (Text(m.displayName).font(Font(TypeStyle.bodyStrong.uiFont())).foregroundStyle(Tokens.ink)
                                     + Text(" @\(m.username)").font(Font(TypeStyle.body.uiFont())).foregroundStyle(Tokens.muted)).lineLimit(1)
                                 Spacer()
-                                if m.isAdmin { Chip("admin", tone: .done) }
+                                if m.isAdmin {
+                                    Chip("admin", tone: .done)
+                                } else if league.isAdmin {
+                                    Button("Make admin") { promoting = m }
+                                        .buttonStyle(.fc(size: .sm, busy: promotingUsername == m.username))
+                                        .disabled(promotingUsername != nil)
+                                        .accessibilityLabel("Make \(m.displayName) an admin")
+                                }
                             }
                             .padding(.vertical, 6)
-                            .accessibilityElement(children: .combine)
+                            .accessibilityElement(children: .contain)
                         }
                     }
+                    // Takes effect at once and can't be undone in the app, as on the web.
+                    .confirmationDialog("Make \(promoting?.displayName ?? "") an admin?", isPresented: Binding(get: { promoting != nil }, set: { if !$0 { promoting = nil } }),
+                                        titleVisibility: .visible, presenting: promoting) { m in
+                        Button("Make admin") { makeAdmin(m.username) }
+                    } message: { m in Text("\(m.displayName) will run the league with you. This can't be undone in the app.") }
                     Divider().overlay(Tokens.line)
                     if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
                     if league.isAdmin {
@@ -76,21 +91,41 @@ struct LeagueDetailsView: View {
                                     }
                                 } message: { Text("Anyone who hasn't joined yet will need the new one.") }
                         }
-                    } else {
-                        Button("Leave league") { confirmingLeave = true }.buttonStyle(.fc(.danger, size: .sm, busy: leaving))
-                            .confirmationDialog("Leave \(league.name)?", isPresented: $confirmingLeave, titleVisibility: .visible) {
-                                Button("Leave league", role: .destructive) { leave() }
-                            } message: { Text("Your posts and points stay. You can rejoin with an invite link.") }
+                        Divider().overlay(Tokens.line)
                     }
+                    // An admin may leave too (server D48). The last one is warned, as on the web.
+                    let lastAdmin = league.isAdmin && (league.members ?? []).filter(\.isAdmin).count == 1 && (league.members ?? []).count > 1
+                    Button("Leave league") { confirmingLeave = true }.buttonStyle(.fc(.danger, size: .sm, busy: leaving)).id("leave")
+                        .confirmationDialog("Leave \(league.name)?", isPresented: $confirmingLeave, titleVisibility: .visible) {
+                            Button("Leave league", role: .destructive) { leave() }
+                        } message: {
+                            Text("Your posts and points stay. You can rejoin with an invite link."
+                                 + (lastAdmin ? " You're its only admin: nobody will run the league until we make someone admin." : ""))
+                        }
                 }
                 .padding(20)
             }
         }
         #if DEBUG
-        .task(id: store.league == nil) { if ProcessInfo.processInfo.arguments.contains("-leaguesettings") { proxy.scrollTo("settings", anchor: .top) } } // debug: show the settings
+        .task(id: store.league == nil) {
+            // debug: `-leaguesettings` shows the settings; `-makeadmin <username>` makes a
+            // member an admin as the confirm would; `-leaveconfirm` opens the leave confirm.
+            let args = ProcessInfo.processInfo.arguments
+            if args.contains("-leaguesettings") { proxy.scrollTo("settings", anchor: .top) }
+            if let i = args.firstIndex(of: "-makeadmin"), args.indices.contains(i + 1), store.league != nil, promotingUsername == nil { makeAdmin(args[i + 1]) }
+            if args.contains("-leaveconfirm"), store.league != nil { proxy.scrollTo("leave", anchor: .bottom); confirmingLeave = true }
+        }
         #endif
         }
         .background(Tokens.paper)
+    }
+
+    private func makeAdmin(_ username: String) {
+        promotingUsername = username
+        Task {
+            failure = await store.makeAdmin(username: username)
+            promotingUsername = nil
+        }
     }
 
     private func leave() {

@@ -4082,6 +4082,196 @@ internal enum Operations {
             }
         }
     }
+    /// Make a member an admin (admin). Takes effect at once and can't be undone in the app.
+    ///
+    /// - Remark: HTTP `POST /leagues/{slug}/admins`.
+    /// - Remark: Generated from `#/paths//leagues/{slug}/admins/post(makeAdmin)`.
+    internal enum MakeAdmin {
+        internal static let id: Swift.String = "makeAdmin"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/path`.
+            internal struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/path/slug`.
+                internal var slug: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - slug:
+                internal init(slug: Swift.String) {
+                    self.slug = slug
+                }
+            }
+            internal var path: Operations.MakeAdmin.Input.Path
+            /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.MakeAdmin.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.MakeAdmin.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.MakeAdmin.Input.Headers
+            /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/requestBody`.
+            internal enum Body: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/requestBody/content/application\/json`.
+                case json(Components.Schemas.MakeAdminInputBody)
+            }
+            internal var body: Operations.MakeAdmin.Input.Body
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            ///   - body:
+            internal init(
+                path: Operations.MakeAdmin.Input.Path,
+                headers: Operations.MakeAdmin.Input.Headers = .init(),
+                body: Operations.MakeAdmin.Input.Body
+            ) {
+                self.path = path
+                self.headers = headers
+                self.body = body
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/responses/200/content/application\/json`.
+                    case json(Components.Schemas.LeagueView)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.LeagueView {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.MakeAdmin.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.MakeAdmin.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/admins/post(makeAdmin)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.MakeAdmin.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.MakeAdmin.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/leagues/{slug}/admins/POST/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.MakeAdmin.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.MakeAdmin.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//leagues/{slug}/admins/post(makeAdmin)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.MakeAdmin.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.MakeAdmin.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
     /// Invalidate the invite link and make a new one (admin)
     ///
     /// - Remark: HTTP `POST /leagues/{slug}/invite/rotate`.

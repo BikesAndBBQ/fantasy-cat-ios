@@ -124,6 +124,17 @@ final class LeagueStore {
         } catch { return Failure.from(error).message }
     }
 
+    /// Make a member an admin (server D48). Takes effect at once and can't be
+    /// undone in the app; the server answers with the league as it now is.
+    func makeAdmin(username: String) async -> String? {
+        do {
+            switch try await API.client.makeAdmin(path: .init(slug: slug), body: .json(.init(username: username))) {
+            case .ok(let ok): league = try ok.body.json; return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
     /// A new invite link; the old one stops working.
     func rotateInvite() async -> String? {
         do {
