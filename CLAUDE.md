@@ -42,7 +42,9 @@ re-implements a rule; it asks the API.
 - **Releases: TestFlight only.** While the league is pre-release the agent
   may upload TestFlight builds without asking Ryan. It never submits to App
   Store review. `make testflight` archives, signs with the App Store Connect
-  API key (I12) and uploads; `DEST=export` stops at a local `.ipa`.
+  API key (I12) and uploads; `DEST=export` stops at a local `.ipa`. `make
+  builds` lists the latest uploads with their processing state (a build shows
+  up a minute or two after the upload as `PROCESSING`, then `VALID`).
 - **Stack:** Swift 6, SwiftUI, iOS 18+, iPhone only. A normal checked-in
   Xcode project with file-system-synchronized folders (add a file to the
   folder and it's in the target; no project-file edit) (I4). The API client is **generated** by Swift OpenAPI
