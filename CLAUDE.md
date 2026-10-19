@@ -68,7 +68,9 @@ re-implements a rule; it asks the API.
   tokens`), type from `TypeStyle` via `.type(...)`, and the components in
   `Components.swift`, which mirror the web's `ui.tsx`. No raw colors, fonts or
   radii in a screen. New component? Add it to `GalleryView` and look at it:
-  `make shot GALLERY=1 THEME=light`. The reference for how things should look
+  `make shot GALLERY=1 THEME=light`, with `ARGS='-section Reactions'` to open
+  scrolled to a section (a shot shows one screen, and the top one is not
+  yours). The reference for how things should look
   is `design/design-system.html` in the server repo.
 - Not registered in agent-manager on its own: it is an `additional_dirs` of
   `fantasy-cat` (I8), so the dashboard and dispatches reach it through that

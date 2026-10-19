@@ -2,14 +2,27 @@ import FantasyCatCore
 import SwiftUI
 
 /// Every component on one screen, for looking at. Launch with `-gallery`
-/// (`make shot GALLERY=1`). The iOS counterpart of design/design-system.html
-/// in the server repo: if the two disagree, that page wins.
+/// (`make shot GALLERY=1`), and `-section Reactions` to open scrolled to a
+/// section (`ARGS='-section Reactions'`), since a screenshot shows one
+/// screen. The iOS counterpart of design/design-system.html in the server
+/// repo: if the two disagree, that page wins.
 struct GalleryView: View {
     @State private var name = "Totoro"
     @State private var password = ""
     @State private var votes = 2
 
     var body: some View {
+        ScrollViewReader { scroll in
+            gallery.onAppear {
+                let args = ProcessInfo.processInfo.arguments
+                if let i = args.firstIndex(of: "-section"), i + 1 < args.endIndex {
+                    scroll.scrollTo(args[i + 1], anchor: .top)
+                }
+            }
+        }
+    }
+
+    private var gallery: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 PageTitle(eyebrow: "Round 3 of 8", title: "This week") { Chip("Open", tone: .live) }
@@ -82,7 +95,7 @@ struct GalleryView: View {
     }
 
     private func section<C: View>(_ title: String, @ViewBuilder _ content: () -> C) -> some View {
-        VStack(alignment: .leading, spacing: 10) { Eyebrow(title); content() }
+        VStack(alignment: .leading, spacing: 10) { Eyebrow(title); content() }.id(title)
     }
 }
 
