@@ -322,6 +322,20 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /submissions/{id}`.
     /// - Remark: Generated from `#/paths//submissions/{id}/delete(deleteSubmission)`.
     func deleteSubmission(_ input: Operations.DeleteSubmission.Input) async throws -> Operations.DeleteSubmission.Output
+    /// Put an emoji on a post
+    ///
+    /// Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `PUT /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)`.
+    func putReaction(_ input: Operations.PutReaction.Input) async throws -> Operations.PutReaction.Output
+    /// Take your emoji back off a post
+    ///
+    /// Idempotent. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `DELETE /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)`.
+    func deleteReaction(_ input: Operations.DeleteReaction.Input) async throws -> Operations.DeleteReaction.Output
     /// Report a post
     ///
     /// Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.
@@ -1078,6 +1092,36 @@ extension APIProtocol {
         headers: Operations.DeleteSubmission.Input.Headers = .init()
     ) async throws -> Operations.DeleteSubmission.Output {
         try await deleteSubmission(Operations.DeleteSubmission.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Put an emoji on a post
+    ///
+    /// Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `PUT /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)`.
+    internal func putReaction(
+        path: Operations.PutReaction.Input.Path,
+        headers: Operations.PutReaction.Input.Headers = .init()
+    ) async throws -> Operations.PutReaction.Output {
+        try await putReaction(Operations.PutReaction.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Take your emoji back off a post
+    ///
+    /// Idempotent. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `DELETE /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)`.
+    internal func deleteReaction(
+        path: Operations.DeleteReaction.Input.Path,
+        headers: Operations.DeleteReaction.Input.Headers = .init()
+    ) async throws -> Operations.DeleteReaction.Output {
+        try await deleteReaction(Operations.DeleteReaction.Input(
             path: path,
             headers: headers
         ))

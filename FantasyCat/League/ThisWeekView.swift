@@ -141,6 +141,8 @@ struct ThisWeekView: View {
         if let active = cats.first(where: { $0.id == activeID }) { feed(active, submitting: submitting) }
     }
 
+    private func reactionTotal(_ s: Submission) -> Int64 { (s.reactions ?? []).reduce(0) { $0 + $1.count } }
+
     @ViewBuilder private func feed(_ category: Components.Schemas.CategoryView, submitting: Bool) -> some View {
         if let feed = store.feeds[category.id] {
             let items = feed.submissions ?? []
@@ -154,13 +156,20 @@ struct ThisWeekView: View {
                         Button { open = s } label: {
                             VStack(alignment: .leading, spacing: 6) {
                                 MediaTile(media: s.media)
-                                (Text(s.petName).font(Font(TypeStyle.smallStrong.uiFont())).foregroundStyle(Tokens.ink)
-                                    + Text(" \(s.isMine ? "you" : s.manager.displayName)").font(Font(TypeStyle.small.uiFont())).foregroundStyle(Tokens.muted))
-                                    .lineLimit(1)
+                                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                    (Text(s.petName).font(Font(TypeStyle.smallStrong.uiFont())).foregroundStyle(Tokens.ink)
+                                        + Text(" \(s.isMine ? "you" : s.manager.displayName)").font(Font(TypeStyle.small.uiFont())).foregroundStyle(Tokens.muted))
+                                        .lineLimit(1)
+                                    // The leading emoji and the total, when there are any (reactions §4).
+                                    if let lead = s.reactions?.first {
+                                        Spacer(minLength: 0)
+                                        Text("\(lead.emoji) \(reactionTotal(s))").type(.small).foregroundStyle(Tokens.muted).monospacedDigit().lineLimit(1).fixedSize()
+                                    }
+                                }
                             }
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("\(s.petName), posted by \(s.isMine ? "you" : s.manager.displayName)")
+                        .accessibilityLabel("\(s.petName), posted by \(s.isMine ? "you" : s.manager.displayName)\(reactionTotal(s) > 0 ? ", \(reactionTotal(s)) reactions" : "")")
                     }
                 }
                 if let cap = feed.cap {

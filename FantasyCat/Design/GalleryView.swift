@@ -33,6 +33,10 @@ struct GalleryView: View {
                 section("Chips") {
                     HStack { Chip("Top of the cat tree", tone: .selected); Chip("Sploot"); Chip("admin", tone: .done) }
                 }
+                section("Reactions") {
+                    ReactionRow(reactions: Self.reactions, quickPicks: ["😻", "😂", "😮", "😭", "🔥", "👑"]) { _, _ in }
+                    ReactionRow(reactions: Self.reactions, quickPicks: [], readOnly: true) { _, _ in }
+                }
                 section("Votes") {
                     HStack {
                         Pips(filled: 3, total: 5)
@@ -64,6 +68,11 @@ struct GalleryView: View {
         }
         .background(PageBackground())
     }
+
+    private static let reactions: [Components.Schemas.ReactionView] = [
+        .init(by: ["Dana", "Marcus", "you", "Rebecca"], count: 4, emoji: "😻", isMine: true),
+        .init(by: ["Marcus"], count: 1, emoji: "😂", isMine: false),
+    ]
 
     private static func pending(media: Int64?, failure: String?) -> PendingPost {
         var p = PendingPost(league: "pine-st", categoryID: 1, categoryName: "Sploot", petID: 1, newCatName: nil, caption: "", created: .now)

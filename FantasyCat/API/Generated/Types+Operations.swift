@@ -10593,6 +10593,390 @@ internal enum Operations {
             }
         }
     }
+    /// Put an emoji on a post
+    ///
+    /// Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `PUT /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)`.
+    internal enum PutReaction {
+        internal static let id: Swift.String = "putReaction"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/path`.
+            internal struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/path/id`.
+                internal var id: Swift.Int64
+                /// One emoji, percent-encoded.
+                ///
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/path/emoji`.
+                internal var emoji: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - id:
+                ///   - emoji: One emoji, percent-encoded.
+                internal init(
+                    id: Swift.Int64,
+                    emoji: Swift.String
+                ) {
+                    self.id = id
+                    self.emoji = emoji
+                }
+            }
+            internal var path: Operations.PutReaction.Input.Path
+            /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.PutReaction.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.PutReaction.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.PutReaction.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            internal init(
+                path: Operations.PutReaction.Input.Path,
+                headers: Operations.PutReaction.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/responses/200/content/application\/json`.
+                    case json(Components.Schemas.ReactionsOutputBody)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.ReactionsOutputBody {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.PutReaction.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.PutReaction.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.PutReaction.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.PutReaction.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/PUT/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.PutReaction.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.PutReaction.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.PutReaction.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.PutReaction.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
+    /// Take your emoji back off a post
+    ///
+    /// Idempotent. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `DELETE /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)`.
+    internal enum DeleteReaction {
+        internal static let id: Swift.String = "deleteReaction"
+        internal struct Input: Sendable, Hashable {
+            /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/path`.
+            internal struct Path: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/path/id`.
+                internal var id: Swift.Int64
+                /// One emoji, percent-encoded.
+                ///
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/path/emoji`.
+                internal var emoji: Swift.String
+                /// Creates a new `Path`.
+                ///
+                /// - Parameters:
+                ///   - id:
+                ///   - emoji: One emoji, percent-encoded.
+                internal init(
+                    id: Swift.Int64,
+                    emoji: Swift.String
+                ) {
+                    self.id = id
+                    self.emoji = emoji
+                }
+            }
+            internal var path: Operations.DeleteReaction.Input.Path
+            /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/header`.
+            internal struct Headers: Sendable, Hashable {
+                internal var accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.DeleteReaction.AcceptableContentType>]
+                /// Creates a new `Headers`.
+                ///
+                /// - Parameters:
+                ///   - accept:
+                internal init(accept: [OpenAPIRuntime.AcceptHeaderContentType<Operations.DeleteReaction.AcceptableContentType>] = .defaultValues()) {
+                    self.accept = accept
+                }
+            }
+            internal var headers: Operations.DeleteReaction.Input.Headers
+            /// Creates a new `Input`.
+            ///
+            /// - Parameters:
+            ///   - path:
+            ///   - headers:
+            internal init(
+                path: Operations.DeleteReaction.Input.Path,
+                headers: Operations.DeleteReaction.Input.Headers = .init()
+            ) {
+                self.path = path
+                self.headers = headers
+            }
+        }
+        internal enum Output: Sendable, Hashable {
+            internal struct Ok: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/responses/200/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/responses/200/content/application\/json`.
+                    case json(Components.Schemas.ReactionsOutputBody)
+                    /// The associated value of the enum case if `self` is `.json`.
+                    ///
+                    /// - Throws: An error if `self` is not `.json`.
+                    /// - SeeAlso: `.json`.
+                    internal var json: Components.Schemas.ReactionsOutputBody {
+                        get throws {
+                            switch self {
+                            case let .json(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.DeleteReaction.Output.Ok.Body
+                /// Creates a new `Ok`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.DeleteReaction.Output.Ok.Body) {
+                    self.body = body
+                }
+            }
+            /// OK
+            ///
+            /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)/responses/200`.
+            ///
+            /// HTTP response code: `200 ok`.
+            case ok(Operations.DeleteReaction.Output.Ok)
+            /// The associated value of the enum case if `self` is `.ok`.
+            ///
+            /// - Throws: An error if `self` is not `.ok`.
+            /// - SeeAlso: `.ok`.
+            internal var ok: Operations.DeleteReaction.Output.Ok {
+                get throws {
+                    switch self {
+                    case let .ok(response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "ok",
+                            response: self
+                        )
+                    }
+                }
+            }
+            internal struct Default: Sendable, Hashable {
+                /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/responses/default/content`.
+                internal enum Body: Sendable, Hashable {
+                    /// - Remark: Generated from `#/paths/submissions/{id}/reactions/{emoji}/DELETE/responses/default/content/application\/problem+json`.
+                    case applicationProblemJson(Components.Schemas.ErrorModel)
+                    /// The associated value of the enum case if `self` is `.applicationProblemJson`.
+                    ///
+                    /// - Throws: An error if `self` is not `.applicationProblemJson`.
+                    /// - SeeAlso: `.applicationProblemJson`.
+                    internal var applicationProblemJson: Components.Schemas.ErrorModel {
+                        get throws {
+                            switch self {
+                            case let .applicationProblemJson(body):
+                                return body
+                            }
+                        }
+                    }
+                }
+                /// Received HTTP response body
+                internal var body: Operations.DeleteReaction.Output.Default.Body
+                /// Creates a new `Default`.
+                ///
+                /// - Parameters:
+                ///   - body: Received HTTP response body
+                internal init(body: Operations.DeleteReaction.Output.Default.Body) {
+                    self.body = body
+                }
+            }
+            /// Error
+            ///
+            /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)/responses/default`.
+            ///
+            /// HTTP response code: `default`.
+            case `default`(statusCode: Swift.Int, Operations.DeleteReaction.Output.Default)
+            /// The associated value of the enum case if `self` is `.`default``.
+            ///
+            /// - Throws: An error if `self` is not `.`default``.
+            /// - SeeAlso: `.`default``.
+            internal var `default`: Operations.DeleteReaction.Output.Default {
+                get throws {
+                    switch self {
+                    case let .`default`(_, response):
+                        return response
+                    default:
+                        try throwUnexpectedResponseStatus(
+                            expectedStatus: "default",
+                            response: self
+                        )
+                    }
+                }
+            }
+        }
+        internal enum AcceptableContentType: AcceptableProtocol {
+            case json
+            case applicationProblemJson
+            case other(Swift.String)
+            internal init?(rawValue: Swift.String) {
+                switch rawValue.lowercased() {
+                case "application/json":
+                    self = .json
+                case "application/problem+json":
+                    self = .applicationProblemJson
+                default:
+                    self = .other(rawValue)
+                }
+            }
+            internal var rawValue: Swift.String {
+                switch self {
+                case let .other(string):
+                    return string
+                case .json:
+                    return "application/json"
+                case .applicationProblemJson:
+                    return "application/problem+json"
+                }
+            }
+            internal static var allCases: [Self] {
+                [
+                    .json,
+                    .applicationProblemJson
+                ]
+            }
+        }
+    }
     /// Report a post
     ///
     /// Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.

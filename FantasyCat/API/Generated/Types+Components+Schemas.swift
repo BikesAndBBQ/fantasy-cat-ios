@@ -815,6 +815,10 @@ extension Components {
             internal var members: [Components.Schemas.MemberView]?
             /// - Remark: Generated from `#/components/schemas/LeagueView/name`.
             internal var name: Swift.String
+            /// The league's six most-used emoji, for one-tap reactions; seeded until it has its own.
+            ///
+            /// - Remark: Generated from `#/components/schemas/LeagueView/quick_reactions`.
+            internal var quickReactions: [Swift.String]?
             /// - Remark: Generated from `#/components/schemas/LeagueView/season_rounds`.
             internal var seasonRounds: Swift.Int64
             /// - Remark: Generated from `#/components/schemas/LeagueView/slug`.
@@ -840,6 +844,7 @@ extension Components {
             ///   - isAdmin:
             ///   - members:
             ///   - name:
+            ///   - quickReactions: The league's six most-used emoji, for one-tap reactions; seeded until it has its own.
             ///   - seasonRounds:
             ///   - slug:
             ///   - submissionCap: Posts allowed per manager per category. Null means unlimited.
@@ -853,6 +858,7 @@ extension Components {
                 isAdmin: Swift.Bool,
                 members: [Components.Schemas.MemberView]? = nil,
                 name: Swift.String,
+                quickReactions: [Swift.String]? = nil,
                 seasonRounds: Swift.Int64,
                 slug: Swift.String,
                 submissionCap: Swift.Int64? = nil,
@@ -866,6 +872,7 @@ extension Components {
                 self.isAdmin = isAdmin
                 self.members = members
                 self.name = name
+                self.quickReactions = quickReactions
                 self.seasonRounds = seasonRounds
                 self.slug = slug
                 self.submissionCap = submissionCap
@@ -880,6 +887,7 @@ extension Components {
                 case isAdmin = "is_admin"
                 case members
                 case name
+                case quickReactions = "quick_reactions"
                 case seasonRounds = "season_rounds"
                 case slug
                 case submissionCap = "submission_cap"
@@ -1484,6 +1492,70 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case allocations
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/ReactionView`.
+        internal struct ReactionView: Codable, Hashable, Sendable {
+            /// Display names, the caller as "you", in the order they reacted.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReactionView/by`.
+            internal var by: [Swift.String]?
+            /// People who put this emoji on the post.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReactionView/count`.
+            internal var count: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/ReactionView/emoji`.
+            internal var emoji: Swift.String
+            /// - Remark: Generated from `#/components/schemas/ReactionView/is_mine`.
+            internal var isMine: Swift.Bool
+            /// Creates a new `ReactionView`.
+            ///
+            /// - Parameters:
+            ///   - by: Display names, the caller as "you", in the order they reacted.
+            ///   - count: People who put this emoji on the post.
+            ///   - emoji:
+            ///   - isMine:
+            internal init(
+                by: [Swift.String]? = nil,
+                count: Swift.Int64,
+                emoji: Swift.String,
+                isMine: Swift.Bool
+            ) {
+                self.by = by
+                self.count = count
+                self.emoji = emoji
+                self.isMine = isMine
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case by
+                case count
+                case emoji
+                case isMine = "is_mine"
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/ReactionsOutputBody`.
+        internal struct ReactionsOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReactionsOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/ReactionsOutputBody/reactions`.
+            internal var reactions: [Components.Schemas.ReactionView]?
+            /// Creates a new `ReactionsOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - reactions:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                reactions: [Components.Schemas.ReactionView]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.reactions = reactions
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case reactions
             }
         }
         /// - Remark: Generated from `#/components/schemas/RenameSeasonInputBody`.
@@ -2468,6 +2540,10 @@ extension Components {
             ///
             /// - Remark: Generated from `#/components/schemas/SubmissionView/pet_photo_url`.
             internal var petPhotoUrl: Swift.String?
+            /// Emoji on the post, most used first. Never on the ballot's cards; the sheet shows them.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SubmissionView/reactions`.
+            internal var reactions: [Components.Schemas.ReactionView]?
             /// Creates a new `SubmissionView`.
             ///
             /// - Parameters:
@@ -2482,6 +2558,7 @@ extension Components {
             ///   - petId:
             ///   - petName:
             ///   - petPhotoUrl: The cat's own picture, if it has one.
+            ///   - reactions: Emoji on the post, most used first. Never on the ballot's cards; the sheet shows them.
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 caption: Swift.String,
@@ -2493,7 +2570,8 @@ extension Components {
                 media: Components.Schemas.MediaView,
                 petId: Swift.Int64,
                 petName: Swift.String,
-                petPhotoUrl: Swift.String? = nil
+                petPhotoUrl: Swift.String? = nil,
+                reactions: [Components.Schemas.ReactionView]? = nil
             ) {
                 self._dollar_schema = _dollar_schema
                 self.caption = caption
@@ -2506,6 +2584,7 @@ extension Components {
                 self.petId = petId
                 self.petName = petName
                 self.petPhotoUrl = petPhotoUrl
+                self.reactions = reactions
             }
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
@@ -2519,6 +2598,7 @@ extension Components {
                 case petId = "pet_id"
                 case petName = "pet_name"
                 case petPhotoUrl = "pet_photo_url"
+                case reactions
             }
         }
         /// - Remark: Generated from `#/components/schemas/SubmissionsOutputBody`.

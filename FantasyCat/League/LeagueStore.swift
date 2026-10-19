@@ -178,6 +178,31 @@ final class LeagueStore {
         await refresh()
     }
 
+    /// Put an emoji on someone's post, or take yours back. The server answers
+    /// with the post's reactions; the feed is fetched again for the tile count,
+    /// and the league for its quick picks.
+    func react(_ s: Submission, emoji: String, on: Bool) async -> (reactions: [Components.Schemas.ReactionView]?, failure: String?) {
+        do {
+            let reactions: [Components.Schemas.ReactionView]?
+            if on {
+                switch try await API.client.putReaction(path: .init(id: s.id, emoji: emoji)) {
+                case .ok(let ok): reactions = try ok.body.json.reactions
+                case .default(let status, let p): return (nil, Failure.from(status: status, try? p.body.applicationProblemJson).message)
+                }
+            } else {
+                switch try await API.client.deleteReaction(path: .init(id: s.id, emoji: emoji)) {
+                case .ok(let ok): reactions = try ok.body.json.reactions
+                case .default(let status, let p): return (nil, Failure.from(status: status, try? p.body.applicationProblemJson).message)
+                }
+            }
+            Task {
+                await loadFeed(s.categoryId)
+                await refresh()
+            }
+            return (reactions ?? [], nil)
+        } catch { return (nil, Failure.from(error).message) }
+    }
+
     /// Take down your own post while submissions are open. Returns what to tell the person if it failed.
     func delete(_ s: Submission) async -> String? {
         do {

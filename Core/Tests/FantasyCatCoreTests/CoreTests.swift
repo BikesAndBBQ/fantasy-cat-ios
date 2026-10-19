@@ -185,3 +185,20 @@ import Testing
         #expect(store().all(now: now).isEmpty)
     }
 }
+
+@Suite struct EmojiTests {
+    @Test func unicodeNameInSentenceCase() {
+        #expect(Emoji.name("😻") == "Smiling cat face with heart-shaped eyes")
+        #expect(Emoji.name("🔥") == "Fire")
+    }
+    @Test func sequenceIsNamedByItsFace() {
+        #expect(Emoji.name("👍🏽") == "Thumbs up sign")
+        #expect(Emoji.name("❤️") == "Heavy black heart")
+    }
+    @Test func namesList() {
+        #expect(Names.list([]) == "")
+        #expect(Names.list(["Dana"]) == "Dana")
+        #expect(Names.list(["Dana", "Marcus"]) == "Dana and Marcus")
+        #expect(Names.list(["Dana", "Marcus", "you"]) == "Dana, Marcus and you")
+    }
+}

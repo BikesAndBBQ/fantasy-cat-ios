@@ -1,3 +1,4 @@
+import FantasyCatCore
 import SwiftUI
 
 // The component kit, mirroring web/src/components/ui.tsx in the server repo.
@@ -138,6 +139,164 @@ struct Chip: View {
         case .live: Tokens.accentWash
         case .done: .clear
         }
+    }
+}
+
+// MARK: Reactions
+
+/// A post's reactions as chips (server designs/20261017-reactions.md §4),
+/// the iOS twin of the web's `ReactionRow`: each emoji with how many people
+/// put it there, mine in the selected tone, then the league's quick picks
+/// not yet on the post, and a "+" that opens the phone's emoji keyboard.
+/// Under the row, who reacted with what. `readOnly` is your own post:
+/// counts and names, nothing to tap. VoiceOver gets the emoji's Unicode name.
+struct ReactionRow: View {
+    typealias Reaction = Components.Schemas.ReactionView
+    let reactions: [Reaction]
+    let quickPicks: [String]
+    var readOnly = false
+    var busy = false
+    let onToggle: (String, Bool) -> Void
+    @State private var picking = false
+
+    var body: some View {
+        let on = Set(reactions.map(\.emoji))
+        let picks = readOnly ? [] : quickPicks.filter { !on.contains($0) }
+        let named = reactions.filter { !($0.by ?? []).isEmpty }
+        VStack(alignment: .leading, spacing: 8) {
+            ChipFlow(spacing: 8) {
+                ForEach(reactions, id: \.emoji) { r in
+                    if readOnly {
+                        Chip("\(r.emoji) \(r.count)").monospacedDigit().accessibilityLabel(Self.label(r))
+                    } else {
+                        chip("\(r.emoji) \(r.count)", tone: r.isMine ? .selected : .default, says: Self.label(r)) { onToggle(r.emoji, !r.isMine) }
+                            .accessibilityAddTraits(r.isMine ? .isSelected : [])
+                    }
+                }
+                ForEach(picks, id: \.self) { e in
+                    chip(e, tone: .done, says: "React with \(Emoji.name(e))") { onToggle(e, true) }
+                }
+                if !readOnly {
+                    chip("+", tone: .done, says: "React with another emoji") { picking = true }
+                        .background { EmojiField(active: $picking) { onToggle($0, true) } }
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(readOnly ? "Reactions" : "React to this post")
+            if !named.isEmpty {
+                Text(named.map { "\($0.emoji) \(Names.list($0.by ?? []))" }.joined(separator: " · "))
+                    .type(.small).foregroundStyle(Tokens.muted)
+                    .accessibilityLabel(named.map { "\(Emoji.name($0.emoji)): \(Names.list($0.by ?? []))" }.joined(separator: ". "))
+            }
+        }
+    }
+
+    private func chip(_ text: String, tone: Chip.Tone, says: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) { Chip(text, tone: tone).monospacedDigit() }
+            .buttonStyle(PopButtonStyle())
+            .disabled(busy)
+            .accessibilityLabel(says)
+    }
+
+    /// "Smiling cat face with heart-shaped eyes, 4 people, you reacted".
+    static func label(_ r: Reaction) -> String {
+        "\(Emoji.name(r.emoji)), \(r.count) \(r.count == 1 ? "person" : "people")\(r.isMine ? ", you reacted" : "")"
+    }
+}
+
+/// The one small pop a tapped chip gives, as the vote stepper's does.
+private struct PopButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.9 : 1)
+            .animation(.spring(duration: 0.28, bounce: 0.5), value: configuration.isPressed)
+            .sensoryFeedback(.selection, trigger: configuration.isPressed) { !$0 && $1 }
+    }
+}
+
+/// Chips in rows, wrapping to the next when a row is full.
+struct ChipFlow: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        place(in: proposal.width ?? .infinity, subviews).size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        for (i, p) in place(in: bounds.width, subviews).points.enumerated() {
+            subviews[i].place(at: CGPoint(x: bounds.minX + p.x, y: bounds.minY + p.y), proposal: .unspecified)
+        }
+    }
+
+    private func place(in width: CGFloat, _ subviews: Subviews) -> (points: [CGPoint], size: CGSize) {
+        var points: [CGPoint] = []
+        var x: CGFloat = 0, y: CGFloat = 0, rowHeight: CGFloat = 0, widest: CGFloat = 0
+        for s in subviews {
+            let size = s.sizeThatFits(.unspecified)
+            if x > 0, x + size.width > width {
+                x = 0
+                y += rowHeight + spacing
+                rowHeight = 0
+            }
+            points.append(CGPoint(x: x, y: y))
+            x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+            widest = max(widest, x - spacing)
+        }
+        return (points, CGSize(width: widest, height: y + rowHeight))
+    }
+}
+
+/// A text field nobody sees. When `active` turns on it opens the phone's
+/// emoji keyboard (the only way to ask for it: a field whose input mode is
+/// the emoji one), hands back what was typed, and closes.
+private struct EmojiField: UIViewRepresentable {
+    @Binding var active: Bool
+    let onPick: (String) -> Void
+
+    func makeUIView(context: Context) -> EmojiTextField {
+        let f = EmojiTextField()
+        f.delegate = context.coordinator
+        f.autocorrectionType = .no
+        f.autocapitalizationType = .none
+        f.spellCheckingType = .no
+        f.alpha = 0
+        f.isAccessibilityElement = false
+        f.addTarget(context.coordinator, action: #selector(Coordinator.changed(_:)), for: .editingChanged)
+        return f
+    }
+
+    func updateUIView(_ f: EmojiTextField, context: Context) {
+        context.coordinator.parent = self
+        if active, !f.isFirstResponder {
+            DispatchQueue.main.async { f.becomeFirstResponder() }
+        } else if !active, f.isFirstResponder {
+            f.resignFirstResponder()
+        }
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    @MainActor final class Coordinator: NSObject, UITextFieldDelegate {
+        var parent: EmojiField
+        init(_ parent: EmojiField) { self.parent = parent }
+
+        @objc func changed(_ f: UITextField) {
+            let v = (f.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            f.text = ""
+            guard !v.isEmpty else { return }
+            parent.onPick(v)
+            f.resignFirstResponder()
+        }
+
+        func textFieldDidEndEditing(_ f: UITextField) { parent.active = false }
+    }
+}
+
+final class EmojiTextField: UITextField {
+    override var textInputContextIdentifier: String? { "emoji" }
+    override var textInputMode: UITextInputMode? {
+        UITextInputMode.activeInputModes.first { $0.primaryLanguage == "emoji" } ?? super.textInputMode
     }
 }
 

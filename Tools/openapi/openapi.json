@@ -675,6 +675,16 @@
           "name": {
             "type": "string"
           },
+          "quick_reactions": {
+            "description": "The league's six most-used emoji, for one-tap reactions; seeded until it has its own.",
+            "items": {
+              "type": "string"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "season_rounds": {
             "format": "int64",
             "type": "integer"
@@ -716,7 +726,8 @@
           "vote_budget",
           "vote_max_per_submission",
           "invite_code",
-          "members"
+          "members",
+          "quick_reactions"
         ],
         "type": "object"
       },
@@ -1216,6 +1227,64 @@
         },
         "required": [
           "allocations"
+        ],
+        "type": "object"
+      },
+      "ReactionView": {
+        "properties": {
+          "by": {
+            "description": "Display names, the caller as \"you\", in the order they reacted.",
+            "items": {
+              "type": "string"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "count": {
+            "description": "People who put this emoji on the post.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "emoji": {
+            "type": "string"
+          },
+          "is_mine": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "emoji",
+          "count",
+          "is_mine",
+          "by"
+        ],
+        "type": "object"
+      },
+      "ReactionsOutputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/ReactionsOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "reactions": {
+            "items": {
+              "$ref": "#/components/schemas/ReactionView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "reactions"
         ],
         "type": "object"
       },
@@ -2061,6 +2130,16 @@
           "pet_photo_url": {
             "description": "The cat's own picture, if it has one.",
             "type": "string"
+          },
+          "reactions": {
+            "description": "Emoji on the post, most used first. Never on the ballot's cards; the sheet shows them.",
+            "items": {
+              "$ref": "#/components/schemas/ReactionView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
           }
         },
         "required": [
@@ -2072,7 +2151,8 @@
           "caption",
           "media",
           "is_mine",
-          "created_at"
+          "created_at",
+          "reactions"
         ],
         "type": "object"
       },
@@ -4995,6 +5075,110 @@
         "summary": "Take down your own post while submissions are open",
         "tags": [
           "submissions"
+        ]
+      }
+    },
+    "/submissions/{id}/reactions/{emoji}": {
+      "delete": {
+        "description": "Idempotent. Returns the post's reactions.",
+        "operationId": "deleteReaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "One emoji, percent-encoded.",
+            "in": "path",
+            "name": "emoji",
+            "required": true,
+            "schema": {
+              "description": "One emoji, percent-encoded.",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Take your emoji back off a post",
+        "tags": [
+          "reactions"
+        ]
+      },
+      "put": {
+        "description": "Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.",
+        "operationId": "putReaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "One emoji, percent-encoded.",
+            "in": "path",
+            "name": "emoji",
+            "required": true,
+            "schema": {
+              "description": "One emoji, percent-encoded.",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Put an emoji on a post",
+        "tags": [
+          "reactions"
         ]
       }
     },

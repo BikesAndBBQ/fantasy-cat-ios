@@ -4825,6 +4825,170 @@ internal struct Client: APIProtocol {
             }
         )
     }
+    /// Put an emoji on a post
+    ///
+    /// Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `PUT /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/put(putReaction)`.
+    internal func putReaction(_ input: Operations.PutReaction.Input) async throws -> Operations.PutReaction.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.PutReaction.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/submissions/{}/reactions/{}",
+                    parameters: [
+                        input.path.id,
+                        input.path.emoji
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .put
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.PutReaction.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ReactionsOutputBody.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.PutReaction.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
+    /// Take your emoji back off a post
+    ///
+    /// Idempotent. Returns the post's reactions.
+    ///
+    /// - Remark: HTTP `DELETE /submissions/{id}/reactions/{emoji}`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/reactions/{emoji}/delete(deleteReaction)`.
+    internal func deleteReaction(_ input: Operations.DeleteReaction.Input) async throws -> Operations.DeleteReaction.Output {
+        try await client.send(
+            input: input,
+            forOperation: Operations.DeleteReaction.id,
+            serializer: { input in
+                let path = try converter.renderedPath(
+                    template: "/submissions/{}/reactions/{}",
+                    parameters: [
+                        input.path.id,
+                        input.path.emoji
+                    ]
+                )
+                var request: HTTPTypes.HTTPRequest = .init(
+                    soar_path: path,
+                    method: .delete
+                )
+                suppressMutabilityWarning(&request)
+                converter.setAcceptHeader(
+                    in: &request.headerFields,
+                    contentTypes: input.headers.accept
+                )
+                return (request, nil)
+            },
+            deserializer: { response, responseBody in
+                switch response.status.code {
+                case 200:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.DeleteReaction.Output.Ok.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ReactionsOutputBody.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .json(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .ok(.init(body: body))
+                default:
+                    let contentType = converter.extractContentTypeIfPresent(in: response.headerFields)
+                    let body: Operations.DeleteReaction.Output.Default.Body
+                    let chosenContentType = try converter.bestContentType(
+                        received: contentType,
+                        options: [
+                            "application/problem+json"
+                        ]
+                    )
+                    switch chosenContentType {
+                    case "application/problem+json":
+                        body = try await converter.getResponseBodyAsJSON(
+                            Components.Schemas.ErrorModel.self,
+                            from: responseBody,
+                            transforming: { value in
+                                .applicationProblemJson(value)
+                            }
+                        )
+                    default:
+                        preconditionFailure("bestContentType chose an invalid content type.")
+                    }
+                    return .`default`(
+                        statusCode: response.status.code,
+                        .init(body: body)
+                    )
+                }
+            }
+        )
+    }
     /// Report a post
     ///
     /// Hides the post from you at once and tells the people who run Fantasy Cat. Reporting the same post twice does nothing more.

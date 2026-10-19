@@ -37,6 +37,7 @@ struct SubmissionSheet: View {
                     Button("Close") { dismiss() }.buttonStyle(.fc(size: .sm))
                 }
                 if !s.caption.isEmpty { Text(s.caption).type(.body).foregroundStyle(Tokens.ink) }
+                Reactions(submission: s, store: store)
                 if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
                 if s.isMine, canDelete {
                     Button("Take it down") {
@@ -69,6 +70,54 @@ struct SubmissionSheet: View {
     private var aspect: CGFloat {
         guard let w = submission.media.width, let h = submission.media.height, w > 0, h > 0 else { return Tokens.photoRatio }
         return CGFloat(w) / CGFloat(h)
+    }
+}
+
+/// The post's reactions (server designs/20261017-reactions.md): tap to add
+/// or take back, optimistic, with the server's answer replacing the guess.
+/// Your own post shows counts and names only.
+private struct Reactions: View {
+    typealias Reaction = Components.Schemas.ReactionView
+    let submission: Submission
+    let store: LeagueStore
+    @State private var reactions: [Reaction]
+    @State private var busy = false
+    @State private var failure: String?
+
+    init(submission: Submission, store: LeagueStore) {
+        self.submission = submission
+        self.store = store
+        _reactions = State(initialValue: submission.reactions ?? [])
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ReactionRow(reactions: reactions, quickPicks: store.league?.quickReactions ?? [], readOnly: submission.isMine, busy: busy) { emoji, on in
+                toggle(emoji, on: on)
+            }
+            if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+        }
+    }
+
+    private func toggle(_ emoji: String, on: Bool) {
+        let before = reactions
+        var next = reactions.compactMap { r -> Reaction? in
+            guard r.emoji == emoji else { return r }
+            var r = r
+            r.count += on ? 1 : -1
+            r.isMine = on
+            r.by = on ? (r.by ?? []) + ["you"] : (r.by ?? []).filter { $0 != "you" }
+            return r.count > 0 ? r : nil
+        }
+        if on, !before.contains(where: { $0.emoji == emoji }) { next.append(Reaction(by: ["you"], count: 1, emoji: emoji, isMine: true)) }
+        reactions = next
+        failure = nil
+        busy = true
+        Task {
+            let out = await store.react(submission, emoji: emoji, on: on)
+            if let r = out.reactions { reactions = r } else { reactions = before; failure = out.failure }
+            busy = false
+        }
     }
 }
 
