@@ -415,3 +415,23 @@ phone failed right after Google sign-in (sc-2381).
   so requests lose nothing, and responses may grow without breaking old builds.
 - Removing or renaming a field, or making a new one required in a request, still
   breaks old builds: that is the server repo's concern when it changes the API.
+
+## I19 — The signing recipe is the agent system's; our script only names the project (2026-10-20)
+
+Ryan, 2026-10-19 (sc-2874): the xcodebuild wrapper of I12 and I16 is the agent
+system's concern, not each project's, since needlepointer copied it line for
+line. agent-manager's `agent-run` now writes the shared tool `ios-xcodebuild`
+to `~/.agent-runs/bin` at every run over SSH (agent-manager
+`internal/sshserve/tools/ios-xcodebuild`, its DECISIONS.md 2026-10-19): the
+recipe that `scripts/ios-xcodebuild.sh` held until then, with the project's
+names from six `IOS_*` variables.
+
+- `scripts/ios-xcodebuild.sh` in the server repo is a shim: it loads the
+  project token (environment, else the login Keychain), exports the six names
+  (the app dir, `FantasyCat.xcodeproj`, the two vault references, the build
+  keychain's path, the token's variable) and `exec`s the tool. `make
+  testflight` is unchanged.
+- A fix to the recipe is a fix in agent-manager's file, reported on a ticket
+  for Kermit; nothing is patched here.
+- Proof: `make testflight DEST=export` through the shim in a run sshd started,
+  2026-10-20 (sc-2874).
