@@ -461,7 +461,15 @@ struct Rosette: View {
 struct InfoTip: View {
     let title: String
     let lines: [String]
-    @State private var open = false
+    @State private var open: Bool
+
+    /// `open` starts the popover shown: the gallery's way to screenshot it
+    /// (`ARGS='-section Notifications -tip "New posts"'`), nothing else's.
+    init(title: String, lines: [String], open: Bool = false) {
+        self.title = title
+        self.lines = lines
+        _open = State(initialValue: open)
+    }
 
     var body: some View {
         Button { open.toggle() } label: {
@@ -478,11 +486,16 @@ struct InfoTip: View {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text("·").type(.body).foregroundStyle(Tokens.muted)
                         Text(line).type(.body).foregroundStyle(Tokens.ink)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             .padding(16)
-            .frame(maxWidth: 300, alignment: .leading)
+            // A fixed width, not a maximum: a compact popover sizes to its
+            // content's ideal width, which for a long line is the whole line,
+            // so at a larger text size the line was clipped to "...yo…"
+            // (Ryan, sc-3129). At 280 points it wraps and the popover grows down.
+            .frame(width: 280, alignment: .leading)
             .presentationBackground(Tokens.surface)
             .presentationCompactAdaptation(.popover)
         }
@@ -497,6 +510,8 @@ struct NotificationsGrid: View {
     let rows: [Components.Schemas.NotificationRow]
     /// Called with the category, the channel and the new value.
     let set: (String, String, Bool) async -> Void
+    /// The label of the row whose info tip starts open; the gallery's only.
+    var openTip: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -508,7 +523,7 @@ struct NotificationsGrid: View {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 2) {
                         Text(row.label).type(.bodyStrong).foregroundStyle(Tokens.ink)
-                        if let events = row.events, !events.isEmpty { InfoTip(title: row.label, lines: events) }
+                        if let events = row.events, !events.isEmpty { InfoTip(title: row.label, lines: events, open: openTip == row.label) }
                     }
                     ForEach(row.channels ?? [], id: \.channel) { cell in
                         Toggle(isOn: Binding(get: { cell.on }, set: { on in Task { await set(row.category, cell.channel, on) } })) {

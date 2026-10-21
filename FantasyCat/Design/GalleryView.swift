@@ -58,7 +58,7 @@ struct GalleryView: View {
                     }
                 }
                 // The grid brings its own eyebrow.
-                NotificationsGrid(rows: Self.notificationRows) { _, _, _ in }.id("Notifications")
+                NotificationsGrid(rows: Self.notificationRows, set: { _, _, _ in }, openTip: Self.argument("-tip")).id("Notifications")
                 section("Fields") {
                     FCField(label: "Your cat's name", text: $name, help: "You can add more cats later.")
                     FCField(label: "Password", text: $password, error: "Ten characters or more.", secure: true)
@@ -93,6 +93,13 @@ struct GalleryView: View {
         .init(category: "round", channels: [.init(channel: "email", on: true)], events: ["A round opens", "Last-day reminder if you haven't posted", "Voting opens", "Results"], label: "Round events"),
         .init(category: "posts", channels: [.init(channel: "email", on: false)], events: ["A photo or video posted to your round"], label: "New posts"),
     ]
+
+    /// The value after a launch flag (`-tip "New posts"`), or nil.
+    private static func argument(_ flag: String) -> String? {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: flag), i + 1 < args.endIndex else { return nil }
+        return args[i + 1]
+    }
 
     private static func pending(media: Int64?, failure: String?) -> PendingPost {
         var p = PendingPost(league: "pine-st", categoryID: 1, categoryName: "Sploot", petID: 1, newCatName: nil, caption: "", created: .now)
