@@ -57,6 +57,8 @@ struct GalleryView: View {
                         VoteStepper(value: votes, canAdd: votes < 5, label: "Totoro") { votes = $0 }
                     }
                 }
+                // The grid brings its own eyebrow.
+                NotificationsGrid(rows: Self.notificationRows) { _, _, _ in }.id("Notifications")
                 section("Fields") {
                     FCField(label: "Your cat's name", text: $name, help: "You can add more cats later.")
                     FCField(label: "Password", text: $password, error: "Ten characters or more.", secure: true)
@@ -85,6 +87,11 @@ struct GalleryView: View {
     private static let reactions: [Components.Schemas.ReactionView] = [
         .init(by: ["Dana", "Marcus", "you", "Rebecca"], count: 4, emoji: "😻", isMine: true),
         .init(by: ["Marcus"], count: 1, emoji: "😂", isMine: false),
+    ]
+
+    private static let notificationRows: [Components.Schemas.NotificationRow] = [
+        .init(category: "round", channels: [.init(channel: "email", on: true)], events: ["A round opens", "Last-day reminder if you haven't posted", "Voting opens", "Results"], label: "Round events"),
+        .init(category: "posts", channels: [.init(channel: "email", on: false)], events: ["A photo or video posted to your round"], label: "New posts"),
     ]
 
     private static func pending(media: Int64?, failure: String?) -> PendingPost {

@@ -35,7 +35,7 @@ struct AccountView: View {
                     Divider().overlay(Tokens.line)
                     profile(user, store)
                     Divider().overlay(Tokens.line)
-                    reminders(user, store)
+                    notifications(user, store)
                     Divider().overlay(Tokens.line)
                     PasswordSection(hasPassword: user.hasPassword)
                     Divider().overlay(Tokens.line)
@@ -150,17 +150,15 @@ struct AccountView: View {
         }
     }
 
-    private func reminders(_ user: Components.Schemas.UserView, _ store: AccountStore) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Eyebrow("Round reminders")
-            Toggle(isOn: Binding(get: { user.notifyEmail }, set: { on in Task { failure = await store.setReminders(on, name: user.displayName) } })) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Email me round reminders").type(.bodyStrong).foregroundStyle(Tokens.ink)
-                    Text("When a round opens, the day before it closes, when voting starts, and when results post.").type(.small).foregroundStyle(Tokens.muted)
-                }
-            }
-            .tint(Tokens.ink)
+    /// The notifications grid (server designs/20261019-notification-settings.md
+    /// §5): a row per category the server shows this person, its events behind
+    /// an info button, and a switch per channel. The rows, their labels and
+    /// their defaults all come from the server; the app holds no list of its own.
+    private func notifications(_ user: Components.Schemas.UserView, _ store: AccountStore) -> some View {
+        NotificationsGrid(rows: model.notifications) { category, channel, on in
+            failure = await store.setNotification(category: category, channel: channel, on: on, name: user.displayName)
         }
+        .task { if model.notifications.isEmpty { await model.reload() } }
     }
 
     private func banner(_ text: String, bad: Bool) -> some View {

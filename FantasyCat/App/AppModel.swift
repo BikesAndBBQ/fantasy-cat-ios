@@ -29,6 +29,10 @@ final class AppModel {
         }
     }
     private(set) var signIns = SignIns()
+    /// The notification settings grid from `GET /me`: a row per category this
+    /// person is shown, with a cell per channel that exists (server
+    /// designs/20261019-notification-settings.md §3). Empty until /me is read.
+    private(set) var notifications: [Components.Schemas.NotificationRow] = []
 
     /// The code of an invite link the app was opened with, kept until it's
     /// used: by signing up with it, or on the join screen once signed in.
@@ -87,6 +91,7 @@ final class AppModel {
         phase = .signedIn(me.user, leagues: me.leagues ?? [])
         pictureOffer = me.pictureOffer
         signIns = SignIns(google: me.hasGoogle, apple: me.hasApple)
+        notifications = me.notifications ?? []
     }
 
     /// Re-read who we are and which leagues we're in (after creating, joining or leaving one).

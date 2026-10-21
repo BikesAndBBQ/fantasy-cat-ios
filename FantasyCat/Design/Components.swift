@@ -451,3 +451,85 @@ struct Rosette: View {
         .accessibilityLabel(["First place", "Second place", "Third place"][max(0, min(2, place - 1))])
     }
 }
+
+// MARK: Info tip and the notifications grid
+
+/// A circled-i button that opens a compact popover listing a few lines: what
+/// a switch covers, without a help line under every row (server
+/// designs/20261019-notification-settings.md §5). VoiceOver hears
+/// "What's in <title>".
+struct InfoTip: View {
+    let title: String
+    let lines: [String]
+    @State private var open = false
+
+    var body: some View {
+        Button { open.toggle() } label: {
+            Image(systemName: "info.circle").type(.body).foregroundStyle(Tokens.muted)
+                .frame(minWidth: 32, minHeight: 32)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("What's in \(title)")
+        .popover(isPresented: $open, arrowEdge: .top) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(title).type(.bodyStrong).foregroundStyle(Tokens.ink)
+                ForEach(lines, id: \.self) { line in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("·").type(.body).foregroundStyle(Tokens.muted)
+                        Text(line).type(.body).foregroundStyle(Tokens.ink)
+                    }
+                }
+            }
+            .padding(16)
+            .frame(maxWidth: 300, alignment: .leading)
+            .presentationBackground(Tokens.surface)
+            .presentationCompactAdaptation(.popover)
+        }
+    }
+}
+
+/// The notification settings: a row per category with its label and info
+/// button, then a switch per channel. With one channel it reads as a list of
+/// switches; a second channel is a column, not a screen. Everything shown
+/// comes from the server's rows; the app holds no list of its own.
+struct NotificationsGrid: View {
+    let rows: [Components.Schemas.NotificationRow]
+    /// Called with the category, the channel and the new value.
+    let set: (String, String, Bool) async -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Eyebrow("Notifications")
+            if rows.isEmpty {
+                Text("Loading your settings…").type(.small).foregroundStyle(Tokens.muted)
+            }
+            ForEach(rows, id: \.category) { row in
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 2) {
+                        Text(row.label).type(.bodyStrong).foregroundStyle(Tokens.ink)
+                        if let events = row.events, !events.isEmpty { InfoTip(title: row.label, lines: events) }
+                    }
+                    ForEach(row.channels ?? [], id: \.channel) { cell in
+                        Toggle(isOn: Binding(get: { cell.on }, set: { on in Task { await set(row.category, cell.channel, on) } })) {
+                            Text(Self.channelLabel(cell.channel)).type(.body).foregroundStyle(Tokens.ink)
+                        }
+                        .tint(Tokens.ink)
+                        .accessibilityLabel("\(row.label) by \(Self.channelLabel(cell.channel).lowercased())")
+                    }
+                }
+            }
+        }
+    }
+
+    /// The channel's word. The server sends the key; the words are few and
+    /// the app's, as the web's are.
+    static func channelLabel(_ channel: String) -> String {
+        switch channel {
+        case "email": "Email"
+        case "push": "Push"
+        case "web": "In the app"
+        default: channel.capitalized
+        }
+    }
+}

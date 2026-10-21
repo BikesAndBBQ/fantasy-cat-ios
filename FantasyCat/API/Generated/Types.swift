@@ -297,6 +297,11 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `POST /moderation/reports/{id}/takedown`.
     /// - Remark: Generated from `#/paths//moderation/reports/{id}/takedown/post(takeDownReported)`.
     func takeDownReported(_ input: Operations.TakeDownReported.Input) async throws -> Operations.TakeDownReported.Output
+    /// Turn one category's emails off from a link in an email
+    ///
+    /// - Remark: HTTP `POST /notifications/unsubscribe`.
+    /// - Remark: Generated from `#/paths//notifications/unsubscribe/post(unsubscribe)`.
+    func unsubscribe(_ input: Operations.Unsubscribe.Input) async throws -> Operations.Unsubscribe.Output
     /// Your cats
     ///
     /// - Remark: HTTP `GET /pets`.
@@ -1031,6 +1036,19 @@ extension APIProtocol {
     ) async throws -> Operations.TakeDownReported.Output {
         try await takeDownReported(Operations.TakeDownReported.Input(
             path: path,
+            headers: headers,
+            body: body
+        ))
+    }
+    /// Turn one category's emails off from a link in an email
+    ///
+    /// - Remark: HTTP `POST /notifications/unsubscribe`.
+    /// - Remark: Generated from `#/paths//notifications/unsubscribe/post(unsubscribe)`.
+    internal func unsubscribe(
+        headers: Operations.Unsubscribe.Input.Headers = .init(),
+        body: Operations.Unsubscribe.Input.Body
+    ) async throws -> Operations.Unsubscribe.Output {
+        try await unsubscribe(Operations.Unsubscribe.Input(
             headers: headers,
             body: body
         ))

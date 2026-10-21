@@ -52,8 +52,10 @@ final class AccountStore {
         await me { try await API.client.updateMe(body: .json(.init(displayName: name, username: username))) } unpack: { if case .ok(let ok) = $0 { return try? ok.body.json }; return nil } problem: { if case .default(let s, let p) = $0 { return (s, try? p.body.applicationProblemJson) }; return nil }
     }
 
-    func setReminders(_ on: Bool, name: String) async -> String? {
-        await me { try await API.client.updateMe(body: .json(.init(displayName: name, notifyEmail: on))) } unpack: { if case .ok(let ok) = $0 { return try? ok.body.json }; return nil } problem: { if case .default(let s, let p) = $0 { return (s, try? p.body.applicationProblemJson) }; return nil }
+    /// One cell of the notifications grid: a category on a channel. The
+    /// server answers with the whole account, grid included.
+    func setNotification(category: String, channel: String, on: Bool, name: String) async -> String? {
+        await me { try await API.client.updateMe(body: .json(.init(displayName: name, notifications: [.init(category: category, channel: channel, on: on)]))) } unpack: { if case .ok(let ok) = $0 { return try? ok.body.json }; return nil } problem: { if case .default(let s, let p) = $0 { return (s, try? p.body.applicationProblemJson) }; return nil }
     }
 
     func resendVerification() async -> String? {

@@ -105,6 +105,16 @@
               "null"
             ]
           },
+          "notifications": {
+            "description": "The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.",
+            "items": {
+              "$ref": "#/components/schemas/NotificationRow"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "picture_offer": {
             "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
             "type": "string"
@@ -121,6 +131,7 @@
           "created",
           "user",
           "leagues",
+          "notifications",
           "has_google",
           "has_apple"
         ],
@@ -815,6 +826,16 @@
               "null"
             ]
           },
+          "notifications": {
+            "description": "The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.",
+            "items": {
+              "$ref": "#/components/schemas/NotificationRow"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "picture_offer": {
             "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
             "type": "string"
@@ -826,6 +847,7 @@
         "required": [
           "user",
           "leagues",
+          "notifications",
           "has_google",
           "has_apple"
         ],
@@ -983,6 +1005,79 @@
           "round_number",
           "opens_at",
           "categories"
+        ],
+        "type": "object"
+      },
+      "NotificationCell": {
+        "properties": {
+          "channel": {
+            "description": "email, and push or web once they exist.",
+            "type": "string"
+          },
+          "on": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "channel",
+          "on"
+        ],
+        "type": "object"
+      },
+      "NotificationRow": {
+        "properties": {
+          "category": {
+            "description": "round, posts, activity or admin.",
+            "type": "string"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/NotificationCell"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "events": {
+            "description": "What the info button lists: the events this switch covers.",
+            "items": {
+              "type": "string"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "label": {
+            "description": "The row's heading, as the clients show it.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "category",
+          "label",
+          "events",
+          "channels"
+        ],
+        "type": "object"
+      },
+      "NotificationSetting": {
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "on": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "category",
+          "channel",
+          "on"
         ],
         "type": "object"
       },
@@ -1779,6 +1874,16 @@
               "null"
             ]
           },
+          "notifications": {
+            "description": "The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.",
+            "items": {
+              "$ref": "#/components/schemas/NotificationRow"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "picture_offer": {
             "description": "Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.",
             "type": "string"
@@ -1794,6 +1899,7 @@
         "required": [
           "user",
           "leagues",
+          "notifications",
           "has_google",
           "has_apple"
         ],
@@ -2283,6 +2389,54 @@
         ],
         "type": "object"
       },
+      "UnsubscribeInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/UnsubscribeInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "token": {
+            "description": "The t= of the link in the email.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      },
+      "UnsubscribeOutputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/UnsubscribeOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "category": {
+            "description": "The category whose email is now off.",
+            "type": "string"
+          },
+          "label": {
+            "description": "Its name, for the page's sentence.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "category",
+          "label"
+        ],
+        "type": "object"
+      },
       "UpdateLeagueInputBody": {
         "properties": {
           "$schema": {
@@ -2349,6 +2503,16 @@
             "minLength": 1,
             "type": "string"
           },
+          "notifications": {
+            "description": "Cells of the notification settings grid to set. Any subset; the rest keep their value.",
+            "items": {
+              "$ref": "#/components/schemas/NotificationSetting"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "notify_email": {
             "description": "Turn round reminder emails on or off.",
             "type": "boolean"
@@ -2399,7 +2563,7 @@
             "type": "integer"
           },
           "notify_email": {
-            "description": "Whether round reminder emails are on.",
+            "description": "Whether round reminder emails are on: the Round events \u00d7 email setting. Kept for one release; notifications is the full picture.",
             "type": "boolean"
           },
           "phone": {
@@ -4885,6 +5049,47 @@
         "summary": "Take a reported post down, everywhere",
         "tags": [
           "moderation"
+        ]
+      }
+    },
+    "/notifications/unsubscribe": {
+      "post": {
+        "operationId": "unsubscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnsubscribeInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnsubscribeOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Turn one category's emails off from a link in an email",
+        "tags": [
+          "auth"
         ]
       }
     },

@@ -114,6 +114,10 @@ extension Components {
             internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
+            ///
+            /// - Remark: Generated from `#/components/schemas/AppleSessionBody/notifications`.
+            internal var notifications: [Components.Schemas.NotificationRow]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///
             /// - Remark: Generated from `#/components/schemas/AppleSessionBody/picture_offer`.
@@ -133,6 +137,7 @@ extension Components {
             ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
+            ///   - notifications: The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///   - user:
@@ -143,6 +148,7 @@ extension Components {
                 hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                notifications: [Components.Schemas.NotificationRow]? = nil,
                 pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
                 user: Components.Schemas.UserView
@@ -153,6 +159,7 @@ extension Components {
                 self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
+                self.notifications = notifications
                 self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
                 self.user = user
@@ -164,6 +171,7 @@ extension Components {
                 case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
+                case notifications
                 case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
@@ -976,6 +984,10 @@ extension Components {
             internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/MeBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
+            ///
+            /// - Remark: Generated from `#/components/schemas/MeBody/notifications`.
+            internal var notifications: [Components.Schemas.NotificationRow]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///
             /// - Remark: Generated from `#/components/schemas/MeBody/picture_offer`.
@@ -990,6 +1002,7 @@ extension Components {
             ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
+            ///   - notifications: The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - user:
             internal init(
@@ -998,6 +1011,7 @@ extension Components {
                 hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                notifications: [Components.Schemas.NotificationRow]? = nil,
                 pictureOffer: Swift.String? = nil,
                 user: Components.Schemas.UserView
             ) {
@@ -1006,6 +1020,7 @@ extension Components {
                 self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
+                self.notifications = notifications
                 self.pictureOffer = pictureOffer
                 self.user = user
             }
@@ -1015,6 +1030,7 @@ extension Components {
                 case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
+                case notifications
                 case pictureOffer = "picture_offer"
                 case user
             }
@@ -1193,6 +1209,101 @@ extension Components {
                 case categories
                 case opensAt = "opens_at"
                 case roundNumber = "round_number"
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/NotificationCell`.
+        internal struct NotificationCell: Codable, Hashable, Sendable {
+            /// email, and push or web once they exist.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NotificationCell/channel`.
+            internal var channel: Swift.String
+            /// - Remark: Generated from `#/components/schemas/NotificationCell/on`.
+            internal var on: Swift.Bool
+            /// Creates a new `NotificationCell`.
+            ///
+            /// - Parameters:
+            ///   - channel: email, and push or web once they exist.
+            ///   - on:
+            internal init(
+                channel: Swift.String,
+                on: Swift.Bool
+            ) {
+                self.channel = channel
+                self.on = on
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case channel
+                case on
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/NotificationRow`.
+        internal struct NotificationRow: Codable, Hashable, Sendable {
+            /// round, posts, activity or admin.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NotificationRow/category`.
+            internal var category: Swift.String
+            /// - Remark: Generated from `#/components/schemas/NotificationRow/channels`.
+            internal var channels: [Components.Schemas.NotificationCell]?
+            /// What the info button lists: the events this switch covers.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NotificationRow/events`.
+            internal var events: [Swift.String]?
+            /// The row's heading, as the clients show it.
+            ///
+            /// - Remark: Generated from `#/components/schemas/NotificationRow/label`.
+            internal var label: Swift.String
+            /// Creates a new `NotificationRow`.
+            ///
+            /// - Parameters:
+            ///   - category: round, posts, activity or admin.
+            ///   - channels:
+            ///   - events: What the info button lists: the events this switch covers.
+            ///   - label: The row's heading, as the clients show it.
+            internal init(
+                category: Swift.String,
+                channels: [Components.Schemas.NotificationCell]? = nil,
+                events: [Swift.String]? = nil,
+                label: Swift.String
+            ) {
+                self.category = category
+                self.channels = channels
+                self.events = events
+                self.label = label
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case category
+                case channels
+                case events
+                case label
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/NotificationSetting`.
+        internal struct NotificationSetting: Codable, Hashable, Sendable {
+            /// - Remark: Generated from `#/components/schemas/NotificationSetting/category`.
+            internal var category: Swift.String
+            /// - Remark: Generated from `#/components/schemas/NotificationSetting/channel`.
+            internal var channel: Swift.String
+            /// - Remark: Generated from `#/components/schemas/NotificationSetting/on`.
+            internal var on: Swift.Bool
+            /// Creates a new `NotificationSetting`.
+            ///
+            /// - Parameters:
+            ///   - category:
+            ///   - channel:
+            ///   - on:
+            internal init(
+                category: Swift.String,
+                channel: Swift.String,
+                on: Swift.Bool
+            ) {
+                self.category = category
+                self.channel = channel
+                self.on = on
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case category
+                case channel
+                case on
             }
         }
         /// - Remark: Generated from `#/components/schemas/PersonView`.
@@ -2131,6 +2242,10 @@ extension Components {
             internal var hasGoogle: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/SessionBody/leagues`.
             internal var leagues: [Components.Schemas.LeagueSummary]?
+            /// The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SessionBody/notifications`.
+            internal var notifications: [Components.Schemas.NotificationRow]?
             /// Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///
             /// - Remark: Generated from `#/components/schemas/SessionBody/picture_offer`.
@@ -2149,6 +2264,7 @@ extension Components {
             ///   - hasApple: Whether Apple is one of your ways to sign in.
             ///   - hasGoogle: Whether Google is one of your ways to sign in.
             ///   - leagues:
+            ///   - notifications: The notification settings grid: the categories you are shown, each with one switch per channel. Set any subset with PATCH /me.
             ///   - pictureOffer: Your Google picture, offered once while you have none. Answer with POST /me/picture-offer.
             ///   - sessionToken: Only when the request sent X-Session-Transport: bearer. Send it back as Authorization: Bearer on every request, and keep it in the platform's secure storage.
             ///   - user:
@@ -2158,6 +2274,7 @@ extension Components {
                 hasApple: Swift.Bool,
                 hasGoogle: Swift.Bool,
                 leagues: [Components.Schemas.LeagueSummary]? = nil,
+                notifications: [Components.Schemas.NotificationRow]? = nil,
                 pictureOffer: Swift.String? = nil,
                 sessionToken: Swift.String? = nil,
                 user: Components.Schemas.UserView
@@ -2167,6 +2284,7 @@ extension Components {
                 self.hasApple = hasApple
                 self.hasGoogle = hasGoogle
                 self.leagues = leagues
+                self.notifications = notifications
                 self.pictureOffer = pictureOffer
                 self.sessionToken = sessionToken
                 self.user = user
@@ -2177,6 +2295,7 @@ extension Components {
                 case hasApple = "has_apple"
                 case hasGoogle = "has_google"
                 case leagues
+                case notifications
                 case pictureOffer = "picture_offer"
                 case sessionToken = "session_token"
                 case user
@@ -2744,6 +2863,68 @@ extension Components {
                 case startMs = "start_ms"
             }
         }
+        /// - Remark: Generated from `#/components/schemas/UnsubscribeInputBody`.
+        internal struct UnsubscribeInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UnsubscribeInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// The t= of the link in the email.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UnsubscribeInputBody/token`.
+            internal var token: Swift.String
+            /// Creates a new `UnsubscribeInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - token: The t= of the link in the email.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                token: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.token = token
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case token
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/UnsubscribeOutputBody`.
+        internal struct UnsubscribeOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UnsubscribeOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// The category whose email is now off.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UnsubscribeOutputBody/category`.
+            internal var category: Swift.String
+            /// Its name, for the page's sentence.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UnsubscribeOutputBody/label`.
+            internal var label: Swift.String
+            /// Creates a new `UnsubscribeOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - category: The category whose email is now off.
+            ///   - label: Its name, for the page's sentence.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                category: Swift.String,
+                label: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.category = category
+                self.label = label
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case category
+                case label
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/UpdateLeagueInputBody`.
         internal struct UpdateLeagueInputBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.
@@ -2805,6 +2986,10 @@ extension Components {
             internal var _dollar_schema: Swift.String?
             /// - Remark: Generated from `#/components/schemas/UpdateMeInputBody/display_name`.
             internal var displayName: Swift.String
+            /// Cells of the notification settings grid to set. Any subset; the rest keep their value.
+            ///
+            /// - Remark: Generated from `#/components/schemas/UpdateMeInputBody/notifications`.
+            internal var notifications: [Components.Schemas.NotificationSetting]?
             /// Turn round reminder emails on or off.
             ///
             /// - Remark: Generated from `#/components/schemas/UpdateMeInputBody/notify_email`.
@@ -2820,18 +3005,21 @@ extension Components {
             /// - Parameters:
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - displayName:
+            ///   - notifications: Cells of the notification settings grid to set. Any subset; the rest keep their value.
             ///   - notifyEmail: Turn round reminder emails on or off.
             ///   - phone:
             ///   - username: Change your login name. Kept as typed; unique regardless of case.
             internal init(
                 _dollar_schema: Swift.String? = nil,
                 displayName: Swift.String,
+                notifications: [Components.Schemas.NotificationSetting]? = nil,
                 notifyEmail: Swift.Bool? = nil,
                 phone: Swift.String? = nil,
                 username: Swift.String? = nil
             ) {
                 self._dollar_schema = _dollar_schema
                 self.displayName = displayName
+                self.notifications = notifications
                 self.notifyEmail = notifyEmail
                 self.phone = phone
                 self.username = username
@@ -2839,6 +3027,7 @@ extension Components {
             internal enum CodingKeys: String, CodingKey {
                 case _dollar_schema = "$schema"
                 case displayName = "display_name"
+                case notifications
                 case notifyEmail = "notify_email"
                 case phone
                 case username
@@ -2862,7 +3051,7 @@ extension Components {
             internal var hasPassword: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/UserView/id`.
             internal var id: Swift.Int64
-            /// Whether round reminder emails are on.
+            /// Whether round reminder emails are on: the Round events × email setting. Kept for one release; notifications is the full picture.
             ///
             /// - Remark: Generated from `#/components/schemas/UserView/notify_email`.
             internal var notifyEmail: Swift.Bool
@@ -2880,7 +3069,7 @@ extension Components {
             ///   - emailVerified:
             ///   - hasPassword: False for accounts that only sign in with Google or a passkey.
             ///   - id:
-            ///   - notifyEmail: Whether round reminder emails are on.
+            ///   - notifyEmail: Whether round reminder emails are on: the Round events × email setting. Kept for one release; notifications is the full picture.
             ///   - phone:
             ///   - username:
             internal init(
