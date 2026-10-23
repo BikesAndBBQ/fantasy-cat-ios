@@ -136,7 +136,7 @@ struct AccountView: View {
         VStack(alignment: .leading, spacing: 14) {
             Eyebrow("Profile")
             FCField(label: "Your name", text: $name, contentType: .name)
-            FCField(label: "Username", text: $username, help: "What you sign in with, and how you appear as @name. Capitals are kept; signing in ignores them.", contentType: .username)
+            FCField(label: "Username", text: $username, help: "What you sign in with, and how you appear as @name.", contentType: .username)
             Button("Save profile") {
                 saving = true
                 Task {
