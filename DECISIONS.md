@@ -435,3 +435,24 @@ names from six `IOS_*` variables.
   for Kermit; nothing is patched here.
 - Proof: `make testflight DEST=export` through the shim in a run sshd started,
   2026-10-20 (sc-2874).
+
+## I20 — Comments are the server's thread in the post's sheet; the email switch is the notifications grid (2026-10-23)
+
+The iOS half of comments on posts (server designs/20261019-comments.md §5,
+D55, sc-3492) adds `CommentRow` and `Composer` to the kit and a `Comments`
+view at the end of `SubmissionSheet`: the thread is fetched when the sheet
+opens (`GET /submissions/{id}/comments`), the composer sits last so it is
+above the keyboard, and each comment's "…" menu offers what `is_mine` and
+`can_remove` allow (Delete on yours, Remove from your post on your own post,
+Report on someone else's, with the same optional reason as a post's report).
+
+- The "Email me when someone comments" switch is **not** a control of its
+  own: it is the `My post activity` × `email` cell of the notifications grid
+  on the account screen, which the server's `GET /me` `notifications` rows
+  already carry. The app adds nothing for it; a new row on the server shows
+  up in the grid on its own (I18).
+- Delete and remove are optimistic: the comment goes at once and comes back
+  with the server's reason if it refused. Sending is not: the field clears
+  only once the server has the comment.
+- The Simulator checked both themes, the gallery and the live sheet against
+  the dev server; the keyboard over the composer is checked on Ryan's phone.
