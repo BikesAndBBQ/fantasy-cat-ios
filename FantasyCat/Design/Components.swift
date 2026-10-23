@@ -382,50 +382,81 @@ struct FCField: View {
 // MARK: Comments
 
 /// One comment under a post (server designs/20261019-comments.md §5): the
-/// face, the name and when, the text, and a "…" menu on the trailing edge
-/// with what the caller may do. Mirrors the web's CommentList item.
+/// face, the name and when, the text, and a "…" on the trailing edge that
+/// opens a row of the kit's buttons under the comment with what the caller
+/// may do, as the web's CommentItem does. Not a system `Menu`: that one
+/// draws UIKit's context menu, which is not the app's look (Ryan, sc-3492).
 struct CommentRow: View {
     enum Action { case delete, remove, report }
     let name: String
     var avatar: URL?
     let when: Date
     let text: String
-    /// What the "…" menu offers: nothing hides the menu.
+    /// What the "…" offers: nothing hides it.
     var actions: [Action] = []
     var act: (Action) -> Void = { _ in }
+    @State private var open: Bool
+
+    init(name: String, avatar: URL? = nil, when: Date, text: String, actions: [Action] = [], open: Bool = false, act: @escaping (Action) -> Void = { _ in }) {
+        self.name = name
+        self.avatar = avatar
+        self.when = when
+        self.text = text
+        self.actions = actions
+        self.act = act
+        _open = State(initialValue: open)
+    }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Avatar(url: avatar, kind: .person, size: .sm)
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(name).type(.smallStrong).foregroundStyle(Tokens.ink).lineLimit(1)
-                    Text(TimeText.ago(when)).type(.small).foregroundStyle(Tokens.muted).lineLimit(1)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: 10) {
+                Avatar(url: avatar, kind: .person, size: .sm)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Text(name).type(.smallStrong).foregroundStyle(Tokens.ink).lineLimit(1)
+                        Text(TimeText.ago(when)).type(.small).foregroundStyle(Tokens.muted).lineLimit(1)
+                    }
+                    Text(text).type(.body).foregroundStyle(Tokens.ink).fixedSize(horizontal: false, vertical: true)
                 }
-                Text(text).type(.body).foregroundStyle(Tokens.ink).fixedSize(horizontal: false, vertical: true)
+                // VoiceOver reads the comment as one thing: "Rebecca, 2 hr ago, what a face".
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("\(name), \(TimeText.ago(when)), \(text)")
+                Spacer(minLength: 0)
+                if !actions.isEmpty {
+                    Button {
+                        withAnimation(.easeOut(duration: 0.15)) { open.toggle() }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .type(.small).foregroundStyle(open ? Tokens.ink : Tokens.muted)
+                            .frame(width: 32, height: 32) // a finger
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("More, \(name)'s comment")
+                    .accessibilityAddTraits(open ? .isSelected : [])
+                    .accessibilityIdentifier("comment-more")
+                }
             }
-            // VoiceOver reads the comment as one thing: "Rebecca, 2 hr ago, what a face".
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("\(name), \(TimeText.ago(when)), \(text)")
-            Spacer(minLength: 0)
-            if !actions.isEmpty {
-                Menu {
+            if open {
+                ChipFlow(spacing: 10) {
                     ForEach(actions, id: \.self) { a in
                         switch a {
-                        case .delete: Button("Delete", role: .destructive) { act(.delete) }
-                        case .remove: Button("Remove from your post", role: .destructive) { act(.remove) }
-                        case .report: Button("Report", role: .destructive) { act(.report) }
+                        case .delete: Button("Delete") { choose(.delete) }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("delete-comment")
+                        case .remove: Button("Remove from your post") { choose(.remove) }.buttonStyle(.fc(.danger, size: .sm)).accessibilityIdentifier("remove-comment")
+                        case .report: Button("Report") { choose(.report) }.buttonStyle(.fc(size: .sm)).accessibilityIdentifier("report-comment")
                         }
                     }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .type(.small).foregroundStyle(Tokens.muted)
-                        .frame(width: 32, height: 32) // a finger
-                        .contentShape(Rectangle())
+                    Button("Cancel") { withAnimation(.easeOut(duration: 0.15)) { open = false } }.buttonStyle(.fc(size: .sm))
                 }
-                .accessibilityLabel("More, \(name)'s comment")
+                .padding(.leading, 36) // under the text, past the face
+                .transition(.opacity)
             }
         }
+    }
+
+    private func choose(_ a: Action) {
+        open = false
+        act(a)
     }
 }
 

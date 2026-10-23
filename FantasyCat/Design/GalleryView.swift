@@ -53,7 +53,7 @@ struct GalleryView: View {
                     ReactionRow(reactions: Self.reactions, quickPicks: [], readOnly: true) { _, _ in }
                 }
                 section("Comments") {
-                    CommentRow(name: "Rebecca", when: .now.addingTimeInterval(-7200), text: "What a face. The whiskers alone deserve a treat.", actions: [.remove, .report])
+                    CommentRow(name: "Rebecca", when: .now.addingTimeInterval(-7200), text: "What a face. The whiskers alone deserve a treat.", actions: [.remove, .report], open: true)
                     CommentRow(name: "You", when: .now.addingTimeInterval(-300), text: "He knows.", actions: [.delete])
                     Composer(text: $comment, busy: false, send: {}, focused: $composing)
                 }

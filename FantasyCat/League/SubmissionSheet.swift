@@ -14,59 +14,61 @@ struct SubmissionSheet: View {
 
     var body: some View {
         let s = submission
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                Group {
-                    if s.media.kind == .video, let player {
-                        VideoPlayer(player: player).aspectRatio(aspect, contentMode: .fit)
-                    } else {
-                        MediaTile(media: s.media, large: true).aspectRatio(aspect, contentMode: .fit)
-                    }
-                }
-                .frame(maxWidth: .infinity).frame(maxHeight: 520)
-                .background(Tokens.sunken).clipShape(RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous))
-                .accessibilityLabel("\(s.petName), posted by \(s.manager.displayName)")
-
-                HStack(spacing: 10) {
-                    Avatar(url: s.petPhotoUrl.flatMap(URL.init(string:)), kind: .cat, size: .md)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(s.petName).type(.bodyStrong).foregroundStyle(Tokens.ink)
-                        Text("\(s.manager.displayName), \(TimeText.ago(s.createdAt))").type(.small).foregroundStyle(Tokens.muted)
-                    }
-                    Spacer()
-                    Button("Close") { dismiss() }.buttonStyle(.fc(size: .sm))
-                }
-                if !s.caption.isEmpty { Text(s.caption).type(.body).foregroundStyle(Tokens.ink) }
-                Reactions(submission: s, store: store)
-                if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
-                if s.isMine, canDelete {
-                    Button("Take it down") {
-                        deleting = true
-                        Task {
-                            failure = await store.delete(s)
-                            deleting = false
-                            if failure == nil { dismiss() }
+        ScrollViewReader { scroll in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    Group {
+                        if s.media.kind == .video, let player {
+                            VideoPlayer(player: player).aspectRatio(aspect, contentMode: .fit)
+                        } else {
+                            MediaTile(media: s.media, large: true).aspectRatio(aspect, contentMode: .fit)
                         }
                     }
-                    .buttonStyle(.fc(.danger, size: .sm, busy: deleting))
+                    .frame(maxWidth: .infinity).frame(maxHeight: 520)
+                    .background(Tokens.sunken).clipShape(RoundedRectangle(cornerRadius: Tokens.Radius.card, style: .continuous))
+                    .accessibilityLabel("\(s.petName), posted by \(s.manager.displayName)")
+
+                    HStack(spacing: 10) {
+                        Avatar(url: s.petPhotoUrl.flatMap(URL.init(string:)), kind: .cat, size: .md)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(s.petName).type(.bodyStrong).foregroundStyle(Tokens.ink)
+                            Text("\(s.manager.displayName), \(TimeText.ago(s.createdAt))").type(.small).foregroundStyle(Tokens.muted)
+                        }
+                        Spacer()
+                        Button("Close") { dismiss() }.buttonStyle(.fc(size: .sm))
+                    }
+                    if !s.caption.isEmpty { Text(s.caption).type(.body).foregroundStyle(Tokens.ink) }
+                    Reactions(submission: s, store: store)
+                    if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+                    if s.isMine, canDelete {
+                        Button("Take it down") {
+                            deleting = true
+                            Task {
+                                failure = await store.delete(s)
+                                deleting = false
+                                if failure == nil { dismiss() }
+                            }
+                        }
+                        .buttonStyle(.fc(.danger, size: .sm, busy: deleting))
+                    }
+                    if !s.isMine { ReportOrBlock(submission: s, store: store) { dismiss() } }
+                    Comments(submission: s, store: store, scroll: scroll)
                 }
-                if !s.isMine { ReportOrBlock(submission: s, store: store) { dismiss() } }
-                Comments(submission: s, store: store)
+                .padding(16)
             }
-            .padding(16)
-        }
-        .scrollDismissesKeyboard(.interactively)
-        .background(Tokens.paper)
-        .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
-        .onAppear {
-            if s.media.kind == .video, let url = s.media.displayUrl.flatMap(URL.init(string:)) {
-                let p = AVPlayer(url: url)
-                player = p
-                p.play()
+            .scrollDismissesKeyboard(.interactively)
+            .background(Tokens.paper)
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+            .onAppear {
+                if s.media.kind == .video, let url = s.media.displayUrl.flatMap(URL.init(string:)) {
+                    let p = AVPlayer(url: url)
+                    player = p
+                    p.play()
+                }
             }
+            .onDisappear { player?.pause() }
         }
-        .onDisappear { player?.pause() }
     }
 
     private var aspect: CGFloat {
@@ -127,11 +129,13 @@ private struct Reactions: View {
 /// D55): fetched when the sheet opens, oldest first. Each comment's "…" menu
 /// offers Delete on yours, Remove from your post on your own post, Report
 /// on someone else's. The composer sits last, so it is above the keyboard
-/// when it has focus; the thread scrolls to it.
+/// when it has focus; after a send the sheet scrolls it back above the
+/// keyboard, since the new comment has pushed it down (Ryan, sc-3492).
 private struct Comments: View {
     typealias Comment = LeagueStore.Comment
     let submission: Submission
     let store: LeagueStore
+    let scroll: ScrollViewProxy
     @State private var comments: [Comment]?
     @State private var draft = ""
     @State private var sending = false
@@ -221,7 +225,16 @@ private struct Comments: View {
         Task {
             let out = await store.comment(on: submission, body: body)
             sending = false
-            if let c = out.comment { comments = (comments ?? []) + [c]; draft = "" } else { failure = out.failure }
+            if let c = out.comment {
+                comments = (comments ?? []) + [c]
+                draft = ""
+                // Once the thread has laid out with the new comment, bring the
+                // composer back up above the keyboard; it keeps focus for the next one.
+                try? await Task.sleep(for: .milliseconds(80))
+                withAnimation(.easeOut(duration: 0.2)) { scroll.scrollTo("composer", anchor: .bottom) }
+            } else {
+                failure = out.failure
+            }
         }
     }
 }

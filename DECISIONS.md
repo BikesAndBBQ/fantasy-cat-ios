@@ -442,9 +442,16 @@ The iOS half of comments on posts (server designs/20261019-comments.md §5,
 D55, sc-3492) adds `CommentRow` and `Composer` to the kit and a `Comments`
 view at the end of `SubmissionSheet`: the thread is fetched when the sheet
 opens (`GET /submissions/{id}/comments`), the composer sits last so it is
-above the keyboard, and each comment's "…" menu offers what `is_mine` and
+above the keyboard, and each comment's "…" offers what `is_mine` and
 `can_remove` allow (Delete on yours, Remove from your post on your own post,
 Report on someone else's, with the same optional reason as a post's report).
+
+- The "…" opens a row of the kit's buttons under the comment, as the web's
+  CommentItem does, not a SwiftUI `Menu`: the first build used `Menu`, and
+  Ryan found its UIKit context-menu pill was not the app's look (sc-3492).
+  After a send the sheet scrolls the composer back above the keyboard
+  (`ScrollViewReader`), since the new comment pushes it down; the keyboard
+  stays, for the next one.
 
 - The "Email me when someone comments" switch is **not** a control of its
   own: it is the `My post activity` × `email` cell of the notifications grid
