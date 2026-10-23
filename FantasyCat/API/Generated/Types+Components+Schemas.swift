@@ -484,6 +484,117 @@ extension Components {
                 case newPassword = "new_password"
             }
         }
+        /// - Remark: Generated from `#/components/schemas/CommentView`.
+        internal struct CommentView: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CommentView/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// - Remark: Generated from `#/components/schemas/CommentView/author`.
+            internal var author: Components.Schemas.PersonView
+            /// - Remark: Generated from `#/components/schemas/CommentView/body`.
+            internal var body: Swift.String
+            /// The caller may delete it: their own comment, or any comment on their post.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CommentView/can_remove`.
+            internal var canRemove: Swift.Bool
+            /// - Remark: Generated from `#/components/schemas/CommentView/created_at`.
+            internal var createdAt: Foundation.Date
+            /// - Remark: Generated from `#/components/schemas/CommentView/id`.
+            internal var id: Swift.Int64
+            /// - Remark: Generated from `#/components/schemas/CommentView/is_mine`.
+            internal var isMine: Swift.Bool
+            /// Creates a new `CommentView`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - author:
+            ///   - body:
+            ///   - canRemove: The caller may delete it: their own comment, or any comment on their post.
+            ///   - createdAt:
+            ///   - id:
+            ///   - isMine:
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                author: Components.Schemas.PersonView,
+                body: Swift.String,
+                canRemove: Swift.Bool,
+                createdAt: Foundation.Date,
+                id: Swift.Int64,
+                isMine: Swift.Bool
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.author = author
+                self.body = body
+                self.canRemove = canRemove
+                self.createdAt = createdAt
+                self.id = id
+                self.isMine = isMine
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case author
+                case body
+                case canRemove = "can_remove"
+                case createdAt = "created_at"
+                case id
+                case isMine = "is_mine"
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CommentsOutputBody`.
+        internal struct CommentsOutputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CommentsOutputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Oldest first. Never null.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CommentsOutputBody/comments`.
+            internal var comments: [Components.Schemas.CommentView]?
+            /// Creates a new `CommentsOutputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - comments: Oldest first. Never null.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                comments: [Components.Schemas.CommentView]? = nil
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.comments = comments
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case comments
+            }
+        }
+        /// - Remark: Generated from `#/components/schemas/CreateCommentInputBody`.
+        internal struct CreateCommentInputBody: Codable, Hashable, Sendable {
+            /// A URL to the JSON Schema for this object.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CreateCommentInputBody/$schema`.
+            internal var _dollar_schema: Swift.String?
+            /// Plain text, 1 to 1,000 characters after trimming. Newlines kept.
+            ///
+            /// - Remark: Generated from `#/components/schemas/CreateCommentInputBody/body`.
+            internal var body: Swift.String
+            /// Creates a new `CreateCommentInputBody`.
+            ///
+            /// - Parameters:
+            ///   - _dollar_schema: A URL to the JSON Schema for this object.
+            ///   - body: Plain text, 1 to 1,000 characters after trimming. Newlines kept.
+            internal init(
+                _dollar_schema: Swift.String? = nil,
+                body: Swift.String
+            ) {
+                self._dollar_schema = _dollar_schema
+                self.body = body
+            }
+            internal enum CodingKeys: String, CodingKey {
+                case _dollar_schema = "$schema"
+                case body
+            }
+        }
         /// - Remark: Generated from `#/components/schemas/CreateLeagueInputBody`.
         internal struct CreateLeagueInputBody: Codable, Hashable, Sendable {
             /// A URL to the JSON Schema for this object.
@@ -1731,17 +1842,29 @@ extension Components {
             internal var caption: Swift.String?
             /// - Remark: Generated from `#/components/schemas/ReportView/category`.
             internal var category: Swift.String?
+            /// The reported comment's text, while it exists. The post fields are the post it was under, for context.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/comment`.
+            internal var comment: Swift.String?
+            /// For a comment's report: removed by the operator, the commenter or the poster, or with an account.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/comment_is_gone`.
+            internal var commentIsGone: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/ReportView/created_at`.
             internal var createdAt: Foundation.Date
             /// - Remark: Generated from `#/components/schemas/ReportView/id`.
             internal var id: Swift.Int64
+            /// This reports a comment, not a post: the action is to remove the comment, not take the post down.
+            ///
+            /// - Remark: Generated from `#/components/schemas/ReportView/is_comment`.
+            internal var isComment: Swift.Bool
             /// - Remark: Generated from `#/components/schemas/ReportView/league`.
             internal var league: Swift.String?
             /// Absent once the post is gone.
             ///
             /// - Remark: Generated from `#/components/schemas/ReportView/media`.
             internal var media: Components.Schemas.MediaView?
-            /// Taken down, or removed by its owner or with their account.
+            /// Taken down, or removed by its owner or with their account. For a comment's report: the post it was under is gone.
             ///
             /// - Remark: Generated from `#/components/schemas/ReportView/post_is_gone`.
             internal var postIsGone: Swift.Bool
@@ -1758,6 +1881,7 @@ extension Components {
             /// - Remark: Generated from `#/components/schemas/ReportView/resolution`.
             internal enum ResolutionPayload: String, Codable, Hashable, Sendable, CaseIterable {
                 case takenDown = "taken_down"
+                case commentRemoved = "comment_removed"
             }
             /// - Remark: Generated from `#/components/schemas/ReportView/resolution`.
             internal var resolution: Components.Schemas.ReportView.ResolutionPayload?
@@ -1769,11 +1893,14 @@ extension Components {
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - caption:
             ///   - category:
+            ///   - comment: The reported comment's text, while it exists. The post fields are the post it was under, for context.
+            ///   - commentIsGone: For a comment's report: removed by the operator, the commenter or the poster, or with an account.
             ///   - createdAt:
             ///   - id:
+            ///   - isComment: This reports a comment, not a post: the action is to remove the comment, not take the post down.
             ///   - league:
             ///   - media: Absent once the post is gone.
-            ///   - postIsGone: Taken down, or removed by its owner or with their account.
+            ///   - postIsGone: Taken down, or removed by its owner or with their account. For a comment's report: the post it was under is gone.
             ///   - poster: Display name and @username of who posted it; absent if their account is gone.
             ///   - reason:
             ///   - reporter: Display name and @username of who reported it.
@@ -1783,8 +1910,11 @@ extension Components {
                 _dollar_schema: Swift.String? = nil,
                 caption: Swift.String? = nil,
                 category: Swift.String? = nil,
+                comment: Swift.String? = nil,
+                commentIsGone: Swift.Bool,
                 createdAt: Foundation.Date,
                 id: Swift.Int64,
+                isComment: Swift.Bool,
                 league: Swift.String? = nil,
                 media: Components.Schemas.MediaView? = nil,
                 postIsGone: Swift.Bool,
@@ -1797,8 +1927,11 @@ extension Components {
                 self._dollar_schema = _dollar_schema
                 self.caption = caption
                 self.category = category
+                self.comment = comment
+                self.commentIsGone = commentIsGone
                 self.createdAt = createdAt
                 self.id = id
+                self.isComment = isComment
                 self.league = league
                 self.media = media
                 self.postIsGone = postIsGone
@@ -1812,8 +1945,11 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case caption
                 case category
+                case comment
+                case commentIsGone = "comment_is_gone"
                 case createdAt = "created_at"
                 case id
+                case isComment = "is_comment"
                 case league
                 case media
                 case postIsGone = "post_is_gone"
@@ -2641,6 +2777,10 @@ extension Components {
             internal var caption: Swift.String
             /// - Remark: Generated from `#/components/schemas/SubmissionView/category_id`.
             internal var categoryId: Swift.Int64
+            /// Comments under the post, for the tile. Always 0 on the ballot's cards; the sheet fetches the thread.
+            ///
+            /// - Remark: Generated from `#/components/schemas/SubmissionView/comment_count`.
+            internal var commentCount: Swift.Int64
             /// - Remark: Generated from `#/components/schemas/SubmissionView/created_at`.
             internal var createdAt: Foundation.Date
             /// - Remark: Generated from `#/components/schemas/SubmissionView/id`.
@@ -2669,6 +2809,7 @@ extension Components {
             ///   - _dollar_schema: A URL to the JSON Schema for this object.
             ///   - caption:
             ///   - categoryId:
+            ///   - commentCount: Comments under the post, for the tile. Always 0 on the ballot's cards; the sheet fetches the thread.
             ///   - createdAt:
             ///   - id:
             ///   - isMine:
@@ -2682,6 +2823,7 @@ extension Components {
                 _dollar_schema: Swift.String? = nil,
                 caption: Swift.String,
                 categoryId: Swift.Int64,
+                commentCount: Swift.Int64,
                 createdAt: Foundation.Date,
                 id: Swift.Int64,
                 isMine: Swift.Bool,
@@ -2695,6 +2837,7 @@ extension Components {
                 self._dollar_schema = _dollar_schema
                 self.caption = caption
                 self.categoryId = categoryId
+                self.commentCount = commentCount
                 self.createdAt = createdAt
                 self.id = id
                 self.isMine = isMine
@@ -2709,6 +2852,7 @@ extension Components {
                 case _dollar_schema = "$schema"
                 case caption
                 case categoryId = "category_id"
+                case commentCount = "comment_count"
                 case createdAt = "created_at"
                 case id
                 case isMine = "is_mine"

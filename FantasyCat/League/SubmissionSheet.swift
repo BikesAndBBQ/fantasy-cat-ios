@@ -51,9 +51,11 @@ struct SubmissionSheet: View {
                     .buttonStyle(.fc(.danger, size: .sm, busy: deleting))
                 }
                 if !s.isMine { ReportOrBlock(submission: s, store: store) { dismiss() } }
+                Comments(submission: s, store: store)
             }
             .padding(16)
         }
+        .scrollDismissesKeyboard(.interactively)
         .background(Tokens.paper)
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
@@ -117,6 +119,109 @@ private struct Reactions: View {
             let out = await store.react(submission, emoji: emoji, on: on)
             if let r = out.reactions { reactions = r } else { reactions = before; failure = out.failure }
             busy = false
+        }
+    }
+}
+
+/// The post's thread and the composer (server designs/20261019-comments.md,
+/// D55): fetched when the sheet opens, oldest first. Each comment's "…" menu
+/// offers Delete on yours, Remove from your post on your own post, Report
+/// on someone else's. The composer sits last, so it is above the keyboard
+/// when it has focus; the thread scrolls to it.
+private struct Comments: View {
+    typealias Comment = LeagueStore.Comment
+    let submission: Submission
+    let store: LeagueStore
+    @State private var comments: [Comment]?
+    @State private var draft = ""
+    @State private var sending = false
+    @State private var reporting: Comment?
+    @State private var reason = ""
+    @State private var busy = false
+    @State private var failure: String?
+    @FocusState private var composing: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Divider().overlay(Tokens.line)
+            Eyebrow(title)
+            if let comments {
+                if comments.isEmpty {
+                    Text("Nothing yet. Say something nice.").type(.small).foregroundStyle(Tokens.muted)
+                }
+                ForEach(comments, id: \.id) { c in
+                    CommentRow(name: c.isMine ? "You" : c.author.displayName, avatar: c.author.avatarUrl.flatMap(URL.init(string:)),
+                               when: c.createdAt, text: c.body, actions: actions(for: c)) { a in act(a, on: c) }
+                    if reporting?.id == c.id { reportForm(c) }
+                }
+            } else {
+                ProgressView().tint(Tokens.muted).frame(maxWidth: .infinity)
+            }
+            if let failure { Text(failure).type(.small).foregroundStyle(Tokens.danger) }
+            Composer(text: $draft, busy: sending, send: send, focused: $composing).id("composer")
+        }
+        .task { await load() }
+    }
+
+    private var title: String {
+        guard let n = comments?.count, n > 0 else { return "Comments" }
+        return n == 1 ? "1 comment" : "\(n) comments"
+    }
+
+    private func actions(for c: Comment) -> [CommentRow.Action] {
+        if c.isMine { return [.delete] }
+        var a: [CommentRow.Action] = []
+        if c.canRemove { a.append(.remove) }
+        a.append(.report)
+        return a
+    }
+
+    @ViewBuilder private func reportForm(_ c: Comment) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            FCField(label: "What's wrong with it?", text: $reason, help: "Optional. Only the people who run Fantasy Cat see this.")
+            HStack(spacing: 10) {
+                Button("Report this comment") {
+                    busy = true
+                    Task {
+                        failure = await store.reportComment(c, reason: reason)
+                        busy = false
+                        if failure == nil { comments?.removeAll { $0.id == c.id }; reporting = nil; reason = "" }
+                    }
+                }
+                .buttonStyle(.fc(.danger, size: .sm, busy: busy)).accessibilityIdentifier("send-comment-report")
+                Button("Cancel") { reporting = nil; reason = "" }.buttonStyle(.fc(size: .sm))
+            }
+        }
+        .padding(.leading, 36)
+    }
+
+    private func load() async {
+        let out = await store.comments(of: submission)
+        if let c = out.comments { comments = c } else { comments = []; failure = out.failure }
+    }
+
+    private func act(_ a: CommentRow.Action, on c: Comment) {
+        failure = nil
+        switch a {
+        case .report: reporting = c
+        case .delete, .remove:
+            let before = comments
+            comments?.removeAll { $0.id == c.id } // gone at once; back if the server says no
+            Task {
+                if let f = await store.deleteComment(c, on: submission) { failure = f; comments = before }
+            }
+        }
+    }
+
+    private func send() {
+        let body = draft.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !body.isEmpty, !sending else { return }
+        sending = true
+        failure = nil
+        Task {
+            let out = await store.comment(on: submission, body: body)
+            sending = false
+            if let c = out.comment { comments = (comments ?? []) + [c]; draft = "" } else { failure = out.failure }
         }
     }
 }

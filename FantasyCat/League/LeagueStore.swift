@@ -203,6 +203,57 @@ final class LeagueStore {
         } catch { return (nil, Failure.from(error).message) }
     }
 
+    // MARK: Comments (server designs/20261019-comments.md, D55)
+
+    typealias Comment = Components.Schemas.CommentView
+
+    /// The post's thread, oldest first, with people you've blocked and comments
+    /// you've reported left out by the server.
+    func comments(of s: Submission) async -> (comments: [Comment]?, failure: String?) {
+        do {
+            switch try await API.client.listComments(path: .init(id: s.id)) {
+            case .ok(let ok): return (try ok.body.json.comments ?? [], nil)
+            case .default(let status, let p): return (nil, Failure.from(status: status, try? p.body.applicationProblemJson).message)
+            }
+        } catch { return (nil, Failure.from(error).message) }
+    }
+
+    /// Say something under a post. The server answers with the comment; the
+    /// feed is fetched again for the tile's count.
+    func comment(on s: Submission, body: String) async -> (comment: Comment?, failure: String?) {
+        do {
+            switch try await API.client.createComment(path: .init(id: s.id), body: .json(.init(body: body))) {
+            case .created(let ok):
+                let c = try ok.body.json
+                Task { await loadFeed(s.categoryId) }
+                return (c, nil)
+            case .default(let status, let p): return (nil, Failure.from(status: status, try? p.body.applicationProblemJson).message)
+            }
+        } catch { return (nil, Failure.from(error).message) }
+    }
+
+    /// Delete your own comment, or remove any comment from your own post.
+    func deleteComment(_ c: Comment, on s: Submission) async -> String? {
+        do {
+            switch try await API.client.deleteComment(path: .init(id: c.id)) {
+            case .noContent: Task { await loadFeed(s.categoryId) }; return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
+    /// Report someone's comment: hidden from you at once, and the people who
+    /// run Fantasy Cat are told.
+    func reportComment(_ c: Comment, reason: String) async -> String? {
+        let reason = reason.trimmingCharacters(in: .whitespacesAndNewlines)
+        do {
+            switch try await API.client.reportComment(path: .init(id: c.id), body: .json(.init(reason: reason.isEmpty ? nil : reason))) {
+            case .noContent: return nil
+            case .default(let status, let p): return Failure.from(status: status, try? p.body.applicationProblemJson).message
+            }
+        } catch { return Failure.from(error).message }
+    }
+
     /// Take down your own post while submissions are open. Returns what to tell the person if it failed.
     func delete(_ s: Submission) async -> String? {
         do {

@@ -393,6 +393,97 @@
         ],
         "type": "object"
       },
+      "CommentView": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/CommentView.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "author": {
+            "$ref": "#/components/schemas/PersonView"
+          },
+          "body": {
+            "type": "string"
+          },
+          "can_remove": {
+            "description": "The caller may delete it: their own comment, or any comment on their post.",
+            "type": "boolean"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "is_mine": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "author",
+          "body",
+          "created_at",
+          "is_mine",
+          "can_remove"
+        ],
+        "type": "object"
+      },
+      "CommentsOutputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/CommentsOutputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "comments": {
+            "description": "Oldest first. Never null.",
+            "items": {
+              "$ref": "#/components/schemas/CommentView"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "comments"
+        ],
+        "type": "object"
+      },
+      "CreateCommentInputBody": {
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "/api/schemas/CreateCommentInputBody.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "body": {
+            "description": "Plain text, 1 to 1,000 characters after trimming. Newlines kept.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "type": "object"
+      },
       "CreateLeagueInputBody": {
         "properties": {
           "$schema": {
@@ -1441,6 +1532,14 @@
           "category": {
             "type": "string"
           },
+          "comment": {
+            "description": "The reported comment's text, while it exists. The post fields are the post it was under, for context.",
+            "type": "string"
+          },
+          "comment_is_gone": {
+            "description": "For a comment's report: removed by the operator, the commenter or the poster, or with an account.",
+            "type": "boolean"
+          },
           "created_at": {
             "format": "date-time",
             "type": "string"
@@ -1448,6 +1547,10 @@
           "id": {
             "format": "int64",
             "type": "integer"
+          },
+          "is_comment": {
+            "description": "This reports a comment, not a post: the action is to remove the comment, not take the post down.",
+            "type": "boolean"
           },
           "league": {
             "type": "string"
@@ -1457,7 +1560,7 @@
             "description": "Absent once the post is gone."
           },
           "post_is_gone": {
-            "description": "Taken down, or removed by its owner or with their account.",
+            "description": "Taken down, or removed by its owner or with their account. For a comment's report: the post it was under is gone.",
             "type": "boolean"
           },
           "poster": {
@@ -1473,7 +1576,8 @@
           },
           "resolution": {
             "enum": [
-              "taken_down"
+              "taken_down",
+              "comment_removed"
             ],
             "type": "string"
           },
@@ -1487,7 +1591,9 @@
           "created_at",
           "reason",
           "reporter",
-          "post_is_gone"
+          "post_is_gone",
+          "is_comment",
+          "comment_is_gone"
         ],
         "type": "object"
       },
@@ -2209,6 +2315,11 @@
             "format": "int64",
             "type": "integer"
           },
+          "comment_count": {
+            "description": "Comments under the post, for the tile. Always 0 on the ballot's cards; the sheet fetches the thread.",
+            "format": "int64",
+            "type": "integer"
+          },
           "created_at": {
             "format": "date-time",
             "type": "string"
@@ -2258,7 +2369,8 @@
           "media",
           "is_mine",
           "created_at",
-          "reactions"
+          "reactions",
+          "comment_count"
         ],
         "type": "object"
       },
@@ -3342,6 +3454,88 @@
         "summary": "Suggested categories",
         "tags": [
           "rounds"
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "delete": {
+        "description": "The commenter deletes their own; the poster removes any comment from their post. Gone for good.",
+        "operationId": "deleteComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Delete a comment",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/comments/{id}/report": {
+      "post": {
+        "description": "Hides the comment from you at once and tells the people who run Fantasy Cat. Reporting the same comment twice does nothing more.",
+        "operationId": "reportComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a comment",
+        "tags": [
+          "moderation"
         ]
       }
     },
@@ -4999,6 +5193,59 @@
         ]
       }
     },
+    "/moderation/reports/{id}/remove-comment": {
+      "post": {
+        "description": "Deletes the comment for good; the commenter is not told. Authorized by the report's token.",
+        "operationId": "removeReportedComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TakeDownInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Remove a reported comment",
+        "tags": [
+          "moderation"
+        ]
+      }
+    },
     "/moderation/reports/{id}/takedown": {
       "post": {
         "description": "Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.",
@@ -5280,6 +5527,100 @@
         "summary": "Take down your own post while submissions are open",
         "tags": [
           "submissions"
+        ]
+      }
+    },
+    "/submissions/{id}/comments": {
+      "get": {
+        "description": "Oldest first. Comments by people the caller has blocked are left out.",
+        "operationId": "listComments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The comments under a post",
+        "tags": [
+          "comments"
+        ]
+      },
+      "post": {
+        "description": "Any member of the league, on any post they can see, their own included, at any time.",
+        "operationId": "createComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentInputBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentView"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Comment on a post",
+        "tags": [
+          "comments"
         ]
       }
     },

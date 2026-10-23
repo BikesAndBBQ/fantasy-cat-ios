@@ -161,15 +161,19 @@ struct ThisWeekView: View {
                                         + Text(" \(s.isMine ? "you" : s.manager.displayName)").font(Font(TypeStyle.small.uiFont())).foregroundStyle(Tokens.muted))
                                         .lineLimit(1)
                                     // The leading emoji and the total, when there are any (reactions §4).
+                                    if s.reactions?.first != nil || s.commentCount > 0 { Spacer(minLength: 0) }
                                     if let lead = s.reactions?.first {
-                                        Spacer(minLength: 0)
                                         Text("\(lead.emoji) \(reactionTotal(s))").type(.small).foregroundStyle(Tokens.muted).monospacedDigit().lineLimit(1).fixedSize()
+                                    }
+                                    // The comment count next to it (comments §5), as on the web tile.
+                                    if s.commentCount > 0 {
+                                        Label("\(s.commentCount)", systemImage: "bubble").type(.small).foregroundStyle(Tokens.muted).monospacedDigit().lineLimit(1).fixedSize()
                                     }
                                 }
                             }
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("\(s.petName), posted by \(s.isMine ? "you" : s.manager.displayName)\(reactionTotal(s) > 0 ? ", \(reactionTotal(s)) reactions" : "")")
+                        .accessibilityLabel("\(s.petName), posted by \(s.isMine ? "you" : s.manager.displayName)\(reactionTotal(s) > 0 ? ", \(reactionTotal(s)) reactions" : "")\(s.commentCount > 0 ? ", \(s.commentCount) comments" : "")")
                     }
                 }
                 if let cap = feed.cap {

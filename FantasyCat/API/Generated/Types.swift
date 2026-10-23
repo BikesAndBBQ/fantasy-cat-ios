@@ -104,6 +104,20 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /category-pool`.
     /// - Remark: Generated from `#/paths//category-pool/get(categoryPool)`.
     func categoryPool(_ input: Operations.CategoryPool.Input) async throws -> Operations.CategoryPool.Output
+    /// Delete a comment
+    ///
+    /// The commenter deletes their own; the poster removes any comment from their post. Gone for good.
+    ///
+    /// - Remark: HTTP `DELETE /comments/{id}`.
+    /// - Remark: Generated from `#/paths//comments/{id}/delete(deleteComment)`.
+    func deleteComment(_ input: Operations.DeleteComment.Input) async throws -> Operations.DeleteComment.Output
+    /// Report a comment
+    ///
+    /// Hides the comment from you at once and tells the people who run Fantasy Cat. Reporting the same comment twice does nothing more.
+    ///
+    /// - Remark: HTTP `POST /comments/{id}/report`.
+    /// - Remark: Generated from `#/paths//comments/{id}/report/post(reportComment)`.
+    func reportComment(_ input: Operations.ReportComment.Input) async throws -> Operations.ReportComment.Output
     /// Liveness and DB connectivity check
     ///
     /// - Remark: HTTP `GET /health`.
@@ -290,6 +304,13 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `GET /moderation/reports/{id}`.
     /// - Remark: Generated from `#/paths//moderation/reports/{id}/get(getReport)`.
     func getReport(_ input: Operations.GetReport.Input) async throws -> Operations.GetReport.Output
+    /// Remove a reported comment
+    ///
+    /// Deletes the comment for good; the commenter is not told. Authorized by the report's token.
+    ///
+    /// - Remark: HTTP `POST /moderation/reports/{id}/remove-comment`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/remove-comment/post(removeReportedComment)`.
+    func removeReportedComment(_ input: Operations.RemoveReportedComment.Input) async throws -> Operations.RemoveReportedComment.Output
     /// Take a reported post down, everywhere
     ///
     /// Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.
@@ -327,6 +348,20 @@ internal protocol APIProtocol: Sendable {
     /// - Remark: HTTP `DELETE /submissions/{id}`.
     /// - Remark: Generated from `#/paths//submissions/{id}/delete(deleteSubmission)`.
     func deleteSubmission(_ input: Operations.DeleteSubmission.Input) async throws -> Operations.DeleteSubmission.Output
+    /// The comments under a post
+    ///
+    /// Oldest first. Comments by people the caller has blocked are left out.
+    ///
+    /// - Remark: HTTP `GET /submissions/{id}/comments`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/comments/get(listComments)`.
+    func listComments(_ input: Operations.ListComments.Input) async throws -> Operations.ListComments.Output
+    /// Comment on a post
+    ///
+    /// Any member of the league, on any post they can see, their own included, at any time.
+    ///
+    /// - Remark: HTTP `POST /submissions/{id}/comments`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/comments/post(createComment)`.
+    func createComment(_ input: Operations.CreateComment.Input) async throws -> Operations.CreateComment.Output
     /// Put an emoji on a post
     ///
     /// Any one emoji. Idempotent: the same emoji twice is once. Not on your own post. Returns the post's reactions.
@@ -564,6 +599,38 @@ extension APIProtocol {
     /// - Remark: Generated from `#/paths//category-pool/get(categoryPool)`.
     internal func categoryPool(headers: Operations.CategoryPool.Input.Headers = .init()) async throws -> Operations.CategoryPool.Output {
         try await categoryPool(Operations.CategoryPool.Input(headers: headers))
+    }
+    /// Delete a comment
+    ///
+    /// The commenter deletes their own; the poster removes any comment from their post. Gone for good.
+    ///
+    /// - Remark: HTTP `DELETE /comments/{id}`.
+    /// - Remark: Generated from `#/paths//comments/{id}/delete(deleteComment)`.
+    internal func deleteComment(
+        path: Operations.DeleteComment.Input.Path,
+        headers: Operations.DeleteComment.Input.Headers = .init()
+    ) async throws -> Operations.DeleteComment.Output {
+        try await deleteComment(Operations.DeleteComment.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Report a comment
+    ///
+    /// Hides the comment from you at once and tells the people who run Fantasy Cat. Reporting the same comment twice does nothing more.
+    ///
+    /// - Remark: HTTP `POST /comments/{id}/report`.
+    /// - Remark: Generated from `#/paths//comments/{id}/report/post(reportComment)`.
+    internal func reportComment(
+        path: Operations.ReportComment.Input.Path,
+        headers: Operations.ReportComment.Input.Headers = .init(),
+        body: Operations.ReportComment.Input.Body
+    ) async throws -> Operations.ReportComment.Output {
+        try await reportComment(Operations.ReportComment.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
     }
     /// Liveness and DB connectivity check
     ///
@@ -1023,6 +1090,23 @@ extension APIProtocol {
             headers: headers
         ))
     }
+    /// Remove a reported comment
+    ///
+    /// Deletes the comment for good; the commenter is not told. Authorized by the report's token.
+    ///
+    /// - Remark: HTTP `POST /moderation/reports/{id}/remove-comment`.
+    /// - Remark: Generated from `#/paths//moderation/reports/{id}/remove-comment/post(removeReportedComment)`.
+    internal func removeReportedComment(
+        path: Operations.RemoveReportedComment.Input.Path,
+        headers: Operations.RemoveReportedComment.Input.Headers = .init(),
+        body: Operations.RemoveReportedComment.Input.Body
+    ) async throws -> Operations.RemoveReportedComment.Output {
+        try await removeReportedComment(Operations.RemoveReportedComment.Input(
+            path: path,
+            headers: headers,
+            body: body
+        ))
+    }
     /// Take a reported post down, everywhere
     ///
     /// Removes every post of that photo or video, its votes, and its files. Authorized by the report's token.
@@ -1112,6 +1196,38 @@ extension APIProtocol {
         try await deleteSubmission(Operations.DeleteSubmission.Input(
             path: path,
             headers: headers
+        ))
+    }
+    /// The comments under a post
+    ///
+    /// Oldest first. Comments by people the caller has blocked are left out.
+    ///
+    /// - Remark: HTTP `GET /submissions/{id}/comments`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/comments/get(listComments)`.
+    internal func listComments(
+        path: Operations.ListComments.Input.Path,
+        headers: Operations.ListComments.Input.Headers = .init()
+    ) async throws -> Operations.ListComments.Output {
+        try await listComments(Operations.ListComments.Input(
+            path: path,
+            headers: headers
+        ))
+    }
+    /// Comment on a post
+    ///
+    /// Any member of the league, on any post they can see, their own included, at any time.
+    ///
+    /// - Remark: HTTP `POST /submissions/{id}/comments`.
+    /// - Remark: Generated from `#/paths//submissions/{id}/comments/post(createComment)`.
+    internal func createComment(
+        path: Operations.CreateComment.Input.Path,
+        headers: Operations.CreateComment.Input.Headers = .init(),
+        body: Operations.CreateComment.Input.Body
+    ) async throws -> Operations.CreateComment.Output {
+        try await createComment(Operations.CreateComment.Input(
+            path: path,
+            headers: headers,
+            body: body
         ))
     }
     /// Put an emoji on a post

@@ -10,6 +10,8 @@ struct GalleryView: View {
     @State private var name = "Totoro"
     @State private var password = ""
     @State private var votes = 2
+    @State private var comment = "Those ears"
+    @FocusState private var composing: Bool
 
     var body: some View {
         ScrollViewReader { scroll in
@@ -49,6 +51,11 @@ struct GalleryView: View {
                 section("Reactions") {
                     ReactionRow(reactions: Self.reactions, quickPicks: ["😻", "😂", "😮", "😭", "🔥", "👑"]) { _, _ in }
                     ReactionRow(reactions: Self.reactions, quickPicks: [], readOnly: true) { _, _ in }
+                }
+                section("Comments") {
+                    CommentRow(name: "Rebecca", when: .now.addingTimeInterval(-7200), text: "What a face. The whiskers alone deserve a treat.", actions: [.remove, .report])
+                    CommentRow(name: "You", when: .now.addingTimeInterval(-300), text: "He knows.", actions: [.delete])
+                    Composer(text: $comment, busy: false, send: {}, focused: $composing)
                 }
                 section("Votes") {
                     HStack {

@@ -379,6 +379,89 @@ struct FCField: View {
     }
 }
 
+// MARK: Comments
+
+/// One comment under a post (server designs/20261019-comments.md §5): the
+/// face, the name and when, the text, and a "…" menu on the trailing edge
+/// with what the caller may do. Mirrors the web's CommentList item.
+struct CommentRow: View {
+    enum Action { case delete, remove, report }
+    let name: String
+    var avatar: URL?
+    let when: Date
+    let text: String
+    /// What the "…" menu offers: nothing hides the menu.
+    var actions: [Action] = []
+    var act: (Action) -> Void = { _ in }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Avatar(url: avatar, kind: .person, size: .sm)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(name).type(.smallStrong).foregroundStyle(Tokens.ink).lineLimit(1)
+                    Text(TimeText.ago(when)).type(.small).foregroundStyle(Tokens.muted).lineLimit(1)
+                }
+                Text(text).type(.body).foregroundStyle(Tokens.ink).fixedSize(horizontal: false, vertical: true)
+            }
+            // VoiceOver reads the comment as one thing: "Rebecca, 2 hr ago, what a face".
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(name), \(TimeText.ago(when)), \(text)")
+            Spacer(minLength: 0)
+            if !actions.isEmpty {
+                Menu {
+                    ForEach(actions, id: \.self) { a in
+                        switch a {
+                        case .delete: Button("Delete", role: .destructive) { act(.delete) }
+                        case .remove: Button("Remove from your post", role: .destructive) { act(.remove) }
+                        case .report: Button("Report", role: .destructive) { act(.report) }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .type(.small).foregroundStyle(Tokens.muted)
+                        .frame(width: 32, height: 32) // a finger
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("More, \(name)'s comment")
+            }
+        }
+    }
+}
+
+/// Where a comment is written: a field that grows with the text, and Send,
+/// which is busy while the comment is on its way and off while there is
+/// nothing to send. The web's Composer.
+struct Composer: View {
+    @Binding var text: String
+    var busy = false
+    var send: () -> Void
+    var focused: FocusState<Bool>.Binding
+
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            TextField("Say something…", text: $text, axis: .vertical)
+                .lineLimit(1...6)
+                .focused(focused)
+                .type(TypeStyle(face: .body, size: 16, weight: 400))
+                .foregroundStyle(Tokens.ink)
+                .padding(.horizontal, 13)
+                .padding(.vertical, 9)
+                .background(Tokens.surface, in: RoundedRectangle(cornerRadius: Tokens.Radius.field, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: Tokens.Radius.field, style: .continuous)
+                        .strokeBorder(focused.wrappedValue ? Tokens.accentInk : Tokens.line, lineWidth: 1.5)
+                }
+                .accessibilityLabel("Comment")
+                .accessibilityIdentifier("comment-body")
+            Button("Send", action: send)
+                .buttonStyle(.fc(.ink, size: .sm, busy: busy))
+                .disabled(busy || text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .accessibilityIdentifier("send-comment")
+        }
+    }
+}
+
 // MARK: Avatar
 
 /// A person's or a cat's face. Always a circle, cropped to fill. No photo
